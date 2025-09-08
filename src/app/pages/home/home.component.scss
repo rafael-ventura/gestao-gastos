@@ -1,0 +1,548 @@
+.home-container {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+  
+  p {
+    margin-top: 16px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ===== BALANCE CARD =====
+.balance-card {
+  margin-bottom: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(244, 67, 54, 0.1);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+  
+  &.positive {
+    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    color: white;
+    
+    .balance-amount {
+      color: white;
+    }
+  }
+  
+  &.negative {
+    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
+    color: white;
+    
+    .balance-amount {
+      color: white;
+    }
+  }
+  
+  &.neutral {
+    background: linear-gradient(135deg, #607D8B 0%, #78909C 100%);
+    color: white;
+    
+    .balance-amount {
+      color: white;
+    }
+  }
+}
+
+  .balance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .balance-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+      
+      .data-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        
+        mat-icon {
+          font-size: 1.2rem;
+          width: 1.2rem;
+          height: 1.2rem;
+          color: #4CAF50;
+        }
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
+.balance-amount {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+.balance-details {
+  display: flex;
+  justify-content: space-around;
+  gap: 24px;
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    
+    .detail-label {
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+    
+    .detail-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      
+      &.positive {
+        color: #4CAF50;
+      }
+      
+      &.negative {
+        color: #F44336;
+      }
+    }
+  }
+}
+
+// ===== EMPTY STATE =====
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  
+  .empty-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #F44336;
+    margin-bottom: 16px;
+    animation: pulse 2s infinite;
+  }
+  
+  h3 {
+    margin: 0 0 8px 0;
+    color: #212121;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 0 0 24px 0;
+    color: #757575;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.1rem;
+  }
+  
+  button[color="primary"] {
+    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3) !important;
+    transition: all 0.3s ease !important;
+    padding: 12px 24px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #E53935 0%, #F44336 100%) !important;
+      box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4) !important;
+      transform: translateY(-2px) !important;
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0) !important;
+      box-shadow: 0 2px 10px rgba(244, 67, 54, 0.3) !important;
+    }
+    
+    mat-icon {
+      color: white !important;
+      margin-right: 8px !important;
+    }
+  }
+}
+
+// ===== CONTENT WITH DATA =====
+.content-with-data {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ===== CATEGORIES CARD =====
+.categories-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(244, 67, 54, 0.1);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+  
+  .categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    
+    .category-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      
+      .category-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      
+      .category-name {
+        font-weight: 500;
+      }
+      
+      .category-percentage {
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 0.875rem;
+      }
+    }
+    
+    .category-amount {
+      font-weight: 600;
+      color: #F44336;
+    }
+  }
+}
+
+// ===== TRANSACTIONS CARD =====
+.transactions-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(244, 67, 54, 0.1);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+  
+  .no-transactions {
+    text-align: center;
+    padding: 32px 16px;
+    color: rgba(0, 0, 0, 0.6);
+    
+    mat-icon {
+      font-size: 3rem;
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      margin: 0;
+    }
+  }
+  
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 0;
+    gap: 16px;
+    
+    .transaction-info {
+      flex: 1;
+      min-width: 0;
+      
+      .transaction-main {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 4px;
+        
+        .transaction-description {
+          font-weight: 500;
+          word-break: break-word;
+        }
+        
+        mat-chip-set {
+          display: flex;
+          gap: 4px;
+          flex-wrap: wrap;
+          
+          mat-chip {
+            font-size: 0.75rem;
+            height: 24px;
+            color: white;
+            
+            &.credit-card-chip {
+              background-color: #FF9800 !important;
+            }
+          }
+        }
+      }
+      
+      .transaction-meta {
+        .transaction-date {
+          font-size: 0.875rem;
+          color: rgba(0, 0, 0, 0.6);
+        }
+      }
+    }
+    
+    .transaction-amount {
+      font-weight: 600;
+      font-size: 1.1rem;
+      white-space: nowrap;
+      
+      &.positive {
+        color: #4CAF50;
+      }
+      
+      &.negative {
+        color: #F44336;
+      }
+    }
+  }
+}
+
+// ===== FLOATING ACTION BUTTON =====
+.add-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  
+  @media (max-width: 599px) {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+// ===== RESPONSIVE DESIGN =====
+@media (max-width: 768px) {
+  .home-container {
+    padding: 12px;
+  }
+  
+  .balance-amount {
+    font-size: 2.5rem;
+  }
+  
+  .balance-details {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .transaction-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    
+    .transaction-amount {
+      text-align: right;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .balance-amount {
+    font-size: 2rem;
+  }
+  
+  .balance-header {
+    flex-direction: column;
+    gap: 8px;
+    
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+  
+  .category-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    
+    .category-amount {
+      text-align: right;
+    }
+  }
+  
+  .add-transaction-section {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    
+    .add-transaction-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// ===== ADD TRANSACTION SECTION =====
+.add-transaction-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 32px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  border-radius: 16px;
+  border: 2px dashed rgba(33, 150, 243, 0.3);
+  
+  .add-transaction-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+    
+    mat-icon {
+      font-size: 1.3rem;
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+  }
+  
+  .quick-add-button {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+    }
+    
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+}
+
+// ===== FLOATING ACTION BUTTON =====
+.floating-add-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  
+  &.mat-mdc-fab {
+    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+    }
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.balance-card,
+.categories-card,
+.transactions-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// ===== MATERIAL THEME OVERRIDES =====
+::ng-deep {
+  .mat-mdc-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+  }
+  
+  .mat-mdc-fab {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .mat-mdc-chip {
+    border-radius: 16px;
+  }
+}

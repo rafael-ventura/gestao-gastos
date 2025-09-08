@@ -1,0 +1,271 @@
+<div class="informacoes-container">
+  <!-- Header -->
+  <div class="informacoes-header">
+    <h1>Informações Financeiras</h1>
+    <p>Análise detalhada dos seus gastos e receitas</p>
+    
+    <!-- Seletor de Mês -->
+    <mat-form-field appearance="outline" class="month-selector">
+      <mat-label>Período</mat-label>
+      <mat-select [value]="selectedMonth" (selectionChange)="onMonthChange($event.value)">
+        <mat-option *ngFor="let month of months" [value]="month">
+          {{ formatMonthYear(month) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando informações...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading" class="main-content">
+    
+    <!-- Empty State -->
+    <div *ngIf="!hasData" class="empty-state">
+      <mat-icon class="empty-icon">analytics</mat-icon>
+      <h3>Nenhuma informação disponível</h3>
+      <p>Adicione algumas transações para ver suas informações financeiras aqui.</p>
+    </div>
+
+    <!-- Content com Dados -->
+    <div *ngIf="hasData" class="content-with-data">
+      
+      <!-- KPIs Principais -->
+      <div class="kpis-grid">
+        <mat-card class="kpi-card balance-card" [class]="getBalanceColor()">
+          <mat-card-content>
+            <div class="kpi-header">
+              <h3>Saldo do Mês</h3>
+              <mat-icon class="kpi-icon">{{ getBalanceIcon() }}</mat-icon>
+            </div>
+            <div class="kpi-value">{{ formatCurrency(balance) }}</div>
+            <div class="kpi-details">
+              <span class="detail-item">
+                <span class="label">Receitas:</span>
+                <span class="value positive">{{ formatCurrency(income) }}</span>
+              </span>
+              <span class="detail-item">
+                <span class="label">Gastos:</span>
+                <span class="value negative">{{ formatCurrency(expenses) }}</span>
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card">
+          <mat-card-content>
+            <div class="kpi-header">
+              <h3>Taxa de Poupança</h3>
+              <mat-icon class="kpi-icon" [class]="getSavingsRateColor()">{{ getSavingsRateIcon() }}</mat-icon>
+            </div>
+            <div class="kpi-value" [class]="getSavingsRateColor()">{{ savingsRate | number:'1.1-1' }}%</div>
+            <div class="kpi-details">
+              <span class="detail-item">
+                <span class="label">Salário:</span>
+                <span class="value">{{ formatCurrency(salary) }}</span>
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card">
+          <mat-card-content>
+            <div class="kpi-header">
+              <h3>Gasto Médio Diário</h3>
+              <mat-icon class="kpi-icon">today</mat-icon>
+            </div>
+            <div class="kpi-value">{{ formatCurrency(averageDailyExpense) }}</div>
+            <div class="kpi-details">
+              <span class="detail-item">
+                <span class="label">Total do mês:</span>
+                <span class="value">{{ formatCurrency(expenses) }}</span>
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card">
+          <mat-card-content>
+            <div class="kpi-header">
+              <h3>Cartão de Crédito</h3>
+              <mat-icon class="kpi-icon">credit_card</mat-icon>
+            </div>
+            <div class="kpi-value">{{ formatCurrency(creditCardExpenses) }}</div>
+            <div class="kpi-details">
+              <span class="detail-item">
+                <span class="label">% do total:</span>
+                <span class="value">{{ (expenses > 0 ? (creditCardExpenses / expenses) * 100 : 0) | number:'1.1-1' }}%</span>
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Abas de Informações Detalhadas -->
+      <mat-tab-group [(selectedIndex)]="selectedTab" class="info-tabs">
+        
+        <!-- Aba: Gastos por Categoria -->
+        <mat-tab label="Gastos por Categoria">
+          <div class="tab-content">
+            <mat-card *ngIf="expensesByCategory.length > 0" class="categories-card">
+              <mat-card-header>
+                <mat-card-title>Distribuição dos Gastos</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="categories-list">
+                  <div *ngFor="let category of expensesByCategory" class="category-item">
+                    <div class="category-info">
+                      <div class="category-color" [style.background-color]="category.color"></div>
+                      <span class="category-name">{{ category.category }}</span>
+                      <span class="category-percentage">({{ category.percentage | number:'1.1-1' }}%)</span>
+                    </div>
+                    <div class="category-amount">
+                      {{ formatCurrency(category.amount) }}
+                    </div>
+                    <div class="category-bar">
+                      <div class="category-bar-fill" 
+                           [style.width.%]="category.percentage" 
+                           [style.background-color]="category.color">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <div *ngIf="expensesByCategory.length === 0" class="no-data">
+              <mat-icon>category</mat-icon>
+              <p>Nenhum gasto registrado neste período</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Aba: Transações do Mês -->
+        <mat-tab label="Transações do Mês">
+          <div class="tab-content">
+            <mat-card class="transactions-card">
+              <mat-card-header>
+                <mat-card-title>Lista de Transações</mat-card-title>
+                <div class="card-subtitle">
+                  {{ monthTransactions.length }} transação(ões) encontrada(s)
+                </div>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngIf="monthTransactions.length === 0" class="no-transactions">
+                  <mat-icon>receipt_long</mat-icon>
+                  <p>Nenhuma transação encontrada</p>
+                </div>
+                
+                <ng-container *ngFor="let transaction of monthTransactions; let last = last">
+                  <div class="transaction-item">
+                    <div class="transaction-info">
+                      <div class="transaction-main">
+                        <span class="transaction-description">{{ transaction.description }}</span>
+                        <mat-chip-set>
+                          <mat-chip [style.background-color]="getCategoryColor(transaction.category)">
+                            {{ transaction.category }}
+                          </mat-chip>
+                          <mat-chip *ngIf="transaction.isCreditCard" class="credit-card-chip">
+                            <mat-icon>credit_card</mat-icon>
+                            Cartão
+                          </mat-chip>
+                        </mat-chip-set>
+                      </div>
+                      <div class="transaction-meta">
+                        <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
+                      </div>
+                    </div>
+                    <div class="transaction-amount" [class]="transaction.amount > 0 ? 'positive' : 'negative'">
+                      {{ formatCurrency(transaction.amount) }}
+                    </div>
+                  </div>
+                  
+                  <mat-divider *ngIf="!last"></mat-divider>
+                </ng-container>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <!-- Aba: Resumo dos Últimos 12 Meses -->
+        <mat-tab label="Últimos 12 Meses">
+          <div class="tab-content">
+            <mat-card class="monthly-summary-card">
+              <mat-card-header>
+                <mat-card-title>Evolução Mensal</mat-card-title>
+                <div class="card-subtitle">
+                  Comparativo dos últimos 12 meses
+                </div>
+              </mat-card-header>
+              <mat-card-content>
+                <div *ngIf="monthlySummaries.length === 0" class="no-data">
+                  <mat-icon>timeline</mat-icon>
+                  <p>Dados insuficientes para análise</p>
+                </div>
+                
+                <div *ngFor="let summary of monthlySummaries" class="monthly-item">
+                  <div class="month-info">
+                    <span class="month-name">{{ formatMonthYear(summary.month) }}</span>
+                    <span class="transaction-count">{{ summary.transactionCount }} transação(ões)</span>
+                  </div>
+                  <div class="month-values">
+                    <div class="value-item">
+                      <span class="label">Receitas:</span>
+                      <span class="value positive">{{ formatCurrency(summary.income) }}</span>
+                    </div>
+                    <div class="value-item">
+                      <span class="label">Gastos:</span>
+                      <span class="value negative">{{ formatCurrency(summary.expenses) }}</span>
+                    </div>
+                    <div class="value-item">
+                      <span class="label">Saldo:</span>
+                      <span class="value" [class]="summary.balance >= 0 ? 'positive' : 'negative'">
+                        {{ formatCurrency(summary.balance) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <!-- Aba: Maior Gasto -->
+        <mat-tab label="Maior Gasto" *ngIf="largestExpense">
+          <div class="tab-content">
+            <mat-card class="largest-expense-card">
+              <mat-card-header>
+                <mat-card-title>Maior Gasto do Mês</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="largest-expense-item">
+                  <div class="expense-info">
+                    <span class="expense-description">{{ largestExpense.description }}</span>
+                    <mat-chip-set>
+                      <mat-chip [style.background-color]="getCategoryColor(largestExpense.category)">
+                        {{ largestExpense.category }}
+                      </mat-chip>
+                      <mat-chip *ngIf="largestExpense.isCreditCard" class="credit-card-chip">
+                        <mat-icon>credit_card</mat-icon>
+                        Cartão
+                      </mat-chip>
+                    </mat-chip-set>
+                    <span class="expense-date">{{ formatDate(largestExpense.date) }}</span>
+                  </div>
+                  <div class="expense-amount negative">
+                    {{ formatCurrency(largestExpense.amount) }}
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

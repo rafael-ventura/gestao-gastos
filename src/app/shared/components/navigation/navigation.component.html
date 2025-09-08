@@ -1,0 +1,130 @@
+<!-- Toolbar Principal -->
+<mat-toolbar class="main-toolbar" color="primary">
+  <div class="toolbar-content">
+    
+    <!-- Botão Menu (Mobile) -->
+    <button 
+      *ngIf="isMobile" 
+      mat-icon-button 
+      (click)="toggleSidenav()"
+      class="menu-button"
+      matTooltip="Menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Logo e Título -->
+    <div class="logo-section">
+      <mat-icon class="logo-icon">account_balance_wallet</mat-icon>
+      <span class="app-title">Gestão de Gastos</span>
+    </div>
+
+    <!-- Saldo (Desktop) -->
+    <div *ngIf="!isMobile && hasData" class="balance-section">
+      <div class="balance-info" [class]="getBalanceColor()">
+        <mat-icon class="balance-icon">{{ getBalanceIcon() }}</mat-icon>
+        <span class="balance-amount">{{ formatCurrency(balance) }}</span>
+      </div>
+    </div>
+
+    <!-- Menu Desktop -->
+    <div *ngIf="!isMobile" class="desktop-nav">
+      <button 
+        *ngFor="let item of navItems" 
+        mat-button 
+        [routerLink]="item.route"
+        [class.active]="isActiveRoute(item.route)"
+        [matTooltip]="item.tooltip"
+        class="nav-button">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </button>
+    </div>
+
+    <!-- Menu Mobile (Toolbar) -->
+    <div *ngIf="isMobile" class="mobile-nav">
+      <button 
+        *ngFor="let item of navItems" 
+        mat-icon-button 
+        [routerLink]="item.route"
+        [class.active]="isActiveRoute(item.route)"
+        [matTooltip]="item.tooltip"
+        class="mobile-nav-button">
+        <mat-icon>{{ item.icon }}</mat-icon>
+      </button>
+    </div>
+
+  </div>
+</mat-toolbar>
+
+<!-- Sidenav (Mobile) -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav 
+    #sidenav 
+    mode="over" 
+    [(opened)]="sidenavOpen"
+    class="sidenav">
+    
+    <div class="sidenav-header">
+      <div class="sidenav-logo">
+        <mat-icon class="logo-icon">account_balance_wallet</mat-icon>
+        <span class="app-title">Gestão de Gastos</span>
+      </div>
+      
+      <!-- Saldo no Sidenav -->
+      <div *ngIf="hasData" class="sidenav-balance" [class]="getBalanceColor()">
+        <div class="balance-info">
+          <mat-icon class="balance-icon">{{ getBalanceIcon() }}</mat-icon>
+          <div class="balance-details">
+            <span class="balance-label">Saldo do Mês</span>
+            <span class="balance-amount">{{ formatCurrency(balance) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-nav-list class="sidenav-list">
+      <a 
+        *ngFor="let item of navItems" 
+        mat-list-item 
+        [routerLink]="item.route"
+        (click)="onNavItemClick(item.route)"
+        [class.active]="isActiveRoute(item.route)"
+        class="sidenav-item">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+        <span *ngIf="item.tooltip" matListItemMeta class="item-tooltip">{{ item.tooltip }}</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <div class="app-info">
+        <span class="version">v1.0.0</span>
+        <span class="status" [class]="hasData ? 'has-data' : 'no-data'">
+          {{ hasData ? 'Dados carregados' : 'Sem dados' }}
+        </span>
+      </div>
+    </div>
+
+  </mat-sidenav>
+
+  <!-- Conteúdo Principal -->
+  <mat-sidenav-content class="main-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Bottom Navigation (Mobile) -->
+<div *ngIf="isMobile" class="bottom-nav">
+  <div class="bottom-nav-content">
+    <button 
+      *ngFor="let item of navItems" 
+      mat-icon-button 
+      [routerLink]="item.route"
+      [class.active]="isActiveRoute(item.route)"
+      [matTooltip]="item.tooltip"
+      class="bottom-nav-button">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span class="button-label">{{ item.label }}</span>
+    </button>
+  </div>
+</div>

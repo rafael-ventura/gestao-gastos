@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+// Reset global styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: #fafafa;
+}
+
+// Ensure full height
+html, body {
+  height: 100%;
+}
