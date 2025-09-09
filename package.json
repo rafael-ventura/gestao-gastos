@@ -2,18 +2,10 @@
   "name": "gastos-simples",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
-    "build": "npx ng build --configuration production",
-    "build:dev": "ng build",
-    "build:vercel": "ng build --configuration production --output-path=dist/gastos-simples/browser",
-    "build:github": "ng build --configuration production --base-href '/gestao-gastos-app/'",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "deploy:local": "ng build --configuration production && npx http-server dist/gastos-simples/browser -p 8080",
-    "test:pwa": "npm run build && npx http-server dist/gastos-simples/browser -p 8080 -c-1",
-    "serve:dist": "npx http-server dist/gastos-simples/browser -p 8080",
-    "serve:ssr:gastos-simples": "node dist/gastos-simples/server/server.mjs"
+    "build": "ng build --configuration production",
+    "dev": "ng serve --open",
+    "test-pwa": "npm run build && npx http-server dist/gastos-simples/browser -p 8080 -c-1"
   },
   "private": true,
   "dependencies": {

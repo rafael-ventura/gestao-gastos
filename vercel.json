@@ -1,7 +1,8 @@
 {
+  "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "dist/gastos-simples/browser",
-  "framework": "angular",
+  "installCommand": "npm ci",
   "rewrites": [
     {
       "source": "/(.*)",
