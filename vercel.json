@@ -1,5 +1,5 @@
 {
-  "buildCommand": "ng build --configuration production",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist/gastos-simples/browser",
   "framework": "angular",
   "rewrites": [

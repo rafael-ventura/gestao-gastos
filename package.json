@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production",
+    "build": "npx ng build --configuration production",
     "build:dev": "ng build",
     "build:vercel": "ng build --configuration production --output-path=dist/gastos-simples/browser",
     "build:github": "ng build --configuration production --base-href '/gestao-gastos-app/'",
