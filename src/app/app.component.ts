@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { SaveIndicatorComponent } from './shared/components/save-indicator/save-indicator.component';
-// import { PwaService } from './core/services/pwa.service';
+import { PwaService } from './core/services/pwa.service';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +13,10 @@ import { SaveIndicatorComponent } from './shared/components/save-indicator/save-
 })
 export class AppComponent implements OnInit {
   title = 'gastos-simples';
-  // private pwaService = inject(PwaService);
+  private pwaService = inject(PwaService);
 
   ngOnInit() {
     // Inicializa o serviço PWA
-    // console.log('PWA Info:', this.pwaService.getAppInfo());
+    console.log('PWA Info:', this.pwaService.getAppInfo());
   }
 }
