@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💰 Gestão de Gastos - PWA
 
 > **App completo para controle de gastos pessoais - funciona offline!**
@@ -214,3 +215,6 @@ Criado para casais que querem controlar gastos de forma simples e eficiente, sem
 *Desenvolvido com ❤️ por [Seu Nome](https://github.com/seu-usuario)*
 
 </div>
+=======
+# gestao-gastos
+>>>>>>> 9d04848d6f2f19b07802ae362751419fc0a9bacb
