@@ -1,6 +1,6 @@
 .home-container {
   padding: 16px;
-  padding-bottom: 100px; // Mais espaço no final para o botão flutuante
+  padding-bottom: 100px;
   max-width: 1200px;
   margin: 0 auto;
   min-height: calc(100vh - 64px);
@@ -23,10 +23,10 @@
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 32px; // Mais espaço entre seções
+  gap: 32px;
 }
 
-// ===== BALANCE SECTION =====
+// BALANCE SECTION
 .balance-section {
   margin-bottom: 32px;
 }
@@ -88,7 +88,7 @@
   }
 }
 
-// ===== BALANCE HEADER =====
+// BALANCE HEADER
 .balance-header {
   display: flex;
   justify-content: space-between;
@@ -182,7 +182,7 @@
   }
 }
 
-// ===== BALANCE AMOUNT SECTION =====
+// BALANCE AMOUNT
 .balance-amount-section {
   text-align: center;
   margin-bottom: 32px;
@@ -221,7 +221,7 @@
   }
 }
 
-// ===== BALANCE DETAILS =====
+// BALANCE DETAILS
 .balance-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -308,7 +308,7 @@
   }
 }
 
-// ===== EMPTY STATE =====
+// EMPTY STATE
 .empty-state {
   text-align: center;
   padding: 48px 16px;
@@ -366,16 +366,14 @@
   }
 }
 
-// ===== CONTENT WITH DATA =====
+// CONTENT WITH DATA
 .content-with-data {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-// Seção de categorias removida - agora está apenas em informações
-
-// ===== TRANSACTIONS CARD =====
+// TRANSACTIONS CARD
 .transactions-card {
   background: white;
   border: 1px solid var(--gray-200);
@@ -507,7 +505,7 @@
   }
 }
 
-// ===== FLOATING ACTION BUTTON =====
+// FLOATING BUTTON
 .add-button {
   position: fixed;
   bottom: 24px;
@@ -520,15 +518,14 @@
   }
 }
 
-// ===== RESPONSIVE DESIGN =====
+// RESPONSIVE
 @media (max-width: 768px) {
   .home-container {
     padding: 8px;
-    padding-bottom: 160px; // Ainda mais espaço para navbar + botão flutuante
-    min-height: calc(100vh - 56px); // Ajustar para altura mobile
+    padding-bottom: 160px;
+    min-height: calc(100vh - 56px);
   }
   
-  // Card de saldo mobile
   .balance-card {
     margin: 0 4px 16px 4px;
     
@@ -607,7 +604,6 @@
     font-size: 1rem;
   }
   
-  // Cards de transações mobile
   .transactions-card {
     margin: 0 4px 16px 4px;
     
@@ -619,7 +615,6 @@
       padding: 16px 16px 0 16px;
     }
     
-    // Último card com margem extra para não ficar cortado
     &:last-child {
       margin-bottom: 80px;
     }
@@ -636,7 +631,6 @@
       font-size: 1rem;
     }
     
-    // Último item com padding extra
     &:last-child {
       padding-bottom: 40px;
     }
@@ -695,11 +689,8 @@
     padding: 10px;
   }
   
-  // Categorias removidas
-  
-  // Botão flutuante menor e acima da navbar
   .floating-add-button {
-    bottom: 72px; // Já definido acima, mantém consistência
+    bottom: 72px;
     right: 16px;
     width: 48px !important;
     height: 48px !important;
@@ -707,7 +698,7 @@
 }
 
 
-// ===== FLOATING ACTION BUTTON =====
+// FLOATING BUTTON
 .floating-add-button {
   position: fixed;
   bottom: 24px;
@@ -726,19 +717,18 @@
     }
   }
   
-  // Ajuste para mobile com navbar
   @media (max-width: 768px) {
-    bottom: 80px; // Acima da navbar mobile (56px + margem)
+    bottom: 80px;
     right: 20px;
   }
   
   @media (max-width: 480px) {
-    bottom: 72px; // Ajuste para telas muito pequenas
+    bottom: 72px;
     right: 16px;
   }
 }
 
-// ===== ANIMATIONS =====
+// ANIMATIONS
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -767,7 +757,7 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-// ===== MATERIAL THEME OVERRIDES =====
+// MATERIAL OVERRIDES
 ::ng-deep {
   .mat-mdc-card {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -782,20 +772,3 @@
     border-radius: 16px;
   }
 }
-
-// ===== BALANCE DECORATION =====
-.balance-decoration {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1;
-}
-.decoration-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-}
-.circle-1 { width: 120px; height: 120px; top: -60px; right: -60px; }
-.circle-2 { width: 80px; height: 80px; bottom: -40px; left: -40px; }
-.circle-3 { width: 60px; height: 60px; top: 50%; right: 20px; }
