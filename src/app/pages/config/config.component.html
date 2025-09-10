@@ -80,85 +80,88 @@
           (click)="addCategory()"
           matTooltip="Adicionar nova categoria">
           <mat-icon>add</mat-icon>
-          Adicionar Categoria
+          Adicionar
         </button>
       </div>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="categoriesForm">
-        <div formArrayName="categories" class="categories-list">
+        <div formArrayName="categories" class="categories-grid">
           
           <div 
             *ngFor="let categoryGroup of categoriesArray.controls; let i = index" 
             [formGroupName]="i"
-            class="category-item">
+            class="category-card modern-card">
             
-            <!-- Ícone de Categoria -->
-            <div class="category-icon">
+            <!-- Header Compacto -->
+            <div class="category-header">
               <div 
                 class="category-color-preview" 
                 [style.background-color]="categoryGroup.get('color')?.value">
               </div>
-            </div>
-
-            <!-- Nome da Categoria -->
-            <mat-form-field appearance="outline" class="category-name-field">
-              <mat-label>Nome da Categoria</mat-label>
-              <input 
-                matInput 
-                formControlName="name" 
-                placeholder="Ex: Alimentação"
-                maxlength="20">
-              <mat-error *ngIf="getCategoryError(i, 'name')">
-                {{ getCategoryError(i, 'name') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Seletor de Cor Melhorado -->
-            <div class="color-selector">
-              <label class="color-label">Cor:</label>
-              <div class="color-picker-wrapper">
-                <app-color-picker
-                  [value]="categoryGroup.get('color')?.value"
-                  (colorSelected)="categoryGroup.get('color')?.setValue($event)"
-                  [showPastels]="true"
-                  [showVibrant]="false"
-                  [showCustom]="true"
-                  [compact]="true">
-                </app-color-picker>
+              <div class="category-actions">
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="action-button duplicate-btn"
+                  (click)="duplicateCategory(i)"
+                  matTooltip="Duplicar">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+                
+                <button
+                  type="button"
+                  mat-icon-button
+                  class="action-button delete-btn"
+                  (click)="removeCategory(i)"
+                  [disabled]="categoriesArray.length <= 1"
+                  matTooltip="Remover">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
               </div>
             </div>
 
-            <!-- Ações da Categoria -->
-            <div class="category-actions">
-              <button
-                type="button"
-                mat-icon-button
-                color="accent"
-                (click)="duplicateCategory(i)"
-                matTooltip="Duplicar categoria">
-                <mat-icon>content_copy</mat-icon>
-              </button>
-              
-              <button
-                type="button"
-                mat-icon-button
-                color="warn"
-                (click)="removeCategory(i)"
-                [disabled]="categoriesArray.length <= 1"
-                matTooltip="Remover categoria">
-                <mat-icon>delete</mat-icon>
-              </button>
+            <!-- Nome da Categoria - Input Moderno -->
+            <div class="category-input-container">
+              <app-form-input
+                label="Nome da categoria"
+                placeholder="Ex: Alimentação"
+                [maxLength]="20"
+                [errorMessage]="getCategoryError(i, 'name')"
+                formControlName="name">
+              </app-form-input>
+            </div>
+
+            <!-- Seletor de Cor Moderno -->
+            <div class="color-selector-modern">
+              <label class="color-label">Cor da categoria</label>
+              <app-color-picker
+                [value]="categoryGroup.get('color')?.value"
+                (colorSelected)="categoryGroup.get('color')?.setValue($event)"
+                [compact]="true">
+              </app-color-picker>
             </div>
           </div>
 
+          <!-- Card para Adicionar Nova Categoria - Moderno -->
+          <div class="add-category-card modern-add-card" (click)="addCategory()">
+            <div class="add-icon-container">
+              <mat-icon>add_circle_outline</mat-icon>
+            </div>
+            <span class="add-text">Nova Categoria</span>
+            <p class="add-subtitle">Clique para adicionar</p>
+          </div>
+
           <!-- Empty State para Categorias -->
-          <div *ngIf="categoriesArray.length === 0" class="empty-categories">
-            <mat-icon>category</mat-icon>
-            <p>Nenhuma categoria configurada</p>
-            <button mat-raised-button color="primary" (click)="addCategory()">
+          <div *ngIf="categoriesArray.length === 0" class="empty-categories modern-empty">
+            <div class="empty-icon-container">
+              <mat-icon>category</mat-icon>
+            </div>
+            <h3>Nenhuma categoria ainda</h3>
+            <p>Crie sua primeira categoria para organizar seus gastos</p>
+            <button mat-raised-button color="primary" (click)="addCategory()" class="create-first-btn">
               <mat-icon>add</mat-icon>
-              Adicionar Primeira Categoria
+              Criar Primeira Categoria
             </button>
           </div>
         </div>

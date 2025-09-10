@@ -17,257 +17,270 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     }
   ],
   template: `
-    <div class="color-picker-container">
-      <div class="color-palette">
-        <!-- Tons Pastéis -->
-        <div class="color-section" *ngIf="showPastels">
-          <h4 class="section-title">Tons Pastéis</h4>
-          <div class="color-grid">
-            <button
-              *ngFor="let color of pastelColors"
-              type="button"
-              class="color-option"
-              [class.selected]="selectedColor === color"
-              [style.background-color]="color"
-              [matTooltip]="color"
-              (click)="selectColor(color)">
-              <mat-icon *ngIf="selectedColor === color">check</mat-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Tons Vibrantes -->
-        <div class="color-section" *ngIf="showVibrant">
-          <h4 class="section-title">Tons Vibrantes</h4>
-          <div class="color-grid">
-            <button
-              *ngFor="let color of vibrantColors"
-              type="button"
-              class="color-option"
-              [class.selected]="selectedColor === color"
-              [style.background-color]="color"
-              [matTooltip]="color"
-              (click)="selectColor(color)">
-              <mat-icon *ngIf="selectedColor === color">check</mat-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Tons Neutros -->
-        <div class="color-section" *ngIf="showNeutrals">
-          <h4 class="section-title">Tons Neutros</h4>
-          <div class="color-grid">
-            <button
-              *ngFor="let color of neutralColors"
-              type="button"
-              class="color-option"
-              [class.selected]="selectedColor === color"
-              [style.background-color]="color"
-              [matTooltip]="color"
-              (click)="selectColor(color)">
-              <mat-icon *ngIf="selectedColor === color">check</mat-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Cor Personalizada -->
-        <div class="color-section custom-section" *ngIf="showCustom">
-          <h4 class="section-title">Cor Personalizada</h4>
-          <div class="custom-color-container">
-            <input
-              type="color"
-              class="custom-color-input"
-              [value]="selectedColor"
-              (input)="onCustomColorChange($event)"
-              [matTooltip]="'Escolher cor personalizada'">
-            <div class="custom-color-preview" [style.background-color]="selectedColor"></div>
-          </div>
+    <div class="color-picker-container" [class.compact]="compact">
+      
+      <!-- Cores Pastéis Sugeridas -->
+      <div class="suggested-colors">
+        <div class="colors-grid">
+          <button
+            *ngFor="let color of suggestedColors"
+            type="button"
+            class="color-button"
+            [class.selected]="selectedColor === color"
+            [style.background-color]="color"
+            [matTooltip]="getColorName(color)"
+            (click)="selectColor(color)">
+            <mat-icon *ngIf="selectedColor === color" class="check-icon">check</mat-icon>
+          </button>
+          
+          <!-- Botão para Cor Personalizada -->
+          <button
+            type="button"
+            class="color-button custom-button"
+            [class.selected]="isCustomColor"
+            (click)="openCustomPicker()"
+            matTooltip="Escolher cor personalizada">
+            <mat-icon class="custom-icon">palette</mat-icon>
+          </button>
         </div>
       </div>
 
-      <!-- Preview da cor selecionada -->
-      <div class="selected-color-preview" *ngIf="selectedColor">
-        <div class="preview-container">
-          <div class="preview-color" [style.background-color]="selectedColor"></div>
-          <div class="preview-info">
-            <span class="preview-label">Cor selecionada:</span>
-            <span class="preview-value">{{ selectedColor }}</span>
-          </div>
-        </div>
+      <!-- Input de cor personalizada (oculto) -->
+      <input
+        #colorInput
+        type="color"
+        class="hidden-color-input"
+        [value]="selectedColor"
+        (input)="onCustomColorChange($event)">
+
+      <!-- Preview da cor selecionada (apenas se não for compacto) -->
+      <div class="selected-preview" *ngIf="!compact && selectedColor">
+        <div class="preview-dot" [style.background-color]="selectedColor"></div>
+        <span class="preview-text">{{ getColorName(selectedColor) || selectedColor }}</span>
       </div>
+      
     </div>
   `,
   styles: [`
     .color-picker-container {
-      padding: 8px;
+      padding: 12px;
+      
+      &.compact {
+        padding: 8px;
+      }
     }
 
-    .color-section {
-      margin-bottom: 16px;
+    .suggested-colors {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .section-title {
-      font-size: 12px;
-      font-weight: 500;
-      color: rgba(0, 0, 0, 0.6);
-      margin: 0 0 8px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .color-grid {
+    .colors-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      
+      .color-picker-container.compact & {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+      }
     }
 
-    .color-option {
-      width: 32px;
-      height: 32px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+    .color-button {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-xs);
+      
+      .color-picker-container.compact & {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+      }
+      
+      &:hover {
+        transform: translateY(-2px) scale(1.05);
+        border-color: var(--gray-300);
+        box-shadow: var(--shadow-md);
+      }
+      
+      &.selected {
+        border-color: var(--primary-400);
+        border-width: 3px;
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 0 0 3px var(--primary-100), var(--shadow-lg);
+      }
+      
+      .check-icon {
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        
+        .color-picker-container.compact & {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
     }
 
-    .color-option:hover {
-      transform: scale(1.1);
-      border-color: rgba(0, 0, 0, 0.3);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    .custom-button {
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease infinite;
+      
+      .custom-icon {
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        
+        .color-picker-container.compact & {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+      
+      &:hover {
+        animation-duration: 1s;
+      }
+      
+      &.selected {
+        border-color: var(--primary-400);
+        animation-duration: 0.5s;
+      }
     }
 
-    .color-option.selected {
-      border-color: #1976d2;
-      border-width: 3px;
-      transform: scale(1.1);
-      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+    .hidden-color-input {
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .color-option mat-icon {
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-    }
-
-    .custom-section {
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
-      padding-top: 12px;
-    }
-
-    .custom-color-container {
+    .selected-preview {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .custom-color-input {
-      width: 40px;
-      height: 32px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .custom-color-input::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-
-    .custom-color-input::-webkit-color-swatch {
-      border: none;
-      border-radius: 8px;
-    }
-
-    .custom-color-preview {
-      width: 32px;
-      height: 32px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-    }
-
-    .selected-color-preview {
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 16px;
       padding-top: 12px;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: 1px solid var(--gray-200);
     }
 
-    .preview-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .preview-dot {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gray-200);
+      border-radius: 50%;
+      box-shadow: var(--shadow-xs);
     }
 
-    .preview-color {
-      width: 24px;
-      height: 24px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      border-radius: 6px;
-    }
-
-    .preview-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .preview-label {
-      font-size: 11px;
-      color: rgba(0, 0, 0, 0.6);
+    .preview-text {
+      font-size: 0.875rem;
+      color: var(--gray-700);
       font-weight: 500;
     }
 
-    .preview-value {
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.87);
-      font-family: monospace;
-      font-weight: 500;
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    
+    // Responsivo
+    @media (max-width: 768px) {
+      .colors-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+      }
+      
+      .color-button {
+        width: 32px;
+        height: 32px;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+        
+        &.selected {
+          transform: scale(1.1);
+        }
+      }
     }
   `]
 })
 export class ColorPickerComponent implements ControlValueAccessor {
-  @Input() showPastels = true;
-  @Input() showVibrant = false;
-  @Input() showNeutrals = false;
-  @Input() showCustom = true;
   @Input() compact = false;
-  @Input() value = '#FF6B6B';
+  @Input() value = '#FFB3BA';
 
   @Output() colorSelected = new EventEmitter<string>();
 
-  selectedColor = '#FF6B6B';
+  selectedColor = '#FFB3BA';
 
-  // Tons pastéis suaves e agradáveis
-  pastelColors = [
-    '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#D4BAFF',
-    '#FFB3E6', '#FFB3C1', '#FFC9B3', '#C9FFB3', '#B3FFF7', '#B3D4FF',
-    '#E1B3FF', '#FFB3D4', '#FFCAB3', '#D4FFB3', '#B3FFE1', '#B3C9FF',
-    '#F0B3FF', '#FFE1B3', '#B3FFB3', '#B3FFFF', '#C1B3FF', '#FFD4B3'
+  // Cores pastéis sugeridas - mais modernas e suaves
+  suggestedColors = [
+    '#FFB3BA', // Rosa suave
+    '#FFDFBA', // Pêssego
+    '#FFFFBA', // Amarelo claro
+    '#BAFFC9', // Verde menta
+    '#BAE1FF', // Azul bebê
+    '#D4BAFF', // Lilás
+    '#FFB3E6', // Rosa vibrante
+    '#B3FFF7', // Turquesa claro
+    '#FFC9B3', // Laranja suave
+    '#C9FFB3', // Verde claro
+    '#E1B3FF', // Roxo claro
+    '#FFE1B3', // Amarelo pêssego
+    '#B3FFE1', // Verde água
+    '#B3C9FF', // Azul periwinkle
+    '#F0B3FF'  // Rosa lavanda
   ];
 
-  // Tons vibrantes para quem prefere mais cor
-  vibrantColors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD',
-    '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43', '#FF3838',
-    '#FF6348', '#FF4757', '#3742FA', '#2F3542', '#A4B0BE', '#57606F'
-  ];
-
-  // Tons neutros e profissionais
-  neutralColors = [
-    '#F8F9FA', '#E9ECEF', '#DEE2E6', '#CED4DA', '#ADB5BD', '#6C757D',
-    '#495057', '#343A40', '#212529', '#FFF3CD', '#D1ECF1', '#D4EDDA',
-    '#F8D7DA', '#E2E3E5', '#D6D8DB', '#C6C8CA', '#BDC1C6', '#9AA0A6'
-  ];
+  // Nomes amigáveis para as cores
+  private colorNames: {[key: string]: string} = {
+    '#FFB3BA': 'Rosa Suave',
+    '#FFDFBA': 'Pêssego',
+    '#FFFFBA': 'Amarelo Claro',
+    '#BAFFC9': 'Verde Menta',
+    '#BAE1FF': 'Azul Bebê',
+    '#D4BAFF': 'Lilás',
+    '#FFB3E6': 'Rosa Vibrante',
+    '#B3FFF7': 'Turquesa Claro',
+    '#FFC9B3': 'Laranja Suave',
+    '#C9FFB3': 'Verde Claro',
+    '#E1B3FF': 'Roxo Claro',
+    '#FFE1B3': 'Amarelo Pêssego',
+    '#B3FFE1': 'Verde Água',
+    '#B3C9FF': 'Azul Periwinkle',
+    '#F0B3FF': 'Rosa Lavanda'
+  };
 
   // ControlValueAccessor
   private onChange = (value: string) => {};
   private onTouched = () => {};
+
+  get isCustomColor(): boolean {
+    return !this.suggestedColors.includes(this.selectedColor);
+  }
 
   writeValue(value: string): void {
     if (value) {
@@ -291,8 +304,20 @@ export class ColorPickerComponent implements ControlValueAccessor {
     this.colorSelected.emit(color);
   }
 
+  openCustomPicker(): void {
+    // Simula um clique no input de cor oculto
+    const colorInput = document.querySelector('.hidden-color-input') as HTMLInputElement;
+    if (colorInput) {
+      colorInput.click();
+    }
+  }
+
   onCustomColorChange(event: any): void {
     const color = event.target.value;
     this.selectColor(color);
+  }
+
+  getColorName(color: string): string {
+    return this.colorNames[color] || '';
   }
 }

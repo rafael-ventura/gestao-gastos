@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
+import { FormInputComponent } from '../form-input/form-input.component';
 
 import { StorageService } from '../../../core/services/storage.service';
 import { UtilsService } from '../../../core/services/utils.service';
@@ -44,22 +45,25 @@ export interface AddTransactionDialogData {
     MatNativeDateModule,
     MatDividerModule,
     MatTooltipModule,
-    BaseDialogComponent
+    BaseDialogComponent,
+    FormInputComponent
   ],
   templateUrl: './add-transaction-dialog.component.html',
   styleUrl: './add-transaction-dialog.component.scss'
 })
-export class AddTransactionDialogComponent implements OnInit {
+export class AddTransactionDialogComponent implements OnInit, AfterViewInit {
   private fb = inject(FormBuilder);
   private storageService = inject(StorageService);
   private utilsService = inject(UtilsService);
   private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
 
   // Formulário
   transactionForm!: FormGroup;
   
   // Dados
   categories: Category[] = [];
+  categoryOptions: Array<{label: string, value: string}> = [];
   isEdit = false;
   compactMode = false;
   
@@ -84,10 +88,24 @@ export class AddTransactionDialogComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    // Força o reset do formulário em modo compacto para garantir estado limpo
+    if (this.compactMode && !this.isEdit) {
+      setTimeout(() => {
+        this.resetForm();
+        // Força a detecção de mudanças após reset
+        if (this.cdr) {
+          this.cdr.detectChanges();
+        }
+      }, 50); // Reduzido para 50ms
+    }
+  }
+
   initializeForm() {
     const today = new Date().toISOString().split('T')[0];
     
     this.transactionForm = this.fb.group({
+      transactionType: ['expense', Validators.required], // 'expense' ou 'income'
       description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       amount: [0, [Validators.required, Validators.min(0.01)]],
       category: ['', Validators.required],
@@ -98,6 +116,7 @@ export class AddTransactionDialogComponent implements OnInit {
 
   populateForm(transaction: Transaction) {
     this.transactionForm.patchValue({
+      transactionType: transaction.amount > 0 ? 'income' : 'expense',
       description: transaction.description,
       amount: Math.abs(transaction.amount), // Sempre positivo no formulário
       category: transaction.category,
@@ -115,6 +134,40 @@ export class AddTransactionDialogComponent implements OnInit {
         { id: this.utilsService.generateId(), name: 'Geral', color: '#2196F3' }
       ];
     }
+    
+    // Atualiza as opções para o select
+    this.categoryOptions = this.categories.map(category => ({
+      label: category.name,
+      value: category.name
+    }));
+  }
+
+  resetForm() {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Reset completo do formulário
+    this.transactionForm.reset();
+    
+    // Define valores padrão
+    this.transactionForm.patchValue({
+      transactionType: 'expense',
+      description: '',
+      amount: 0,
+      category: '',
+      date: today,
+      isCreditCard: false
+    });
+    
+    // Reset de todos os estados
+    this.transactionForm.markAsUntouched();
+    this.transactionForm.markAsPristine();
+    this.transactionForm.updateValueAndValidity();
+    this.expanded = false;
+    this.loading = false;
+    
+    // Força detecção de mudanças
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   toggleExpanded() {
@@ -139,8 +192,10 @@ export class AddTransactionDialogComponent implements OnInit {
       try {
         const formValue = this.transactionForm.value;
         
-        // Para gastos, o valor deve ser negativo
-        const amount = formValue.amount * -1;
+        // Aplica sinal baseado no tipo: receitas positivas, gastos negativos
+        const amount = formValue.transactionType === 'income' 
+          ? Math.abs(formValue.amount)  // Receitas são positivas
+          : Math.abs(formValue.amount) * -1;  // Gastos são negativos
         
         const transaction: Transaction = {
           id: this.isEdit && this.data.transaction ? this.data.transaction.id : this.utilsService.generateId(),
@@ -160,13 +215,21 @@ export class AddTransactionDialogComponent implements OnInit {
           this.snackBar.open('Transação adicionada com sucesso!', 'Fechar', { duration: 3000 });
         }
 
-        this.dialogRef.close(transaction);
+        // Pequeno delay antes de fechar para garantir que o storage foi atualizado
+        setTimeout(() => {
+          this.dialogRef.close(transaction);
+        }, 10);
         
       } catch (error) {
         console.error('Erro ao salvar transação:', error);
         this.snackBar.open('Erro ao salvar transação', 'Fechar', { duration: 3000 });
+        this.loading = false; // Reset loading em caso de erro
       } finally {
-        this.loading = false;
+        // Garante que loading seja resetado
+        setTimeout(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        }, 100);
       }
     } else {
       this.markFormGroupTouched();
@@ -213,5 +276,20 @@ export class AddTransactionDialogComponent implements OnInit {
   getCategoryColor(categoryName: string): string {
     const category = this.categories.find(c => c.name === categoryName);
     return category?.color || '#000000';
+  }
+
+  getCategoryOptions(): Array<{label: string, value: string}> {
+    return this.categories.map(category => ({
+      label: category.name,
+      value: category.name
+    }));
+  }
+
+  get isFormValid(): boolean {
+    return this.transactionForm ? this.transactionForm.valid : false;
+  }
+
+  get isButtonDisabled(): boolean {
+    return !this.isFormValid || this.loading;
   }
 }

@@ -1,5 +1,6 @@
 .home-container {
   padding: 16px;
+  padding-bottom: 100px; // Mais espaço no final para o botão flutuante
   max-width: 1200px;
   margin: 0 auto;
   min-height: calc(100vh - 64px);
@@ -22,129 +23,287 @@
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px; // Mais espaço entre seções
 }
 
-// ===== BALANCE CARD =====
+// ===== BALANCE SECTION =====
+.balance-section {
+  margin-bottom: 32px;
+}
+
 .balance-card {
-  margin-bottom: 24px;
-  text-align: center;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 1px solid rgba(244, 67, 54, 0.1);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+  // Fundo escuro padrão - força aplicação
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  border: none !important;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 10px 25px -5px rgba(245, 101, 101, 0.2), 0 10px 10px -5px rgba(245, 101, 101, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white !important; // Garantir texto branco sempre
+  
+  &.modern-balance {
+    padding: 0;
+    
+    mat-card-content {
+      padding: 32px;
+      position: relative;
+      z-index: 2;
+      background: transparent !important;
+    }
+  }
+  
+  // Força o fundo escuro em todos os elementos internos
+  .mat-mdc-card-content,
+  .mdc-card__content,
+  &::before,
+  &::after {
+    background: transparent !important;
+  }
   
   &.positive {
-    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-    color: white;
-    
-    .balance-amount {
-      color: white;
-    }
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2), 0 10px 10px -5px rgba(16, 185, 129, 0.1);
   }
   
   &.negative {
-    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
-    color: white;
-    
-    .balance-amount {
-      color: white;
-    }
+    background: linear-gradient(135deg, #1f1f1f 0%, #0f0f0f 100%) !important;
+    box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.2), 0 10px 10px -5px rgba(239, 68, 68, 0.1);
   }
   
   &.neutral {
-    background: linear-gradient(135deg, #607D8B 0%, #78909C 100%);
-    color: white;
-    
-    .balance-amount {
-      color: white;
-    }
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important;
+    box-shadow: 0 10px 25px -5px rgba(107, 114, 128, 0.2), 0 10px 10px -5px rgba(107, 114, 128, 0.1);
   }
-}
-
-  .balance-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    
-    h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
-    
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      
-      .balance-icon {
-        font-size: 2rem;
-        width: 2rem;
-        height: 2rem;
-      }
-      
-      .data-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        
-        mat-icon {
-          font-size: 1.2rem;
-          width: 1.2rem;
-          height: 1.2rem;
-          color: #4CAF50;
-        }
-        
-        &:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: scale(1.1);
-        }
-      }
-    }
-  }
-
-.balance-amount {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-  line-height: 1;
-}
-
-.balance-details {
-  display: flex;
-  justify-content: space-around;
-  gap: 24px;
   
-  .detail-item {
+  // Estado padrão para quando não há dados suficientes
+  &.default {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+    box-shadow: 0 10px 25px -5px rgba(245, 101, 101, 0.2), 0 10px 10px -5px rgba(245, 101, 101, 0.1);
+  }
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+}
+
+// ===== BALANCE HEADER =====
+.balance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.balance-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.balance-icon-container {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  .balance-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: white;
+  }
+}
+
+.balance-title-text {
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .balance-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .transaction-count {
+    margin: 4px 0 0 0;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 4px;
     
+    &::before {
+      content: '📊';
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.header-actions {
+  .data-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: white;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
+    }
+  }
+}
+
+// ===== BALANCE AMOUNT SECTION =====
+.balance-amount-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.balance-amount {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.6s ease-out;
+  line-height: 1;
+  
+  &.negative {
+    color: #ff6b6b;
+    text-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+  }
+  
+  &.positive {
+    color: #51cf66;
+    text-shadow: 0 4px 8px rgba(81, 207, 102, 0.3);
+  }
+}
+
+.balance-trend {
+  .trend-text {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+// ===== BALANCE DETAILS =====
+.balance-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.detail-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  .detail-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+  }
+  
+  .detail-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
     .detail-label {
       font-size: 0.875rem;
-      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
     .detail-value {
       font-size: 1.25rem;
       font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       
       &.positive {
-        color: #4CAF50;
+        color: #51cf66;
+        text-shadow: 0 2px 4px rgba(81, 207, 102, 0.3);
       }
       
       &.negative {
-        color: #F44336;
+        color: #ff6b6b;
+        text-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
       }
+    }
+  }
+  
+  &.income-card {
+    .detail-icon {
+      background: rgba(34, 197, 94, 0.3);
+    }
+  }
+  
+  &.expense-card {
+    .detail-icon {
+      background: rgba(239, 68, 68, 0.3);
     }
   }
 }
@@ -158,7 +317,7 @@
     font-size: 4rem;
     width: 4rem;
     height: 4rem;
-    color: #F44336;
+    color: var(--primary-500);
     margin-bottom: 16px;
     animation: pulse 2s infinite;
   }
@@ -179,25 +338,25 @@
   }
   
   button[color="primary"] {
-    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%) !important;
+    background: var(--gradient-primary) !important;
     color: white !important;
     border: none !important;
-    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3) !important;
+    box-shadow: var(--shadow-lg) !important;
     transition: all 0.3s ease !important;
     padding: 12px 24px !important;
     font-size: 1.1rem !important;
     font-weight: 600 !important;
-    border-radius: 12px !important;
+    border-radius: var(--radius-lg) !important;
     
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, #E53935 0%, #F44336 100%) !important;
-      box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4) !important;
+      background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%) !important;
+      box-shadow: var(--shadow-xl) !important;
       transform: translateY(-2px) !important;
     }
     
     &:active:not(:disabled) {
       transform: translateY(0) !important;
-      box-shadow: 0 2px 10px rgba(244, 67, 54, 0.3) !important;
+      box-shadow: var(--shadow-md) !important;
     }
     
     mat-icon {
@@ -214,63 +373,21 @@
   gap: 24px;
 }
 
-// ===== CATEGORIES CARD =====
-.categories-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 1px solid rgba(244, 67, 54, 0.1);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
-  
-  .categories-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .category-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    
-    .category-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      
-      .category-color {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-      
-      .category-name {
-        font-weight: 500;
-      }
-      
-      .category-percentage {
-        color: rgba(0, 0, 0, 0.6);
-        font-size: 0.875rem;
-      }
-    }
-    
-    .category-amount {
-      font-weight: 600;
-      color: #F44336;
-    }
-  }
-}
+// Seção de categorias removida - agora está apenas em informações
 
 // ===== TRANSACTIONS CARD =====
 .transactions-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border: 1px solid rgba(244, 67, 54, 0.1);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.1);
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  color: var(--gray-800);
+  margin-bottom: 44px; // Mais espaço entre cards
   
   .no-transactions {
     text-align: center;
     padding: 32px 16px;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--gray-600);
     
     mat-icon {
       font-size: 3rem;
@@ -288,8 +405,47 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 16px 0;
+    padding: 16px;
+    margin: 8px 0;
     gap: 16px;
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+    
+    // Cores pastéis para diferentes tipos de transação
+    &.income-transaction {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-left-color: #22c55e;
+      
+      &:hover {
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+    
+    &.expense-transaction {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left-color: #ef4444;
+      
+      &:hover {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+    
+    // Transação neutra (caso exista valor zero)
+    &.neutral-transaction {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border-left-color: #6b7280;
+      
+      &:hover {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+      }
+    }
     
     .transaction-info {
       flex: 1;
@@ -326,7 +482,7 @@
       .transaction-meta {
         .transaction-date {
           font-size: 0.875rem;
-          color: rgba(0, 0, 0, 0.6);
+          color: var(--gray-600);
         }
       }
     }
@@ -335,13 +491,17 @@
       font-weight: 600;
       font-size: 1.1rem;
       white-space: nowrap;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
       
       &.positive {
-        color: #4CAF50;
+        color: #059669;
+        background: rgba(34, 197, 94, 0.1);
       }
       
       &.negative {
-        color: #F44336;
+        color: #dc2626;
+        background: rgba(239, 68, 68, 0.1);
       }
     }
   }
@@ -363,123 +523,189 @@
 // ===== RESPONSIVE DESIGN =====
 @media (max-width: 768px) {
   .home-container {
+    padding: 8px;
+    padding-bottom: 160px; // Ainda mais espaço para navbar + botão flutuante
+    min-height: calc(100vh - 56px); // Ajustar para altura mobile
+  }
+  
+  // Card de saldo mobile
+  .balance-card {
+    margin: 0 4px 16px 4px;
+    
+    &.modern-balance mat-card-content {
+      padding: 20px 16px;
+    }
+  }
+  
+  // Header do saldo mobile
+  .balance-header {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+  
+  .balance-title-section {
+    gap: 12px;
+  }
+  
+  .balance-icon-container {
+    width: 48px;
+    height: 48px;
+    
+    .balance-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+  
+  .balance-title-text h2 {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+  }
+  
+  .balance-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  // Valor do saldo mobile
+  .balance-amount {
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+  
+  .balance-amount-section {
+    margin-bottom: 20px;
+  }
+  
+  // Detalhes do saldo mobile (receitas/gastos)
+  .balance-details {
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .detail-card {
     padding: 12px;
   }
   
-  .balance-amount {
-    font-size: 2.5rem;
+  .detail-icon {
+    width: 36px;
+    height: 36px;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
   }
   
-  .balance-details {
-    flex-direction: column;
-    gap: 16px;
+  .detail-label {
+    font-size: 0.8rem;
+  }
+  
+  .detail-value {
+    font-size: 1rem;
+  }
+  
+  // Cards de transações mobile
+  .transactions-card {
+    margin: 0 4px 16px 4px;
+    
+    mat-card-content {
+      padding: 6px;
+    }
+    
+    mat-card-header {
+      padding: 16px 16px 0 16px;
+    }
+    
+    // Último card com margem extra para não ficar cortado
+    &:last-child {
+      margin-bottom: 80px;
+    }
   }
   
   .transaction-item {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
+    padding: 12px 0;
     
     .transaction-amount {
-      text-align: right;
+      text-align: left;
+      font-size: 1rem;
+    }
+    
+    // Último item com padding extra
+    &:last-child {
+      padding-bottom: 40px;
     }
   }
 }
 
 @media (max-width: 480px) {
-  .balance-amount {
-    font-size: 2rem;
+  .home-container {
+    padding: 4px;
+    padding-bottom: 160px; // Ainda mais espaço para navbar + botão
   }
   
+  // Header ainda menor para telas pequenas
   .balance-header {
     flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
+    margin-bottom: 12px;
     
-    h2 {
-      font-size: 1.25rem;
-    }
-  }
-  
-  .category-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    
-    .category-amount {
-      text-align: right;
-    }
-  }
-  
-  .add-transaction-section {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px;
-    
-    .add-transaction-button {
+    .balance-title-section {
       width: 100%;
-      justify-content: center;
-    }
-  }
-}
-
-// ===== ADD TRANSACTION SECTION =====
-.add-transaction-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin: 32px 0;
-  padding: 24px;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-  border-radius: 16px;
-  border: 2px dashed rgba(33, 150, 243, 0.3);
-  
-  .add-transaction-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    border-radius: 25px;
-    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
     }
     
-    mat-icon {
-      font-size: 1.3rem;
-      width: 1.3rem;
-      height: 1.3rem;
+    .header-actions {
+      align-self: flex-end;
     }
   }
   
-  .quick-add-button {
-    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-    color: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-    transition: all 0.3s ease;
+  .balance-title-text h2 {
+    font-size: 1.2rem;
+  }
+  
+  .balance-icon-container {
+    width: 40px;
+    height: 40px;
     
-    &:hover {
-      transform: translateY(-2px) scale(1.1);
-      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
-    }
-    
-    mat-icon {
+    .balance-icon {
       font-size: 1.2rem;
       width: 1.2rem;
       height: 1.2rem;
     }
   }
+  
+  // Valor do saldo ainda menor
+  .balance-amount {
+    font-size: 1.8rem;
+  }
+  
+  // Detalhes em coluna única para telas pequenas
+  .balance-details {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .detail-card {
+    padding: 10px;
+  }
+  
+  // Categorias removidas
+  
+  // Botão flutuante menor e acima da navbar
+  .floating-add-button {
+    bottom: 72px; // Já definido acima, mantém consistência
+    right: 16px;
+    width: 48px !important;
+    height: 48px !important;
+  }
 }
+
 
 // ===== FLOATING ACTION BUTTON =====
 .floating-add-button {
@@ -489,15 +715,26 @@
   z-index: 1000;
   
   &.mat-mdc-fab {
-    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
+    background: var(--gradient-primary);
     color: white;
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    box-shadow: var(--shadow-lg);
     transition: all 0.3s ease;
     
     &:hover {
       transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+      box-shadow: var(--shadow-xl);
     }
+  }
+  
+  // Ajuste para mobile com navbar
+  @media (max-width: 768px) {
+    bottom: 80px; // Acima da navbar mobile (56px + margem)
+    right: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    bottom: 72px; // Ajuste para telas muito pequenas
+    right: 16px;
   }
 }
 
@@ -526,7 +763,6 @@
 }
 
 .balance-card,
-.categories-card,
 .transactions-card {
   animation: fadeIn 0.3s ease-out;
 }
@@ -546,3 +782,20 @@
     border-radius: 16px;
   }
 }
+
+// ===== BALANCE DECORATION =====
+.balance-decoration {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+.circle-1 { width: 120px; height: 120px; top: -60px; right: -60px; }
+.circle-2 { width: 80px; height: 80px; bottom: -40px; left: -40px; }
+.circle-3 { width: 60px; height: 60px; top: 50%; right: 20px; }

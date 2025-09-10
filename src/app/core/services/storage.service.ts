@@ -16,9 +16,12 @@ export class StorageService {
   private readonly SETTINGS_KEY = 'gastos_settings';
   private readonly SCHEMA_VERSION = '1.0.0';
 
-  // Cache para melhor performance
+  // Cache para melhor performance - invalidado no hot reload
   private _transactionsCache: Transaction[] | null = null;
   private _settingsCache: Settings | null = null;
+  
+  // Flag para detectar se é hot reload
+  private _isFirstLoad = true;
 
   // Observable para notificações de salvamento
   private _saveEvents$ = new BehaviorSubject<SaveEvent | null>(null);
@@ -26,25 +29,35 @@ export class StorageService {
 
   // ===== TRANSAÇÕES =====
   getTransactions(): Transaction[] {
-    if (this._transactionsCache) {
+    // No desenvolvimento, sempre recarrega do localStorage na primeira chamada
+    // para evitar problemas com hot reload
+    if (this._transactionsCache && !this._isFirstLoad) {
       return this._transactionsCache;
     }
+    
+    this._isFirstLoad = false;
 
     // Verifica se está no browser
     if (typeof window === 'undefined' || !window.localStorage) {
+      console.log('LocalStorage não disponível');
       this._transactionsCache = [];
       return this._transactionsCache;
     }
 
     try {
       const data = localStorage.getItem(this.TRANSACTIONS_KEY);
+      
       if (!data) {
         this._transactionsCache = [];
         return this._transactionsCache;
       }
 
       const parsed = JSON.parse(data);
-      this._transactionsCache = this.validateTransactions(parsed);
+      
+      // Verifica se tem a estrutura de versioning
+      const transactionsData = parsed.data ? parsed.data : parsed;
+      this._transactionsCache = this.validateTransactions(transactionsData);
+      
       return this._transactionsCache;
     } catch (error) {
       console.error('Erro ao carregar transações:', error);
@@ -279,6 +292,49 @@ export class StorageService {
         { id: '5', name: 'Outros', color: '#FFEAA7' }
       ]
     };
+  }
+
+  // ===== DEBUG METHODS =====
+  debugLocalStorage(): void {
+    console.log('=== DEBUG LOCALSTORAGE ===');
+    console.log('Transactions key:', this.TRANSACTIONS_KEY);
+    console.log('Settings key:', this.SETTINGS_KEY);
+    console.log('First load:', this._isFirstLoad);
+    
+    // Teste básico do localStorage
+    try {
+      localStorage.setItem('test', 'test');
+      const testValue = localStorage.getItem('test');
+      localStorage.removeItem('test');
+      console.log('LocalStorage test:', testValue === 'test' ? 'WORKING' : 'FAILED');
+    } catch (e) {
+      console.error('LocalStorage test failed:', e);
+    }
+    
+    const transactionsData = localStorage.getItem(this.TRANSACTIONS_KEY);
+    const settingsData = localStorage.getItem(this.SETTINGS_KEY);
+    
+    console.log('Transactions in localStorage:', transactionsData ? 'EXISTS' : 'EMPTY');
+    console.log('Settings in localStorage:', settingsData ? 'EXISTS' : 'EMPTY');
+    
+    if (transactionsData) {
+      try {
+        const parsed = JSON.parse(transactionsData);
+        console.log('Parsed transactions structure:', {
+          hasData: !!parsed.data,
+          hasVersion: !!parsed.version,
+          directArray: Array.isArray(parsed),
+          length: parsed.data ? parsed.data.length : (Array.isArray(parsed) ? parsed.length : 0)
+        });
+      } catch (e) {
+        console.error('Error parsing transactions:', e);
+      }
+    }
+    
+    console.log('Cache state:');
+    console.log('- transactionsCache:', this._transactionsCache?.length || 0);
+    console.log('- settingsCache:', this._settingsCache ? 'EXISTS' : 'NULL');
+    console.log('========================');
   }
 
   // ===== NOTIFICAÇÕES DE SALVAMENTO =====

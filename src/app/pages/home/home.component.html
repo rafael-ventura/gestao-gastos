@@ -8,40 +8,77 @@
   <!-- Main Content -->
   <div *ngIf="!loading" class="main-content">
     
-    <!-- Header com Saldo Principal -->
-    <mat-card class="balance-card" [class]="getBalanceColor()">
-      <mat-card-content>
-        <div class="balance-header">
-          <h2>Saldo do Mês</h2>
-          <div class="header-actions">
-            <mat-icon class="balance-icon">{{ getBalanceIcon() }}</mat-icon>
-            <div class="data-indicator" matTooltip="Dados salvos automaticamente">
-              <mat-icon>cloud_done</mat-icon>
+    <!-- Header com Saldo Principal - Visual Melhorado -->
+    <div class="balance-section">
+      <mat-card class="balance-card modern-balance" [class]="getBalanceColor()">
+        <mat-card-content>
+          <div class="balance-header">
+            <div class="balance-title-section">
+              <div class="balance-icon-container">
+                <mat-icon class="balance-icon">{{ getBalanceIcon() }}</mat-icon>
+              </div>
+              <div class="balance-title-text">
+                <h2>Saldo do Mês</h2>
+                <p class="balance-subtitle">{{ getCurrentMonthName() }}</p>
+                <p *ngIf="monthlyTransactionCount > 0" class="transaction-count">
+                  {{ getTransactionCountText() }}
+                </p> 
+              </div>
+            </div>
+            <div class="header-actions">
+              <div class="data-indicator" matTooltip="Dados salvos automaticamente">
+                <mat-icon>cloud_done</mat-icon>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="balance-amount">
-          {{ formatCurrency(balance) }}
-        </div>
-        <div class="balance-details">
-          <div class="detail-item">
-            <span class="detail-label">Receitas</span>
-            <span class="detail-value positive">{{ formatCurrency(income) }}</span>
+          
+          <div class="balance-amount-section">
+            <div class="balance-amount" [class.negative]="balance < 0" [class.positive]="balance > 0">
+              {{ formatCurrency(balance) }}
+            </div>
+            <div class="balance-trend" *ngIf="balance !== 0">
+              <span class="trend-text">{{ getBalanceTrendText() }}</span>
+            </div>
           </div>
-          <div class="detail-item">
-            <span class="detail-label">Gastos</span>
-            <span class="detail-value negative">{{ formatCurrency(expenses) }}</span>
+          
+          <div class="balance-details">
+            <div class="detail-card income-card">
+              <div class="detail-icon">
+                <mat-icon>trending_up</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Receitas</span>
+                <span class="detail-value positive">{{ formatCurrency(income) }}</span>
+              </div>
+            </div>
+            
+            <div class="detail-card expense-card">
+              <div class="detail-icon">
+                <mat-icon>trending_down</mat-icon>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Gastos</span>
+                <span class="detail-value negative">{{ formatCurrency(getAbsoluteValue(expenses)) }}</span>
+              </div>
+            </div>
           </div>
+        </mat-card-content>
+        
+        <!-- Decoração de fundo -->
+        <div class="balance-decoration">
+          <div class="decoration-circle circle-1"></div>
+          <div class="decoration-circle circle-2"></div>
+          <div class="decoration-circle circle-3"></div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </mat-card>
+    </div>
 
     <!-- Empty State -->
     <div *ngIf="!hasData" class="empty-state">
       <mat-icon class="empty-icon">account_balance_wallet</mat-icon>
       <h3>Bem-vindo ao Gastos Simples!</h3>
-      <p>Comece adicionando sua primeira transação para acompanhar seus gastos.</p>
-      <button mat-raised-button color="primary" (click)="openAddDialog()">
+        <p>Comece adicionando sua primeira transação para acompanhar seus gastos.</p>
+      <button mat-raised-button color="primary" (click)="openAddDialog(true)">
         <mat-icon>add</mat-icon>
         Adicionar Primeira Transação
       </button>
@@ -50,27 +87,6 @@
     <!-- Content com Dados -->
     <div *ngIf="hasData" class="content-with-data">
       
-      <!-- Gastos por Categoria -->
-      <mat-card *ngIf="expensesByCategory.length > 0" class="categories-card">
-        <mat-card-header>
-          <mat-card-title>Gastos por Categoria</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="categories-list">
-            <div *ngFor="let category of expensesByCategory" class="category-item">
-              <div class="category-info">
-                <div class="category-color" [style.background-color]="category.color"></div>
-                <span class="category-name">{{ category.category }}</span>
-                <span class="category-percentage">({{ category.percentage | number:'1.1-1' }}%)</span>
-              </div>
-              <div class="category-amount">
-                {{ formatCurrency(category.amount) }}
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
       <!-- Transações Recentes -->
       <mat-card class="transactions-card">
         <mat-card-header>
@@ -83,7 +99,10 @@
           </div>
           
           <ng-container *ngFor="let transaction of recentTransactions; let last = last">
-            <div class="transaction-item">
+            <div class="transaction-item" 
+                 [class.income-transaction]="transaction.amount > 0"
+                 [class.expense-transaction]="transaction.amount < 0"
+                 [class.neutral-transaction]="transaction.amount === 0">
               <div class="transaction-info">
                 <div class="transaction-main">
                   <span class="transaction-description">{{ transaction.description }}</span>
@@ -105,34 +124,11 @@
                 {{ formatCurrency(transaction.amount) }}
               </div>
             </div>
-            
-            <mat-divider *ngIf="!last"></mat-divider>
           </ng-container>
         </mat-card-content>
       </mat-card>
     </div>
 
-    <!-- Botão Principal de Adicionar -->
-    <div class="add-transaction-section">
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="add-transaction-button"
-        (click)="openAddDialog(false)"
-        matTooltip="Adicionar Transação Completa">
-        <mat-icon>add</mat-icon>
-        Adicionar Gasto
-      </button>
-      
-      <button 
-        mat-icon-button 
-        color="accent" 
-        class="quick-add-button"
-        (click)="openAddDialog(true)"
-        matTooltip="Adicionar Rápido">
-        <mat-icon>flash_on</mat-icon>
-      </button>
-    </div>
 
     <!-- Botão Flutuante de Adicionar -->
     <button 
@@ -140,8 +136,8 @@
       color="primary" 
       class="floating-add-button" 
       (click)="openAddDialog(true)"
-      matTooltip="Adicionar Rápido"
-      aria-label="Adicionar transação rápida">
+      matTooltip="Adicionar Transação (modo rápido ou detalhado)"
+      aria-label="Adicionar transação">
       <mat-icon>add</mat-icon>
     </button>
   </div>

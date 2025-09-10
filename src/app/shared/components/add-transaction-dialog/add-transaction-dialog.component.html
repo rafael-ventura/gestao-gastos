@@ -8,7 +8,7 @@
   [showDefaultActions]="true"
   [confirmLabel]="isEdit ? 'Atualizar' : 'Adicionar'"
   [confirmIcon]="isEdit ? 'save' : 'add'"
-  [confirmDisabled]="transactionForm.invalid"
+  [confirmDisabled]="isButtonDisabled"
   (confirmed)="onSave()"
   (cancelled)="onCancel()"
   (closed)="onCancel()">
@@ -16,38 +16,61 @@
   <!-- Form -->
   <form [formGroup]="transactionForm" (ngSubmit)="onSave()" class="transaction-form">
     
+    <!-- Seletor de Tipo de Transação (Moderno) -->
+    <div class="transaction-type-selector">
+      <div class="type-toggle-container">
+        <button type="button" 
+                class="type-button expense-button"
+                [class.active]="transactionForm.get('transactionType')?.value === 'expense'"
+                (click)="transactionForm.patchValue({transactionType: 'expense'})">
+          <mat-icon>trending_down</mat-icon>
+          <span>Gasto</span>
+        </button>
+        
+        <button type="button" 
+                class="type-button income-button"
+                [class.active]="transactionForm.get('transactionType')?.value === 'income'"
+                (click)="transactionForm.patchValue({transactionType: 'income'})">
+          <mat-icon>trending_up</mat-icon>
+          <span>Receita</span>
+        </button>
+      </div>
+    </div>
+    
     <!-- Versão Compacta -->
     <div *ngIf="compactMode && !expanded" class="compact-form">
       <div class="compact-row">
-        <mat-form-field appearance="outline" class="compact-field description-field">
-          <mat-label>O que foi?</mat-label>
-          <input matInput formControlName="description" placeholder="Ex: Almoço" maxlength="100">
-          <mat-error *ngIf="getFieldError('description')">{{ getFieldError('description') }}</mat-error>
-        </mat-form-field>
+        <app-form-input
+          class="compact-field description-field"
+          label="O que foi?"
+          placeholder="Ex: Almoço"
+          [maxLength]="100"
+          [errorMessage]="getFieldError('description')"
+          formControlName="description">
+        </app-form-input>
         
-        <mat-form-field appearance="outline" class="compact-field amount-field">
-          <mat-label>Valor</mat-label>
-          <input matInput type="number" formControlName="amount" 
-                 (input)="onAmountChange($event)" 
-                 placeholder="0,00" step="0.01" min="0">
-          <span matPrefix>R$&nbsp;</span>
-          <mat-error *ngIf="getFieldError('amount')">{{ getFieldError('amount') }}</mat-error>
-        </mat-form-field>
+        <app-form-input
+          class="compact-field amount-field"
+          label="Valor"
+          type="number"
+          placeholder="0,00"
+          prefix="R$"
+          [step]="0.01"
+          [min]="0"
+          [errorMessage]="getFieldError('amount')"
+          formControlName="amount">
+        </app-form-input>
       </div>
 
       <div class="compact-row">
-        <mat-form-field appearance="outline" class="compact-field category-field">
-          <mat-label>Categoria</mat-label>
-          <mat-select formControlName="category">
-            <mat-option *ngFor="let category of categories" [value]="category.name">
-              <div class="category-option">
-                <div class="category-color" [style.background-color]="category.color"></div>
-                <span>{{ category.name }}</span>
-              </div>
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="getFieldError('category')">{{ getFieldError('category') }}</mat-error>
-        </mat-form-field>
+        <app-form-input
+          class="compact-field category-field"
+          label="Categoria"
+          type="select"
+          [options]="categoryOptions"
+          [errorMessage]="getFieldError('category')"
+          formControlName="category">
+        </app-form-input>
 
         <div class="compact-actions">
           <button type="button" mat-icon-button (click)="toggleExpanded()" 
@@ -62,50 +85,51 @@
     <div *ngIf="!compactMode || expanded" class="expanded-form">
       
       <!-- Descrição -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descrição</mat-label>
-        <input matInput formControlName="description" 
-               placeholder="Ex: Almoço no restaurante" maxlength="100">
-        <mat-hint>Descreva o que foi gasto</mat-hint>
-        <mat-error *ngIf="getFieldError('description')">{{ getFieldError('description') }}</mat-error>
-      </mat-form-field>
+      <app-form-input
+        class="full-width"
+        label="Descrição"
+        placeholder="Ex: Almoço no restaurante"
+        hint="Descreva o que foi gasto"
+        [maxLength]="100"
+        [errorMessage]="getFieldError('description')"
+        formControlName="description">
+      </app-form-input>
 
       <!-- Valor e Data -->
       <div class="form-row">
-        <mat-form-field appearance="outline" class="amount-field">
-          <mat-label>Valor</mat-label>
-          <input matInput type="number" formControlName="amount" 
-                 (input)="onAmountChange($event)" 
-                 placeholder="0,00" step="0.01" min="0">
-          <span matPrefix>R$&nbsp;</span>
-          <mat-hint>Valor gasto</mat-hint>
-          <mat-error *ngIf="getFieldError('amount')">{{ getFieldError('amount') }}</mat-error>
-        </mat-form-field>
+        <app-form-input
+          class="amount-field"
+          label="Valor"
+          type="number"
+          placeholder="0,00"
+          prefix="R$"
+          hint="Valor gasto"
+          [step]="0.01"
+          [min]="0"
+          [errorMessage]="getFieldError('amount')"
+          formControlName="amount">
+        </app-form-input>
 
-        <mat-form-field appearance="outline" class="date-field">
-          <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-hint>Data do gasto</mat-hint>
-          <mat-error *ngIf="getFieldError('date')">{{ getFieldError('date') }}</mat-error>
-        </mat-form-field>
+        <app-form-input
+          class="date-field"
+          label="Data"
+          type="date"
+          hint="Data do gasto"
+          [errorMessage]="getFieldError('date')"
+          formControlName="date">
+        </app-form-input>
       </div>
 
       <!-- Categoria -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Categoria</mat-label>
-        <mat-select formControlName="category">
-          <mat-option *ngFor="let category of categories" [value]="category.name">
-            <div class="category-option">
-              <div class="category-color" [style.background-color]="category.color"></div>
-              <span>{{ category.name }}</span>
-            </div>
-          </mat-option>
-        </mat-select>
-        <mat-hint>Selecione uma categoria</mat-hint>
-        <mat-error *ngIf="getFieldError('category')">{{ getFieldError('category') }}</mat-error>
-      </mat-form-field>
+      <app-form-input
+        class="full-width"
+        label="Categoria"
+        type="select"
+        hint="Selecione uma categoria"
+        [options]="categoryOptions"
+        [errorMessage]="getFieldError('category')"
+        formControlName="category">
+      </app-form-input>
 
       <!-- Opções Adicionais -->
       <div class="additional-options">

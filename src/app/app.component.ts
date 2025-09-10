@@ -16,7 +16,14 @@ export class AppComponent implements OnInit {
   private pwaService = inject(PwaService);
 
   ngOnInit() {
-    // Inicializa o serviço PWA
-    console.log('PWA Info:', this.pwaService.getAppInfo());
+    // Inicializa o serviço PWA silenciosamente
+    try {
+      const pwaInfo = this.pwaService.getAppInfo();
+      if (pwaInfo.isServiceWorkerEnabled) {
+        console.log('🚀 PWA ativo');
+      }
+    } catch (error) {
+      // Silenciosamente ignora erros do PWA em desenvolvimento
+    }
   }
 }

@@ -112,8 +112,14 @@ export class PwaService {
 
   // Verifica se o app está rodando como PWA
   isStandalone(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true;
+    if (typeof window === 'undefined') return false;
+    
+    try {
+      return window.matchMedia('(display-mode: standalone)').matches ||
+             (window.navigator as any).standalone === true;
+    } catch (error) {
+      return false;
+    }
   }
 
   // Verifica se o app pode ser instalado
@@ -130,11 +136,21 @@ export class PwaService {
 
   // Informações sobre o app
   getAppInfo() {
-    return {
-      isStandalone: this.isStandalone(),
-      canInstall: this.canInstall(),
-      isServiceWorkerEnabled: this.swUpdate.isEnabled,
-      isOnline: navigator.onLine
-    };
+    try {
+      return {
+        isStandalone: typeof window !== 'undefined' ? this.isStandalone() : false,
+        canInstall: this.canInstall(),
+        isServiceWorkerEnabled: this.swUpdate.isEnabled,
+        isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true
+      };
+    } catch (error) {
+      console.warn('Erro ao obter informações do PWA:', error);
+      return {
+        isStandalone: false,
+        canInstall: false,
+        isServiceWorkerEnabled: false,
+        isOnline: true
+      };
+    }
   }
 }

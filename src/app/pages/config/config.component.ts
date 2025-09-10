@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { ColorPickerComponent } from '../../shared/components/color-picker/color-picker.component';
+import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 
 import { StorageService } from '../../core/services/storage.service';
 import { UtilsService } from '../../core/services/utils.service';
@@ -36,7 +37,8 @@ import { Category } from '../../core/models/category.model';
     MatChipsModule,
     MatDividerModule,
     MatTooltipModule,
-    ColorPickerComponent
+    ColorPickerComponent,
+    FormInputComponent
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'
