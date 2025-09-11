@@ -108,12 +108,30 @@ export interface DialogAction {
     </div>
   `,
   styles: [`
+    // Container do modal - apenas responsividade
     .dialog-container {
       min-width: 320px;
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: 95vw;
+      max-height: 85vh;
+      
+      @media (min-width: 768px) {
+        min-width: 600px;
+        max-width: 800px;
+        width: 70vw;
+      }
+      
+      @media (min-width: 1024px) {
+        min-width: 700px;
+        max-width: 900px;
+        width: 60vw;
+      }
+    }
+
+    .dialog-container {
       display: flex;
       flex-direction: column;
+      background: transparent;
+      color: white;
     }
 
     .dialog-container.compact {
@@ -124,8 +142,10 @@ export interface DialogAction {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 24px 24px 16px 24px;
+      padding: 32px 32px 20px 32px;
       gap: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .header-content {
@@ -137,6 +157,7 @@ export interface DialogAction {
 
     .header-icon {
       margin-top: 2px;
+      color: #60a5fa;
     }
 
     .header-text {
@@ -145,14 +166,16 @@ export interface DialogAction {
 
     .dialog-title {
       margin: 0;
-      font-size: 20px;
-      font-weight: 500;
+      font-size: 22px;
+      font-weight: 600;
       line-height: 1.2;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .dialog-subtitle {
       margin: 4px 0 0 0;
-      color: rgba(0, 0, 0, 0.6);
+      color: rgba(255, 255, 255, 0.8);
       font-size: 14px;
       line-height: 1.4;
     }
@@ -160,13 +183,22 @@ export interface DialogAction {
     .close-button {
       margin-top: -8px;
       margin-right: -8px;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        transform: scale(1.1);
+      }
     }
 
     .dialog-content {
       flex: 1;
       position: relative;
       overflow: auto;
-      padding: 0 24px;
+      padding: 0 32px;
+      background: rgba(255, 255, 255, 0.02);
     }
 
     .dialog-content.no-padding {
@@ -190,7 +222,7 @@ export interface DialogAction {
 
     .loading-overlay p {
       margin: 0;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--gray-600);
       font-size: 14px;
     }
 
@@ -207,23 +239,47 @@ export interface DialogAction {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 24px 24px 24px;
-      gap: 8px;
+      padding: 20px 32px 32px 32px;
+      gap: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .actions-left {
       display: flex;
-      gap: 8px;
+      gap: 12px;
     }
 
     .actions-right {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       margin-left: auto;
     }
 
     .action-button {
       min-width: 64px;
+      border-radius: 12px;
+      font-weight: 500;
+      
+      &.mat-mdc-raised-button {
+        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(96, 165, 250, 0.4);
+        }
+      }
+      
+      &.mat-mdc-button {
+        color: rgba(255, 255, 255, 0.8);
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+      }
     }
 
     .action-button mat-spinner {
@@ -262,6 +318,48 @@ export interface DialogAction {
       .dialog-title {
         font-size: 18px;
       }
+    }
+    
+    // ===== ESTILOS DO SELECT PARA MODAL =====
+    ::ng-deep .mat-mdc-select-panel {
+      background: var(--dark-gradient) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
+      
+      .mat-mdc-option {
+        color: white !important;
+        border-radius: 8px !important;
+        margin: 4px 8px !important;
+        transition: all 0.2s ease !important;
+        
+        &:hover {
+          background-color: rgba(96, 165, 250, 0.2) !important;
+          color: #60a5fa !important;
+        }
+        
+        &.mdc-list-item--selected {
+          background-color: rgba(96, 165, 250, 0.3) !important;
+          color: #60a5fa !important;
+          font-weight: 600 !important;
+        }
+        
+        // Remove animações estranhas
+        .mat-pseudo-checkbox {
+          display: none !important;
+        }
+      }
+    }
+    
+    // Remove animações de entrada/saída do select
+    ::ng-deep .mat-mdc-select-panel-wrap {
+      animation: none !important;
+    }
+    
+    ::ng-deep .mat-select-panel {
+      animation: none !important;
+      transform: none !important;
     }
   `]
 })
