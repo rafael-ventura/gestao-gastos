@@ -190,6 +190,52 @@ export class CalculationService {
   }
 
   // ===== MÉTODOS AUXILIARES =====
+  // ===== ANÁLISES ESPECIAIS =====
+  getHighestExpenseDay(month?: string): { date: string; totalExpenses: number; transactionCount: number } | null {
+    const targetMonth = month || this.getCurrentMonth();
+    const transactions = this.getMonthTransactions(targetMonth)
+      .filter(t => t.amount < 0); // Apenas gastos
+    
+    if (transactions.length === 0) {
+      return null;
+    }
+    
+    // Agrupa por dia
+    const dailyExpenses = new Map<string, { total: number; count: number }>();
+    
+    transactions.forEach(transaction => {
+      const day = transaction.date; // Já está no formato YYYY-MM-DD
+      const amount = Math.abs(transaction.amount);
+      
+      if (dailyExpenses.has(day)) {
+        const existing = dailyExpenses.get(day)!;
+        existing.total += amount;
+        existing.count += 1;
+      } else {
+        dailyExpenses.set(day, { total: amount, count: 1 });
+      }
+    });
+    
+    // Encontra o dia com maior gasto
+    let highestDay = '';
+    let highestAmount = 0;
+    let highestCount = 0;
+    
+    dailyExpenses.forEach((value, day) => {
+      if (value.total > highestAmount) {
+        highestAmount = value.total;
+        highestDay = day;
+        highestCount = value.count;
+      }
+    });
+    
+    return {
+      date: highestDay,
+      totalExpenses: highestAmount,
+      transactionCount: highestCount
+    };
+  }
+
   private getCurrentMonth(): string {
     return new Date().toISOString().slice(0, 7);
   }
@@ -215,11 +261,13 @@ export class CalculationService {
     const months: string[] = [];
     const now = new Date();
     
+    // Inclui o mês atual (i = 0) até 11 meses atrás
     for (let i = 0; i < 12; i++) {
       const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
       months.push(date.toISOString().slice(0, 7));
     }
     
+    // Retorna em ordem cronológica (mais antigo primeiro)
     return months.reverse();
   }
 }

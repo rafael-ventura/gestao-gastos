@@ -59,17 +59,48 @@ export class InformacoesComponent implements OnInit {
   monthTransactions: Transaction[] = [];
   monthlySummaries: MonthlySummary[] = [];
   largestExpense: Transaction | null = null;
+  highestExpenseDay: { date: string; totalExpenses: number; transactionCount: number } | null = null;
+  
+  // GIFs aleatórios
+  randomGif1: string = '';
+  randomGif2: string = '';
   
   // Estados
   loading = true;
   hasData = false;
   selectedTab = 0;
 
+  // Filtros
+  selectedCategoryFilter: string | null = null;
+  filteredTransactions: Transaction[] = [];
+
   // Opções
   months = this.getLast12MonthsList();
 
   ngOnInit() {
+    this.generateRandomGif();
     this.loadData();
+  }
+  
+  private generateRandomGif(): void {
+    // Gera 2 números aleatórios diferentes de 1 a 5
+    const randomNumber1 = Math.floor(Math.random() * 5) + 1;
+    let randomNumber2 = Math.floor(Math.random() * 5) + 1;
+    
+    // Garante que os 2 GIFs sejam diferentes
+    while (randomNumber2 === randomNumber1) {
+      randomNumber2 = Math.floor(Math.random() * 5) + 1;
+    }
+    
+    this.randomGif1 = `/assets/gif${randomNumber1}.webp`;
+    this.randomGif2 = `/assets/gif${randomNumber2}.webp`;
+    
+    console.log(`🎲 GIFs selecionados: gif${randomNumber1}.webp e gif${randomNumber2}.webp`);
+  }
+  
+  // Método público para regenerar GIFs (caso queira usar em algum botão futuramente)
+  public regenerateRandomGif(): void {
+    this.generateRandomGif();
   }
 
   loadData() {
@@ -115,6 +146,7 @@ export class InformacoesComponent implements OnInit {
     this.creditCardExpenses = this.calculationService.getCreditCardExpenses(month);
     this.creditCardExpensesByCategory = this.calculationService.getCreditCardExpensesByCategory(month);
     this.largestExpense = this.calculationService.getLargestExpense(month);
+    this.highestExpenseDay = this.calculationService.getHighestExpenseDay(month);
     
     this.monthTransactions = this.storageService.getTransactions()
       .filter(t => t.date.startsWith(month))
@@ -194,6 +226,28 @@ export class InformacoesComponent implements OnInit {
     }
     
     return months.reverse(); // Mais recente primeiro
+  }
+
+  // Métodos de filtro por categoria
+  filterByCategory(category: string) {
+    if (this.selectedCategoryFilter === category) {
+      // Se já está filtrado pela mesma categoria, remove o filtro
+      this.selectedCategoryFilter = null;
+      this.filteredTransactions = [];
+    } else {
+      // Aplica filtro da categoria
+      this.selectedCategoryFilter = category;
+      this.filteredTransactions = this.monthTransactions.filter(t => t.category === category);
+    }
+  }
+
+  clearCategoryFilter() {
+    this.selectedCategoryFilter = null;
+    this.filteredTransactions = [];
+  }
+
+  getDisplayTransactions(): Transaction[] {
+    return this.selectedCategoryFilter ? this.filteredTransactions : this.monthTransactions;
   }
 }
 

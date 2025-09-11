@@ -276,9 +276,9 @@ Documento para rastrear todos os aspectos visuais, componentes, temas e inconsis
 2. 🔄 **ConfigComponent** - Parcialmente modernizada
 3. 🔄 **SaveIndicatorComponent** - Funcional mas visual básico
 
-### ❌ **COMPONENTES DESATUALIZADOS**
-1. ❌ **InformacoesComponent** - Não modernizada
-2. ❌ **Inputs antigos** - Vários locais ainda usam mat-form-field direto
+### ✅ **COMPONENTES MODERNIZADOS**
+1. ✅ **InformacoesComponent** - Modernizada com tema escuro e filtros
+2. ❌ **Inputs antigos** - Alguns locais ainda usam mat-form-field direto
 
 ---
 
@@ -374,17 +374,18 @@ $custom-theme: mat.define-light-theme((
 - ✅ **Select corrigido**: Painel escuro com tema consistente
 - ✅ **Features restauradas**: Checkbox cartão de crédito e datepicker funcionais
 - ✅ **Botões modernos**: Gradientes, animações e efeitos hover avançados
+- ✅ **Página relatórios**: Modernizada com tema escuro, filtros por categoria e cores do projeto
 
 ### ❌ **PRINCIPAIS PROBLEMAS RESTANTES**
 - Inconsistência entre tema Angular Material e customizações
 - CSS ainda pesado por overrides excessivos
-- Página de Informações não modernizada
+- ✅ ~~Página de Informações não modernizada~~ - **RESOLVIDO**
 
 ### 🎯 **PRÓXIMOS PASSOS**
 1. **Definir tema Angular Material pastel**
 2. **Migrar inputs restantes para FormInputComponent**
 3. **Reduzir overrides CSS**
-4. **Modernizar página de Informações**
+4. ✅ ~~**Modernizar página de Informações**~~ - **CONCLUÍDO**
 5. ✅ **Documentar padrões visuais** - CONCLUÍDO
 
 **Foco:** Padronização > Customização > Performance
