@@ -462,10 +462,8 @@
 }
 
 // ===== MATERIAL THEME OVERRIDES =====
+// Tema da navbar movido para styles.scss global
 ::ng-deep {
-  .mat-mdc-toolbar {
-    background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
-  }
   
   .mat-mdc-sidenav {
     .mdc-list-item__primary-text {

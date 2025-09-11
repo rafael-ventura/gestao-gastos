@@ -7,6 +7,15 @@ Este documento serve como manual de referência para todos os aspectos visuais e
 
 ## 🎨 PALETA DE CORES
 
+### 🌑 **Tema Escuro Principal**
+```scss
+// Tema escuro usado na navbar, modais e headers
+--dark-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+--dark-primary: #1f2937;    // Slate-800
+--dark-secondary: #111827;  // Gray-900
+--dark-accent: #374151;     // Gray-700 para elementos secundários
+```
+
 ### 🌈 **Cores Principais**
 ```scss
 // Rosa/Coral Pastel - Cor primária do projeto
@@ -373,17 +382,32 @@ caption: 0.75rem (12px) - font-weight: 400
 
 ### 🪟 **Modais**
 
-#### 💬 **Modal Padrão**
+#### 💬 **Modal Tema Escuro (Padrão)**
 ```scss
-.modal-container {
-  background: #fafbfc;
-  border-radius: var(--radius-2xl);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--gray-300);
+.mat-mdc-dialog-container {
+  background: var(--dark-gradient);
+  color: white;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  
+  // Responsividade
+  @media (min-width: 768px) {
+    min-width: 600px;
+    max-width: 800px;
+    width: 70vw;
+  }
+  
+  @media (min-width: 1024px) {
+    min-width: 700px;
+    max-width: 900px;
+    width: 60vw;
+  }
 }
 
 .modal-backdrop {
-  background: rgba(0, 0, 0, 0.4); // Menos escuro
+  background: rgba(0, 0, 0, 0.4);
 }
 ```
 

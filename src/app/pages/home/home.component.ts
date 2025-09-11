@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -17,7 +16,8 @@ import { CalculationService } from '../../core/services/calculation.service';
 import { UtilsService } from '../../core/services/utils.service';
 import { SalaryService } from '../../core/services/salary.service';
 import { Transaction } from '../../core/models/transaction.model';
-import { AddTransactionDialogComponent, AddTransactionDialogData } from '../../shared/components/add-transaction-dialog/add-transaction-dialog.component';
+import { CustomModalService } from '../../shared/components/custom-modal/custom-modal.service';
+import { TransactionModalComponent, TransactionModalData } from '../../shared/components/transaction-modal/transaction-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -41,9 +41,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   private calculationService = inject(CalculationService);
   private utilsService = inject(UtilsService);
   private salaryService = inject(SalaryService);
-  private dialog = inject(MatDialog);
+  private customModal = inject(CustomModalService);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private viewContainer = inject(ViewContainerRef);
 
   // Dados principais
   balance = 0;
@@ -118,19 +119,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openAddDialog(compactMode = false) {
-    const dialogData: AddTransactionDialogData = {
+    // Configurar container para o modal service
+    this.customModal.setContainer(this.viewContainer);
+    
+    const modalData: TransactionModalData = {
       compactMode: compactMode
     };
 
-    const dialogRef = this.dialog.open(AddTransactionDialogComponent, {
-      data: dialogData,
-      width: compactMode ? '400px' : '500px',
-      maxWidth: '90vw',
-      disableClose: false,
-      autoFocus: true
+    const modalRef = this.customModal.open(TransactionModalComponent, {
+      data: modalData,
+      width: compactMode ? '500px' : '700px',
+      maxWidth: '90vw'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    modalRef.afterClosed().subscribe(result => {
       if (result) {
         // A atualização será automática via subscribeToStorageChanges()
         // Não precisamos mais chamar loadData() manualmente

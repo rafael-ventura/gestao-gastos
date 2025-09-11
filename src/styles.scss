@@ -1,8 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
+// ===== ANGULAR MATERIAL THEME CUSTOMIZADO =====
+@use '@angular/material' as mat;
+
 // ===== TEMA GLOBAL PASTEL E CLEAN =====
 :root {
   // ===== CORES PRINCIPAIS DO PROJETO - PADRONIZADAS =====
+  
+  // Tema Escuro Principal - Usado na navbar, modais e header
+  --dark-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  --dark-primary: #1f2937;
+  --dark-secondary: #111827;
   
   // Paleta Principal - Rosa/Coral Pastel
   --primary-50: #fef7f7;
@@ -140,19 +148,130 @@ body {
 .rounded-lg { border-radius: var(--radius-lg) !important; }
 .rounded-xl { border-radius: var(--radius-xl) !important; }
 
-// ===== OVERRIDE GLOBAL DO ANGULAR MATERIAL - TEMA PASTEL MODERNO =====
+// ===== TEMA ANGULAR MATERIAL CUSTOMIZADO =====
 
-// ===== MODAL/DIALOG OVERRIDES =====
+// Criar tema customizado usando paletas padrão do Angular Material
+// Temporariamente comentado para debugar erro de compilação
+// $primary-palette: mat.define-palette(mat.$pink-palette, 300, 100, 500);
+// $accent-palette: mat.define-palette(mat.$blue-palette, 300, 100, 500);
+// $warn-palette: mat.define-palette(mat.$red-palette, 500, 100, 600);
+
+// $custom-theme: mat.define-light-theme((
+//   color: (
+//     primary: $primary-palette,
+//     accent: $accent-palette,
+//     warn: $warn-palette,
+//   ),
+//   typography: mat.define-typography-config(
+//     $font-family: 'Inter, Roboto, "Helvetica Neue", Arial, sans-serif',
+//   ),
+//   density: 0
+// ));
+
+// Aplicar tema apenas aos componentes que usamos (comentado temporariamente)
+// @include mat.button-theme($custom-theme);
+// @include mat.form-field-theme($custom-theme);
+// @include mat.input-theme($custom-theme);
+// @include mat.select-theme($custom-theme);
+// @include mat.checkbox-theme($custom-theme);
+// @include mat.dialog-theme($custom-theme);
+// @include mat.snack-bar-theme($custom-theme);
+// @include mat.progress-spinner-theme($custom-theme);
+// @include mat.divider-theme($custom-theme);
+// @include mat.icon-theme($custom-theme);
+
+// ===== OVERRIDES MÍNIMOS PARA MODAIS =====
+// ===== NAVBAR TEMA ESCURO - MESMA COR DO HEADER HOME =====
+.mat-mdc-toolbar,
+.mat-toolbar,
+.main-toolbar {
+  background: var(--dark-gradient) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  
+  // Garantir que todos os textos sejam brancos
+  * {
+    color: white !important;
+  }
+  
+  // Sobrescrever qualquer tema padrão
+  &.mat-primary {
+    background: var(--dark-gradient) !important;
+  }
+}
+
+// ===== SELECT PARA MODAL CUSTOMIZADO =====
+.mat-mdc-select-panel {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  
+  .mat-mdc-option {
+    color: white !important;
+    background: transparent !important;
+    
+    &:hover {
+      background: rgba(96, 165, 250, 0.2) !important;
+      color: #60a5fa !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background: rgba(96, 165, 250, 0.3) !important;
+      color: #60a5fa !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+
+// ===== MODAL CUSTOMIZADO =====
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  
+  // Tema escuro igual navbar/header
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: white;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  
+  // Responsividade
+  width: 90vw;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  
+  @media (max-width: 768px) {
+    width: 95vw;
+    max-width: 500px;
+    margin: 20px;
+  }
+}
+
+// Backdrop do modal
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
-  background: rgba(0, 0, 0, 0.4) !important; // Fundo menos escuro
+  background: rgba(0, 0, 0, 0.4);
 }
 
-.mat-mdc-dialog-container {
-  border-radius: var(--radius-2xl) !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-  background: white !important;
-  border: 1px solid var(--gray-200) !important;
-}
+// Modal styles moved to individual components
 
 // ===== SNACKBAR MOBILE OVERRIDES =====
 @media (max-width: 768px) {
@@ -206,12 +325,15 @@ body {
   background: var(--gradient-primary) !important;
   color: white !important;
   box-shadow: var(--shadow-sm) !important;
+  border-radius: var(--radius-lg) !important;
   
   &:hover:not([disabled]) {
     box-shadow: var(--shadow-lg) !important;
     transform: translateY(-2px) !important;
   }
 }
+
+// Button styles moved to individual components
 
 .mat-mdc-outlined-button {
   border: 2px solid var(--gray-200) !important;
@@ -233,83 +355,10 @@ body {
   }
 }
 
-// Formulários modernos e suaves
-.mat-mdc-form-field {
-  .mat-mdc-text-field-wrapper {
-    background-color: white !important;
-    border: 2px solid var(--gray-200) !important;
-    border-radius: var(--radius-lg) !important;
-    box-shadow: var(--shadow-xs) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    
-    &:hover {
-      border-color: var(--gray-300) !important;
-      box-shadow: var(--shadow-sm) !important;
-      transform: translateY(-1px) !important;
-    }
-    
-    &.mdc-text-field--focused {
-      border-color: var(--primary-400) !important;
-      box-shadow: 0 0 0 4px var(--primary-100), var(--shadow-md) !important;
-      transform: translateY(-2px) !important;
-    }
-  }
-  
-  .mat-mdc-form-field-label {
-    color: var(--gray-600) !important;
-    font-weight: 500 !important;
-    
-    &.mdc-floating-label--float-above {
-      color: var(--primary-600) !important;
-      font-weight: 600 !important;
-    }
-  }
-  
-  .mat-mdc-input-element,
-  .mat-mdc-select-value {
-    color: var(--gray-800) !important;
-    font-weight: 500 !important;
-    
-    &::placeholder {
-      color: var(--gray-400) !important;
-      opacity: 1 !important;
-    }
-  }
-  
-  .mat-mdc-form-field-hint {
-    color: var(--gray-500) !important;
-    font-weight: 500 !important;
-  }
-  
-  .mat-mdc-form-field-error {
-    color: var(--error-500) !important;
-    font-weight: 600 !important;
-  }
-}
+// Formulários modernos e suaves - REMOVIDO para evitar conflito com FormInputComponent
+// O FormInputComponent já tem seus próprios estilos customizados
 
-// Select moderno
-.mat-mdc-select-panel {
-  background: white !important;
-  border-radius: var(--radius-xl) !important;
-  box-shadow: var(--shadow-xl) !important;
-  border: 1px solid var(--gray-200) !important;
-  
-  .mat-mdc-option {
-    border-radius: var(--radius-md) !important;
-    margin: 4px 8px !important;
-    transition: all 0.2s ease !important;
-    
-    &:hover {
-      background-color: var(--primary-50) !important;
-      color: var(--primary-700) !important;
-    }
-    
-    &.mdc-list-item--selected {
-      background-color: var(--primary-100) !important;
-      color: var(--primary-800) !important;
-    }
-  }
-}
+// Select styles moved to individual components
 
 // Chips modernos
 .mat-mdc-chip {
@@ -334,12 +383,7 @@ body {
   }
 }
 
-// Dialog moderno
-.mat-mdc-dialog-container {
-  border-radius: var(--radius-2xl) !important;
-  box-shadow: var(--shadow-xl) !important;
-  border: 1px solid var(--gray-200) !important;
-}
+// Overrides removidos - usando tema customizado
 
 // Snackbar moderno
 .mat-mdc-snack-bar-container {

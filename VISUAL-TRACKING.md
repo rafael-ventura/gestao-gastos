@@ -368,6 +368,12 @@ $custom-theme: mat.define-light-theme((
 - ✅ **Cards modernizados**: Fundo escuro nos cards de transações, texto com melhor contraste
 - ✅ **Botão rápido**: Corrigido problema que impedia uso após primeira vez
 - ✅ **Design System**: Criado arquivo DESIGN-SYSTEM.md com padrões completos
+- ✅ **Tema unificado**: Navbar e modais agora usam a mesma cor do header home (#1f2937 → #111827)
+- ✅ **Modal customizado**: Criado modal próprio sem Angular Material para controle total
+- ✅ **Inputs otimizados**: Altura reduzida (48px) e padding-left para melhor UX
+- ✅ **Select corrigido**: Painel escuro com tema consistente
+- ✅ **Features restauradas**: Checkbox cartão de crédito e datepicker funcionais
+- ✅ **Botões modernos**: Gradientes, animações e efeitos hover avançados
 
 ### ❌ **PRINCIPAIS PROBLEMAS RESTANTES**
 - Inconsistência entre tema Angular Material e customizações
