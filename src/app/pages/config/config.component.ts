@@ -65,7 +65,20 @@ export class ConfigComponent implements OnInit {
       creditCardDueDay: this.settings.creditCardDueDay
     };
     
-    console.log('Configurações carregadas:', this.configData);
+    // Debug: Verificar configurações carregadas
+    console.log('🔍 DEBUG - Config Component:');
+    console.log('📊 Settings loaded:', this.settings);
+    console.log('💰 Salary from settings:', this.settings.salary);
+    console.log('📅 Salary day from settings:', this.settings.salaryDay);
+    console.log('💳 Credit card due day:', this.settings.creditCardDueDay);
+    console.log('📝 Config data initialized:', this.configData);
+    
+    // Verificar transações de salário existentes
+    const transactions = this.storageService.getTransactions();
+    const salaryTransactions = transactions.filter(t => 
+      t.category === 'Salário' || t.description.toLowerCase() === 'salário'
+    );
+    console.log('💳 Existing salary transactions:', salaryTransactions);
   }
 
   // ===== HANDLERS DOS SUBCOMPONENTES =====

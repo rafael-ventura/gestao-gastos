@@ -110,6 +110,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       // Verifica se tem dados
       this.hasData = this.recentTransactions.length > 0 || this.balance !== 0;
       
+      // Debug: Verificar configurações e transações de salário
+      const settings = this.storageService.getSettings();
+      const salaryTransactions = this.recentTransactions.filter(t => 
+        t.category === 'Salário' || t.description.toLowerCase() === 'salário'
+      );
+      
+      console.log('🔍 DEBUG - Home Component:');
+      console.log('📊 Settings:', settings);
+      console.log('💰 Salary from settings:', settings.salary);
+      console.log('💳 Salary transactions:', salaryTransactions);
+      console.log('📈 Income calculated:', this.income);
+      console.log('📉 Expenses calculated:', this.expenses);
+      console.log('⚖️ Balance calculated:', this.balance);
+      
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
       this.snackBar.open('Erro ao carregar dados', 'Fechar', { duration: 3000 });
