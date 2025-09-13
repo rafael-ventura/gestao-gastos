@@ -116,6 +116,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         t.category === 'Salário' || t.description.toLowerCase() === 'salário'
       );
       
+      // Sincronização automática: se há transação de salário mas configuração zerada
+      if (salaryTransactions.length > 0 && settings.salary === 0) {
+        const latestSalaryTransaction = salaryTransactions[0]; // Pega a mais recente
+        console.log('🔄 Sincronizando salário automaticamente:', latestSalaryTransaction.amount);
+        
+        // Atualiza as configurações com o valor da transação existente
+        settings.salary = latestSalaryTransaction.amount;
+        this.storageService.saveSettings(settings);
+        
+        console.log('✅ Salário sincronizado automaticamente!');
+      }
+      
       console.log('🔍 DEBUG - Home Component:');
       console.log('📊 Settings:', settings);
       console.log('💰 Salary from settings:', settings.salary);

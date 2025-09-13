@@ -58,7 +58,25 @@ export class ConfigComponent implements OnInit {
     this.categories = [...this.settings.categories];
     this.categoriesData = [...this.categories];
     
-    // Inicializa os dados do formulário com os valores salvos
+    // Verificar transações de salário existentes
+    const transactions = this.storageService.getTransactions();
+    const salaryTransactions = transactions.filter(t => 
+      t.category === 'Salário' || t.description.toLowerCase() === 'salário'
+    );
+    
+    // Sincronização automática: se há transação de salário mas configuração zerada
+    if (salaryTransactions.length > 0 && this.settings.salary === 0) {
+      const latestSalaryTransaction = salaryTransactions[0]; // Pega a mais recente
+      console.log('🔄 Sincronizando salário automaticamente:', latestSalaryTransaction.amount);
+      
+      // Atualiza as configurações com o valor da transação existente
+      this.settings.salary = latestSalaryTransaction.amount;
+      this.storageService.saveSettings(this.settings);
+      
+      console.log('✅ Salário sincronizado automaticamente!');
+    }
+    
+    // Inicializa os dados do formulário com os valores salvos (ou sincronizados)
     this.configData = {
       salary: this.settings.salary,
       salaryDay: this.settings.salaryDay,
@@ -72,12 +90,6 @@ export class ConfigComponent implements OnInit {
     console.log('📅 Salary day from settings:', this.settings.salaryDay);
     console.log('💳 Credit card due day:', this.settings.creditCardDueDay);
     console.log('📝 Config data initialized:', this.configData);
-    
-    // Verificar transações de salário existentes
-    const transactions = this.storageService.getTransactions();
-    const salaryTransactions = transactions.filter(t => 
-      t.category === 'Salário' || t.description.toLowerCase() === 'salário'
-    );
     console.log('💳 Existing salary transactions:', salaryTransactions);
   }
 
