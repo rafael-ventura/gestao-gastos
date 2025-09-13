@@ -17,7 +17,7 @@ import { StorageService } from '../../core/services/storage.service';
 import { CalculationService, MonthlySummary, CategorySummary } from '../../core/services/calculation.service';
 import { UtilsService } from '../../core/services/utils.service';
 import { Transaction } from '../../core/models/transaction.model';
-import { DeleteConfirmationModalComponent, DeleteConfirmationData } from '../../shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
+import { DeleteConfirmationModalComponent, DeleteConfirmationData } from './components/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-informacoes',

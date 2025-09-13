@@ -1,0 +1,79 @@
+<div class="dialog-container" [class.compact]="compact">
+  <!-- Header -->
+  <div class="dialog-header" *ngIf="title || subtitle || showCloseButton">
+    <div class="header-content">
+      <div class="header-icon" *ngIf="icon">
+        <mat-icon [color]="iconColor">{{ icon }}</mat-icon>
+      </div>
+      <div class="header-text">
+        <h2 mat-dialog-title *ngIf="title" class="dialog-title">{{ title }}</h2>
+        <p class="dialog-subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+    </div>
+    <button 
+      *ngIf="showCloseButton"
+      mat-icon-button 
+      class="close-button"
+      (click)="onClose()"
+      [disabled]="loading">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider *ngIf="(title || subtitle) && !hideHeaderDivider"></mat-divider>
+
+  <!-- Content -->
+  <div mat-dialog-content class="dialog-content" [class.no-padding]="noPadding">
+    <div *ngIf="loading" class="loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p *ngIf="loadingMessage">{{ loadingMessage }}</p>
+    </div>
+    
+    <div class="content-wrapper" [class.loading]="loading">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div mat-dialog-actions class="dialog-actions" *ngIf="actions.length > 0 || showDefaultActions">
+    <div class="actions-left">
+      <ng-content select="[slot=actions-left]"></ng-content>
+    </div>
+    
+    <div class="actions-right">
+      <!-- Ações customizadas -->
+      <button
+        *ngFor="let action of actions"
+        mat-button
+        [color]="action.color || 'primary'"
+        [disabled]="action.disabled || loading"
+        (click)="executeAction(action)"
+        class="action-button">
+        <mat-icon *ngIf="action.icon && !action.loading">{{ action.icon }}</mat-icon>
+        <mat-spinner *ngIf="action.loading" diameter="16"></mat-spinner>
+        {{ action.label }}
+      </button>
+
+      <!-- Ações padrão -->
+      <ng-container *ngIf="showDefaultActions">
+        <button 
+          mat-button 
+          (click)="onCancel()"
+          [disabled]="loading"
+          class="cancel-button">
+          {{ cancelLabel }}
+        </button>
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="onConfirm()"
+          [disabled]="confirmDisabled || loading"
+          class="confirm-button">
+          <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
+          <mat-icon *ngIf="confirmIcon && !loading">{{ confirmIcon }}</mat-icon>
+          {{ confirmLabel }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>

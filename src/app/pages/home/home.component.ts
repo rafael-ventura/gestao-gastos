@@ -18,8 +18,8 @@ import { UtilsService } from '../../core/services/utils.service';
 import { SalaryService } from '../../core/services/salary.service';
 import { Transaction } from '../../core/models/transaction.model';
 import { CustomModalService } from '../../shared/components/custom-modal/custom-modal.service';
-import { TransactionModalComponent, TransactionModalData } from '../../shared/components/transaction-modal/transaction-modal.component';
-import { DeleteConfirmationModalComponent, DeleteConfirmationData } from '../../shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
+import { TransactionModalComponent, TransactionModalData } from './components/transaction-modal/transaction-modal.component';
+import { DeleteConfirmationModalComponent, DeleteConfirmationData } from './components/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-home',

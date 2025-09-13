@@ -1,0 +1,105 @@
+<div class="transaction-modal">
+  <!-- Header -->
+  <div class="modal-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">account_balance_wallet</mat-icon>
+      <div class="header-text">
+        <h2 class="modal-title">{{ isEdit ? 'Editar Transação' : 'Adicionar Gasto' }}</h2>
+        <p class="modal-subtitle">{{ compactMode ? 'Adicione rapidamente um novo gasto' : 'Preencha as informações da transação' }}</p>
+      </div>
+    </div>
+    <button type="button" class="close-button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="transactionForm" (ngSubmit)="onSave()" class="transaction-form">
+    
+    <!-- Seletor de Tipo -->
+    <div class="transaction-type-selector">
+      <div class="type-toggle-container">
+        <button type="button" 
+                class="type-button expense-button"
+                [class.active]="transactionForm.get('transactionType')?.value === 'expense'"
+                (click)="transactionForm.patchValue({transactionType: 'expense'})">
+          <mat-icon>trending_down</mat-icon>
+          <span>Gasto</span>
+        </button>
+        
+        <button type="button" 
+                class="type-button income-button"
+                [class.active]="transactionForm.get('transactionType')?.value === 'income'"
+                (click)="transactionForm.patchValue({transactionType: 'income'})">
+          <mat-icon>trending_up</mat-icon>
+          <span>Receita</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Campos principais -->
+    <div class="form-row">
+      <app-form-input
+        label="O que foi?"
+        type="text"
+        placeholder="Descreva a transação"
+        [formControlName]="'description'"
+        class="description-field">
+      </app-form-input>
+    </div>
+
+    <div class="form-row">
+      <app-form-input
+        label="R$ Valor"
+        type="number"
+        placeholder="0,00"
+        prefix="R$"
+        [formControlName]="'amount'"
+        class="amount-field">
+      </app-form-input>
+      
+      <app-form-input
+        label="Categoria"
+        type="select"
+        placeholder="Selecione uma categoria"
+        [options]="categoryOptions"
+        [formControlName]="'category'"
+        class="category-field">
+      </app-form-input>
+    </div>
+
+    <div class="form-row">
+      <app-form-input
+        label="Data"
+        type="date"
+        [formControlName]="'date'"
+        class="date-field">
+      </app-form-input>
+    </div>
+
+    <!-- Cartão de Crédito -->
+    <div class="form-row">
+      <div class="credit-card-option">
+        <mat-checkbox [formControlName]="'isCreditCard'" class="credit-card-checkbox">
+          <mat-icon>credit_card</mat-icon>
+          <span>Gasto no cartão de crédito</span>
+        </mat-checkbox>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Actions -->
+  <div class="modal-actions">
+    <button type="button" class="cancel-button" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button type="button" 
+            class="confirm-button" 
+            [disabled]="!transactionForm.valid || loading"
+            (click)="onSave()">
+      <mat-icon *ngIf="!loading">{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      {{ loading ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Adicionar') }}
+    </button>
+  </div>
+</div>

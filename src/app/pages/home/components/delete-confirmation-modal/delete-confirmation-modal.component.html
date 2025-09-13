@@ -1,0 +1,33 @@
+<div class="delete-confirmation-modal">
+  <!-- Barra superior decorativa -->
+  <div class="delete-confirmation-modal__decorative-bar"></div>
+  
+  <!-- Header -->
+  <div class="delete-confirmation-modal__header">
+    <h2 class="delete-confirmation-modal__title">{{ data.title }}</h2>
+  </div>
+
+  <!-- Content -->
+  <div class="delete-confirmation-modal__content">
+    <!-- Ícone de atenção -->
+    <div class="delete-confirmation-modal__icon-container">
+      <mat-icon class="delete-confirmation-modal__warning-icon">warning</mat-icon>
+    </div>
+    
+    <!-- Mensagem principal -->
+    <div class="delete-confirmation-modal__message">
+      <p class="delete-confirmation-modal__main-text">{{ data.message }}</p>
+      <p class="delete-confirmation-modal__warning-text">Esta ação não pode ser desfeita.</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="delete-confirmation-modal__actions">
+    <button type="button" class="delete-confirmation-modal__button delete-confirmation-modal__button--cancel" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button type="button" class="delete-confirmation-modal__button delete-confirmation-modal__button--delete" (click)="onConfirm()">
+      Excluir
+    </button>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div 
+  *ngIf="currentEvent" 
+  class="save-indicator"
+  [class.show]="showIndicator">
+  <mat-icon class="save-icon">cloud_done</mat-icon>
+  <span class="save-message">{{ currentEvent.message }}</span>
+  <div class="save-timestamp">{{ formatTime(currentEvent.timestamp) }}</div>
+</div>
