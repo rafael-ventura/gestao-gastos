@@ -69,6 +69,7 @@ export interface DeleteConfirmationData {
       border-radius: 12px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      box-sizing: border-box;
     }
 
     // ===== BARRA DECORATIVA =====
@@ -89,6 +90,8 @@ export interface DeleteConfirmationData {
       text-align: center;
       position: relative;
       z-index: 1;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .delete-confirmation-modal__title {
@@ -97,6 +100,8 @@ export interface DeleteConfirmationData {
       font-weight: 600;
       line-height: 1.2;
       color: white;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     // ===== CONTENT =====
@@ -106,6 +111,8 @@ export interface DeleteConfirmationData {
       position: relative;
       z-index: 1;
       text-align: center;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     // ===== ICON CONTAINER =====
@@ -134,6 +141,8 @@ export interface DeleteConfirmationData {
       display: flex;
       flex-direction: column;
       gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .delete-confirmation-modal__main-text {
@@ -142,6 +151,8 @@ export interface DeleteConfirmationData {
       color: rgba(255, 255, 255, 0.9);
       font-weight: 400;
       line-height: 1.5;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .delete-confirmation-modal__warning-text {
@@ -154,6 +165,8 @@ export interface DeleteConfirmationData {
       padding: 12px 16px;
       border-radius: 8px;
       border: 1px solid rgba(239, 68, 68, 0.2);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     // ===== ACTIONS =====
@@ -166,6 +179,8 @@ export interface DeleteConfirmationData {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
       z-index: 1;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .delete-confirmation-modal__button {
@@ -178,8 +193,11 @@ export interface DeleteConfirmationData {
       position: relative;
       overflow: hidden;
       min-width: 100px;
+      max-width: 150px;
+      flex: 1;
       justify-content: center;
       border: none;
+      box-sizing: border-box;
     }
 
     .delete-confirmation-modal__button--cancel {

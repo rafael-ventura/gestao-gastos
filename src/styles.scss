@@ -523,10 +523,17 @@ input[type="date"] {
     padding: 0 !important;
     max-width: none !important;
     width: auto !important;
+    overflow: hidden !important;
   }
   
   .mat-mdc-dialog-backdrop {
     background: transparent !important;
+  }
+  
+  .cdk-overlay-pane {
+    overflow: hidden !important;
+    max-width: 500px !important;
+    width: 100% !important;
   }
 }
 
@@ -534,5 +541,14 @@ input[type="date"] {
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
   &.custom-delete-modal-backdrop {
     background: transparent !important;
+  }
+}
+
+// Garantir que não apareça scroll horizontal
+.cdk-overlay-container {
+  overflow: hidden !important;
+  
+  .cdk-overlay-pane {
+    overflow: hidden !important;
   }
 }
