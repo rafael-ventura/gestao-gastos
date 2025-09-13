@@ -301,7 +301,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteConfirmationModalComponent, {
       data: dialogData,
       width: '500px',
-      maxWidth: '90vw'
+      maxWidth: '90vw',
+      disableClose: false,
+      hasBackdrop: false,
+      panelClass: 'custom-delete-modal'
     });
 
     dialogRef.afterClosed().subscribe(confirmed => {

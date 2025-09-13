@@ -514,3 +514,25 @@ input[type="date"] {
 .mat-mdc-card {
   animation: slideInUp 0.4s ease-out;
 }
+
+// ===== MODAL DE CONFIRMAÇÃO DE EXCLUSÃO CUSTOMIZADO =====
+.custom-delete-modal {
+  .mat-mdc-dialog-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+  }
+  
+  .mat-mdc-dialog-backdrop {
+    background: transparent !important;
+  }
+}
+
+// Remover backdrop escuro do modal de exclusão
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  &.custom-delete-modal-backdrop {
+    background: transparent !important;
+  }
+}
