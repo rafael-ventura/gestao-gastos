@@ -472,6 +472,14 @@
             
             &.credit-card-chip {
               background-color: #FF9800 !important;
+              
+              mat-icon {
+                font-size: 0.875rem !important;
+                width: 0.875rem !important;
+                height: 0.875rem !important;
+                margin-right: 4px;
+                vertical-align: middle;
+              }
             }
           }
         }

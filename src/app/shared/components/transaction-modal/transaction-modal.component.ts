@@ -464,7 +464,7 @@ export class TransactionModalComponent implements OnInit {
     this.categories = this.storageService.getCategories();
     this.categoryOptions = this.categories.map(cat => ({
       label: cat.name,
-      value: cat.id
+      value: cat.name  // Usar o nome da categoria como valor
     }));
   }
 
