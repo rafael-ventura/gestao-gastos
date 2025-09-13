@@ -8,12 +8,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { FormInputComponent } from '../form-input/form-input.component';
-import { CustomModalRef } from '../custom-modal/custom-modal.service';
-import { StorageService } from '../../../core/services/storage.service';
-import { UtilsService } from '../../../core/services/utils.service';
-import { Transaction } from '../../../core/models/transaction.model';
-import { Category } from '../../../core/models/category.model';
+import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
+import { CustomModalRef } from '../../../../shared/components/custom-modal/custom-modal.service';
+import { StorageService } from '../../../../core/services/storage.service';
+import { UtilsService } from '../../../../core/services/utils.service';
+import { Transaction } from '../../../../core/models/transaction.model';
+import { Category } from '../../../../core/models/category.model';
 
 export interface TransactionModalData {
   compactMode?: boolean;

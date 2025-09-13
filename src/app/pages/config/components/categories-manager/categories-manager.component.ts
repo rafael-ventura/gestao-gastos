@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
-import { ColorPickerComponent } from '../../../../shared/components/color-picker/color-picker.component';
 import { UtilsService } from '../../../../core/services/utils.service';
 import { Category } from '../../../../core/models/category.model';
 
@@ -22,8 +21,7 @@ import { Category } from '../../../../core/models/category.model';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    FormInputComponent,
-    ColorPickerComponent
+    FormInputComponent
   ],
   providers: [
     {
@@ -42,6 +40,28 @@ export class CategoriesManagerComponent implements OnInit, ControlValueAccessor 
   categoriesForm!: FormGroup;
   private fb = new FormBuilder();
   private utilsService = new UtilsService();
+
+  // 18 cores fixas variadas e bonitas
+  availableColors = [
+    '#FF6B6B', // Vermelho pastel
+    '#4ECDC4', // Turquesa
+    '#45B7D1', // Azul claro
+    '#96CEB4', // Verde menta
+    '#FFEAA7', // Amarelo pastel
+    '#DDA0DD', // Roxo claro
+    '#98D8C8', // Verde água
+    '#F7DC6F', // Amarelo dourado
+    '#BB8FCE', // Lilás
+    '#85C1E9', // Azul céu
+    '#F8C471', // Laranja pastel
+    '#82E0AA', // Verde claro
+    '#F1948A', // Rosa salmão
+    '#D7BDE2', // Lavanda
+    '#A9DFBF', // Verde menta claro
+    '#F9E79F', // Amarelo creme
+    '#D5A6BD', // Rosa pálido
+    '#B8C6DB'  // Cinza azulado
+  ];
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -127,12 +147,7 @@ export class CategoriesManagerComponent implements OnInit, ControlValueAccessor 
   }
 
   getRandomColor(): string {
-    const colorPresets = [
-      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-      '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
-      '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2'
-    ];
-    return colorPresets[Math.floor(Math.random() * colorPresets.length)];
+    return this.availableColors[Math.floor(Math.random() * this.availableColors.length)];
   }
 
   onColorChange(index: number, newColor: string): void {

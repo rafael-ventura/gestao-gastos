@@ -67,11 +67,17 @@
           <!-- Seletor de Cor Moderno -->
           <div class="color-selector-modern">
             <label class="color-label">Cor da categoria</label>
-            <app-color-picker
-              [value]="categoryGroup.get('color')?.value"
-              (colorSelected)="onColorChange(i, $event)"
-              [compact]="true">
-            </app-color-picker>
+            <div class="color-palette">
+              <button
+                *ngFor="let color of availableColors"
+                type="button"
+                class="color-option"
+                [class.selected]="categoryGroup.get('color')?.value === color"
+                [style.background-color]="color"
+                (click)="onColorChange(i, color)"
+                [title]="color">
+              </button>
+            </div>
           </div>
         </div>
 

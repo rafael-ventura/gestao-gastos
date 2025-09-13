@@ -425,7 +425,7 @@ body {
 .mat-mdc-select-panel,
 .mat-datepicker-popup,
 .mat-mdc-autocomplete-panel {
-  z-index: 3001 !important;
+  z-index: 9999 !important;
 }
 
 // ===== SELECT GLOBAL - FUNCIONA EM QUALQUER CONTEXTO =====
