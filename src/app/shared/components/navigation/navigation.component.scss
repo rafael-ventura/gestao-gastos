@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 10; // Z-index reduzido para não interferir com conteúdo
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   
   .toolbar-content {
@@ -147,12 +147,9 @@
 
 // ===== SIDENAV =====
 .sidenav-container {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
+  flex: 1;
+  min-height: calc(100vh - 64px); // Muda para min-height
+  z-index: 1; // Z-index muito baixo para não interferir com conteúdo
 }
 
 .sidenav {
@@ -272,6 +269,7 @@
     padding: 16px;
     border-top: 1px solid rgba(0, 0, 0, 0.12);
     background: rgba(0, 0, 0, 0.02);
+    z-index: 1; // Z-index baixo para não interferir com outros elementos
     
     .app-info {
       display: flex;
@@ -300,68 +298,19 @@
 
 // ===== MAIN CONTENT =====
 .main-content {
-  padding-top: 64px;
-  min-height: calc(100vh - 64px);
+  flex: 1;
+  min-height: 100%; // Muda para min-height
   background: #fafafa;
-  padding-bottom: 120px; // Mais espaço para bottom nav + footer
+  overflow-y: auto; // Permite scroll no conteúdo
+  padding-top: 24px; // Espaço entre navbar e conteúdo
+  padding-bottom: 20px; // Pequeno padding para evitar corte no final
+  position: relative;
+  z-index: 50; // Z-index muito alto para ficar por cima de tudo
+  margin-top: 64px; // Margem para compensar a toolbar fixa
 }
 
-// ===== BOTTOM NAVIGATION =====
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
-  
-  .bottom-nav-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 8px 0;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .bottom-nav-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    min-width: 60px;
-    
-    &:hover {
-      background: rgba(33, 150, 243, 0.1);
-    }
-    
-    &.active {
-      background: rgba(33, 150, 243, 0.2);
-      color: #F44336;
-      
-      mat-icon {
-        color: #F44336;
-      }
-    }
-    
-    mat-icon {
-      font-size: 1.5rem;
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-    
-    .button-label {
-      font-size: 0.75rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-  }
-}
+// ===== BOTTOM NAVIGATION REMOVIDA =====
+// Bottom navigation foi removida para evitar interferência com conteúdo
 
 // ===== RESPONSIVE DESIGN =====
 @media (max-width: 768px) {
@@ -385,6 +334,10 @@
     display: none;
   }
   
+  .main-content {
+    padding-top: 16px; // Padding menor no mobile
+    padding-bottom: 20px; // Padding normal sem bottom nav
+  }
 }
 
 @media (max-width: 480px) {

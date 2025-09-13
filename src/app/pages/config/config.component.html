@@ -21,16 +21,9 @@
   <div class="config-actions">
     <button 
       mat-stroked-button 
-      (click)="resetConfig()"
-      [disabled]="!hasChanges || loading">
-      <mat-icon>restore</mat-icon>
-      Restaurar
-    </button>
-    
-    <button 
-      mat-stroked-button 
       (click)="exportData()"
-      [disabled]="loading">
+      [disabled]="loading"
+      class="action-button export-button">
       <mat-icon>download</mat-icon>
       Exportar
     </button>
@@ -38,7 +31,8 @@
     <button 
       mat-stroked-button 
       (click)="importData()"
-      [disabled]="loading">
+      [disabled]="loading"
+      class="action-button import-button">
       <mat-icon>upload</mat-icon>
       Importar
     </button>
@@ -47,7 +41,8 @@
       mat-raised-button 
       color="primary" 
       (click)="saveConfig()"
-      [disabled]="loading">
+      [disabled]="loading"
+      class="action-button save-button">
       <mat-icon *ngIf="!loading">save</mat-icon>
       <mat-icon *ngIf="loading" class="spinning">refresh</mat-icon>
       {{ loading ? 'Salvando...' : 'Salvar Configurações' }}
@@ -68,6 +63,4 @@
     <span>Você tem alterações não salvas</span>
   </div>
 
-  <!-- Footer -->
-  <app-footer></app-footer>
 </div>

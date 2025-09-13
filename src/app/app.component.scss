@@ -1,7 +1,7 @@
 :host {
   display: block;
   height: 100vh;
-  overflow: auto;
+  overflow: auto; // Permite scroll normal
 }
 
 // Reset global styles
@@ -9,14 +9,19 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   background-color: #fafafa;
+  overflow: auto; // Permite scroll normal
 }
 
-// Ensure full height
-html, body {
-  height: 100%;
+// Container principal com Flexbox
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Muda para min-height para permitir scroll
+  overflow: visible; // Permite scroll normal
 }

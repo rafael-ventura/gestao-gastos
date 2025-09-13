@@ -49,7 +49,7 @@ export class NavigationComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
 
-  isMobile = false;
+  // isMobile removido - bottom navigation foi removida
   currentRoute = '';
   sidenavOpen = false;
 
@@ -87,10 +87,7 @@ export class NavigationComponent implements OnInit {
         this.currentRoute = event.url;
       });
 
-    // Detecta se é mobile
-    this.isHandset$.subscribe(isHandset => {
-      this.isMobile = isHandset;
-    });
+    // Bottom navigation removida - não precisa mais detectar mobile
 
     // Carrega dados iniciais
     this.loadData();
@@ -108,10 +105,8 @@ export class NavigationComponent implements OnInit {
   onNavItemClick(route: string) {
     this.router.navigate([route]);
     
-    // Fecha o sidenav no mobile após navegar
-    if (this.isMobile) {
-      this.sidenavOpen = false;
-    }
+    // Fecha o sidenav após navegar
+    this.sidenavOpen = false;
   }
 
   toggleSidenav() {

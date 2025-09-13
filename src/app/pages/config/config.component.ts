@@ -8,7 +8,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ConfigFormComponent } from './components/config-form/config-form.component';
 import { CategoriesManagerComponent } from './components/categories-manager/categories-manager.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 import { StorageService } from '../../core/services/storage.service';
 import { UtilsService } from '../../core/services/utils.service';
@@ -25,8 +24,7 @@ import { Category } from '../../core/models/category.model';
     MatIconModule,
     MatTooltipModule,
     ConfigFormComponent,
-    CategoriesManagerComponent,
-    FooterComponent
+    CategoriesManagerComponent
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'
@@ -185,14 +183,6 @@ export class ConfigComponent implements OnInit {
     }
   }
 
-  resetConfig() {
-    if (this.hasChanges) {
-      // TODO: Implementar dialog de confirmação
-      this.loadSettings();
-      this.hasChanges = false;
-      this.snackBar.open('Configurações restauradas', 'Fechar', { duration: 2000 });
-    }
-  }
 
   // ===== UTILITÁRIOS =====
   formatCurrency(value: number): string {

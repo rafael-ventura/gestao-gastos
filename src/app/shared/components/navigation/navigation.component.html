@@ -2,15 +2,7 @@
 <mat-toolbar class="main-toolbar">
   <div class="toolbar-content">
     
-    <!-- Botão Menu (Mobile) -->
-    <button 
-      *ngIf="isMobile" 
-      mat-icon-button 
-      (click)="toggleSidenav()"
-      class="menu-button"
-      matTooltip="Menu">
-      <mat-icon>menu</mat-icon>
-    </button>
+    <!-- Botão Menu (Mobile) - Removido -->
 
     <!-- Logo e Título -->
     <div class="logo-section">
@@ -19,7 +11,7 @@
     </div>
 
     <!-- Saldo (Desktop) -->
-    <div *ngIf="!isMobile && hasData" class="balance-section">
+    <div *ngIf="hasData" class="balance-section">
       <div class="balance-info" [class]="getBalanceColor()">
         <mat-icon class="balance-icon">{{ getBalanceIcon() }}</mat-icon>
         <span class="balance-amount">{{ formatCurrency(balance) }}</span>
@@ -27,7 +19,7 @@
     </div>
 
     <!-- Menu Desktop -->
-    <div *ngIf="!isMobile" class="desktop-nav">
+    <div class="desktop-nav">
       <button 
         *ngFor="let item of navItems" 
         mat-button 
@@ -40,18 +32,7 @@
       </button>
     </div>
 
-    <!-- Menu Mobile (Toolbar) -->
-    <div *ngIf="isMobile" class="mobile-nav">
-      <button 
-        *ngFor="let item of navItems" 
-        mat-icon-button 
-        [routerLink]="item.route"
-        [class.active]="isActiveRoute(item.route)"
-        [matTooltip]="item.tooltip"
-        class="mobile-nav-button">
-        <mat-icon>{{ item.icon }}</mat-icon>
-      </button>
-    </div>
+    <!-- Menu Mobile removido -->
 
   </div>
 </mat-toolbar>
@@ -113,18 +94,4 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<!-- Bottom Navigation (Mobile) -->
-<div *ngIf="isMobile" class="bottom-nav">
-  <div class="bottom-nav-content">
-    <button 
-      *ngFor="let item of navItems" 
-      mat-icon-button 
-      [routerLink]="item.route"
-      [class.active]="isActiveRoute(item.route)"
-      [matTooltip]="item.tooltip"
-      class="bottom-nav-button">
-      <mat-icon>{{ item.icon }}</mat-icon>
-      <span class="button-label">{{ item.label }}</span>
-    </button>
-  </div>
-</div>
+<!-- Bottom Navigation removida para evitar interferência -->

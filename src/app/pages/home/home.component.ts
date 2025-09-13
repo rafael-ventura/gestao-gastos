@@ -20,7 +20,6 @@ import { Transaction } from '../../core/models/transaction.model';
 import { CustomModalService } from '../../shared/components/custom-modal/custom-modal.service';
 import { TransactionModalComponent, TransactionModalData } from './components/transaction-modal/transaction-modal.component';
 import { DeleteConfirmationModalComponent, DeleteConfirmationData } from './components/delete-confirmation-modal/delete-confirmation-modal.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
@@ -34,8 +33,7 @@ import { FooterComponent } from '../../shared/components/footer/footer.component
     MatChipsModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    MatTooltipModule,
-    FooterComponent
+    MatTooltipModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
