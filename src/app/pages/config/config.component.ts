@@ -1,24 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { ColorPickerComponent } from '../../shared/components/color-picker/color-picker.component';
-import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
+import { ConfigFormComponent } from './components/config-form/config-form.component';
+import { CategoriesManagerComponent } from './components/categories-manager/categories-manager.component';
 
 import { StorageService } from '../../core/services/storage.service';
 import { UtilsService } from '../../core/services/utils.service';
+import { SalaryService } from '../../core/services/salary.service';
 import { Settings } from '../../core/models/settings.model';
 import { Category } from '../../core/models/category.model';
 
@@ -27,18 +20,11 @@ import { Category } from '../../core/models/category.model';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule,
-    MatDividerModule,
     MatTooltipModule,
-    ColorPickerComponent,
-    FormInputComponent
+    ConfigFormComponent,
+    CategoriesManagerComponent
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'
@@ -46,13 +32,9 @@ import { Category } from '../../core/models/category.model';
 export class ConfigComponent implements OnInit {
   private storageService = inject(StorageService);
   private utilsService = inject(UtilsService);
-  private fb = inject(FormBuilder);
+  private salaryService = inject(SalaryService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
-
-  // Formulários
-  configForm!: FormGroup;
-  categoriesForm!: FormGroup;
 
   // Dados
   settings!: Settings;
@@ -63,132 +45,62 @@ export class ConfigComponent implements OnInit {
   hasChanges = false;
   autoSaveEnabled = true;
 
-  // Opções
-  days = Array.from({length: 31}, (_, i) => i + 1);
-  colorPresets = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
-    '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2'
-  ];
+  // Dados dos formulários
+  configData: any = {};
+  categoriesData: Category[] = [];
 
   ngOnInit() {
     this.loadSettings();
-    this.initializeForms();
   }
 
   loadSettings() {
     this.settings = this.storageService.getSettings();
     this.categories = [...this.settings.categories];
-  }
-
-  initializeForms() {
-    // Formulário principal de configurações
-    this.configForm = this.fb.group({
-      salary: [this.settings.salary, [Validators.min(0)]],
-      salaryDay: [this.settings.salaryDay, [Validators.required, Validators.min(1), Validators.max(31)]],
-      creditCardDueDay: [this.settings.creditCardDueDay, [Validators.required, Validators.min(1), Validators.max(31)]]
-    });
-
-    // Formulário de categorias
-    this.categoriesForm = this.fb.group({
-      categories: this.fb.array([])
-    });
-
-    this.populateCategoriesForm();
-
-    // Detecta mudanças
-    this.configForm.valueChanges.subscribe(() => {
-      this.hasChanges = true;
-      if (this.autoSaveEnabled) {
-        this.autoSave();
-      }
-    });
-    this.categoriesForm.valueChanges.subscribe(() => {
-      this.hasChanges = true;
-      if (this.autoSaveEnabled) {
-        this.autoSave();
-      }
-    });
-  }
-
-  populateCategoriesForm() {
-    const categoriesArray = this.categoriesForm.get('categories') as FormArray;
-    categoriesArray.clear();
-
-    this.categories.forEach(category => {
-      categoriesArray.push(this.createCategoryFormGroup(category));
-    });
-  }
-
-  createCategoryFormGroup(category: Category): FormGroup {
-    return this.fb.group({
-      id: [category.id],
-      name: [category.name, [Validators.required, Validators.minLength(2)]],
-      color: [category.color, [Validators.required, this.utilsService.isValidColor.bind(this.utilsService)]]
-    });
-  }
-
-  get categoriesArray(): FormArray {
-    return this.categoriesForm.get('categories') as FormArray;
-  }
-
-  // ===== AÇÕES DE CATEGORIAS =====
-  addCategory() {
-    const newCategory: Category = {
-      id: this.utilsService.generateId(),
-      name: 'Nova Categoria',
-      color: this.getRandomColor()
+    this.categoriesData = [...this.categories];
+    
+    // Inicializa os dados do formulário com os valores salvos
+    this.configData = {
+      salary: this.settings.salary,
+      salaryDay: this.settings.salaryDay,
+      creditCardDueDay: this.settings.creditCardDueDay
     };
-
-    this.categories.push(newCategory);
-    this.categoriesArray.push(this.createCategoryFormGroup(newCategory));
-    this.hasChanges = true;
+    
+    console.log('Configurações carregadas:', this.configData);
   }
 
-  removeCategory(index: number) {
-    if (this.categories.length <= 1) {
-      this.snackBar.open('Deve haver pelo menos uma categoria', 'Fechar', { duration: 3000 });
-      return;
+  // ===== HANDLERS DOS SUBCOMPONENTES =====
+  onConfigFormChange(data: any) {
+    this.configData = data;
+    this.hasChanges = true;
+    if (this.autoSaveEnabled) {
+      this.autoSave();
     }
-
-    this.categories.splice(index, 1);
-    this.categoriesArray.removeAt(index);
-    this.hasChanges = true;
   }
 
-  duplicateCategory(index: number) {
-    const originalCategory = this.categories[index];
-    const duplicatedCategory: Category = {
-      id: this.utilsService.generateId(),
-      name: `${originalCategory.name} (Cópia)`,
-      color: originalCategory.color
-    };
-
-    this.categories.splice(index + 1, 0, duplicatedCategory);
-    this.categoriesArray.insert(index + 1, this.createCategoryFormGroup(duplicatedCategory));
+  onCategoriesChange(categories: Category[]) {
+    this.categoriesData = categories;
     this.hasChanges = true;
+    if (this.autoSaveEnabled) {
+      this.autoSave();
+    }
   }
 
   // ===== SALVAR CONFIGURAÇÕES =====
   saveConfig() {
     this.loading = true;
 
-    // Verifica se há erros de validação
-    const hasErrors = this.configForm.invalid || this.categoriesForm.invalid;
-    if (hasErrors) {
-      this.snackBar.open('Atenção: Há erros no formulário, mas as configurações válidas serão salvas', 'Fechar', { duration: 4000 });
-    }
-
     try {
+      // Armazena valores anteriores para comparação
+      const previousSalary = this.settings.salary;
+      const previousSalaryDay = this.settings.salaryDay;
+
       // Atualiza configurações principais
-      const configData = this.configForm.value;
-      this.settings.salary = configData.salary || 0;
-      this.settings.salaryDay = configData.salaryDay;
-      this.settings.creditCardDueDay = configData.creditCardDueDay;
+      this.settings.salary = this.configData.salary || 0;
+      this.settings.salaryDay = this.configData.salaryDay;
+      this.settings.creditCardDueDay = this.configData.creditCardDueDay;
 
       // Atualiza categorias
-      const categoriesData = this.categoriesForm.value.categories;
-      this.settings.categories = categoriesData.map((cat: any) => ({
+      this.settings.categories = this.categoriesData.map((cat: Category) => ({
         id: cat.id,
         name: cat.name.trim(),
         color: cat.color
@@ -196,6 +108,9 @@ export class ConfigComponent implements OnInit {
 
       // Salva no storage
       this.storageService.saveSettings(this.settings);
+      
+      // Sincroniza salário se houve mudanças relevantes
+      this.syncSalaryIfNeeded(previousSalary, previousSalaryDay);
       
       this.hasChanges = false;
       this.snackBar.open('Configurações salvas com sucesso!', 'Fechar', { duration: 3000 });
@@ -208,28 +123,53 @@ export class ConfigComponent implements OnInit {
     }
   }
 
+  /**
+   * Sincroniza o salário se houve mudanças relevantes
+   */
+  private syncSalaryIfNeeded(previousSalary: number, previousSalaryDay: number): void {
+    const currentSalary = this.settings.salary;
+    const currentSalaryDay = this.settings.salaryDay;
+
+    // Verifica se houve mudanças no salário ou no dia
+    const salaryChanged = previousSalary !== currentSalary;
+    const salaryDayChanged = previousSalaryDay !== currentSalaryDay;
+
+    if (salaryChanged || salaryDayChanged) {
+      try {
+        const updated = this.salaryService.syncSalaryWithSettings();
+        
+        if (updated) {
+          const salaryAmount = this.utilsService.formatCurrency(currentSalary);
+          const salaryDay = currentSalaryDay;
+          
+          this.snackBar.open(
+            `Salário atualizado: ${salaryAmount} no dia ${salaryDay} 💰`,
+            'Ver',
+            { 
+              duration: 4000,
+              panelClass: ['success-snackbar']
+            }
+          );
+        }
+      } catch (error) {
+        console.error('Erro ao sincronizar salário:', error);
+        // Não mostra erro para o usuário, pois é uma funcionalidade secundária
+      }
+    }
+  }
+
   resetConfig() {
     if (this.hasChanges) {
       // TODO: Implementar dialog de confirmação
       this.loadSettings();
-      this.initializeForms();
       this.hasChanges = false;
       this.snackBar.open('Configurações restauradas', 'Fechar', { duration: 2000 });
     }
   }
 
   // ===== UTILITÁRIOS =====
-  getRandomColor(): string {
-    return this.colorPresets[Math.floor(Math.random() * this.colorPresets.length)];
-  }
-
   formatCurrency(value: number): string {
     return this.utilsService.formatCurrency(value);
-  }
-
-  // ===== VALIDAÇÕES =====
-  hasFormErrors(): boolean {
-    return this.configForm.invalid || this.categoriesForm.invalid;
   }
 
   onEnterKey(): void {
@@ -286,7 +226,6 @@ export class ConfigComponent implements OnInit {
         
         if (success) {
           this.loadSettings();
-          this.initializeForms();
           this.snackBar.open('Dados importados com sucesso!', 'Fechar', { duration: 3000 });
         } else {
           this.snackBar.open('Erro ao importar dados - arquivo inválido', 'Fechar', { duration: 3000 });
@@ -300,30 +239,5 @@ export class ConfigComponent implements OnInit {
     reader.readAsText(file);
   }
 
-  getCategoryError(index: number, field: string): string {
-    const categoryGroup = this.categoriesArray.at(index);
-    const fieldControl = categoryGroup.get(field);
-    
-    if (fieldControl?.errors) {
-      if (fieldControl.errors['required']) return 'Campo obrigatório';
-      if (fieldControl.errors['minlength']) return 'Mínimo 2 caracteres';
-      if (fieldControl.errors['min']) return 'Valor inválido';
-      if (fieldControl.errors['max']) return 'Valor inválido';
-    }
-    
-    return '';
-  }
-
-  getConfigError(field: string): string {
-    const fieldControl = this.configForm.get(field);
-    
-    if (fieldControl?.errors) {
-      if (fieldControl.errors['required']) return 'Campo obrigatório';
-      if (fieldControl.errors['min']) return 'Valor deve ser positivo';
-      if (fieldControl.errors['max']) return 'Valor inválido';
-    }
-    
-    return '';
-  }
 }
 
