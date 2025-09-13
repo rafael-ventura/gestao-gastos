@@ -1,25 +1,25 @@
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  MatRipple,
+  _StructuralStylesLoader
+} from "./chunk-PNMX27WQ.js";
 import "./chunk-OIBNGD5S.js";
 import {
   CdkPortal,
   CdkPortalOutlet,
   TemplatePortal
-} from "./chunk-LEYVMM7S.js";
+} from "./chunk-TCE7PLZQ.js";
 import {
   SharedResizeObserver
-} from "./chunk-WROIBPVI.js";
+} from "./chunk-KH5FT5EW.js";
+import "./chunk-2HO4TAWF.js";
+import "./chunk-42FJBLFI.js";
+import "./chunk-JXBCBRYI.js";
 import {
   CdkScrollable,
   ViewportRuler
-} from "./chunk-MPPFP7PY.js";
-import "./chunk-LSHTIKFA.js";
-import {
-  MAT_RIPPLE_GLOBAL_OPTIONS,
-  MatRipple,
-  _StructuralStylesLoader
-} from "./chunk-KTGFH3TI.js";
-import "./chunk-2FQU5IEP.js";
-import "./chunk-42FJBLFI.js";
-import "./chunk-JXBCBRYI.js";
+} from "./chunk-KRTJ32CO.js";
+import "./chunk-PZXHIJGI.js";
 import "./chunk-2O4WY5GE.js";
 import {
   CdkMonitorFocus,
@@ -31,20 +31,20 @@ import {
   SPACE,
   _IdGenerator,
   hasModifierKey
-} from "./chunk-CWBJ3UB5.js";
-import "./chunk-MCN6QZ6Z.js";
+} from "./chunk-IKHXPGAQ.js";
+import "./chunk-XUCZXVT7.js";
 import {
   Directionality
-} from "./chunk-D67GFKGK.js";
+} from "./chunk-MRLABJ3O.js";
 import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
-} from "./chunk-WCU3UK5P.js";
-import "./chunk-JCEZRLIP.js";
+} from "./chunk-NTVRGWQ2.js";
+import "./chunk-2PKFSZPY.js";
 import {
   Platform
-} from "./chunk-GQFJA4KQ.js";
-import "./chunk-H5FU6EWB.js";
+} from "./chunk-ISA6TF3I.js";
+import "./chunk-O3Y4EQOG.js";
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -113,11 +113,11 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵviewQuery
-} from "./chunk-RFZ2BTTM.js";
-import "./chunk-PEBH6BBU.js";
+} from "./chunk-OEOH75ZL.js";
 import {
   merge
 } from "./chunk-WPM5VTLQ.js";
+import "./chunk-PEBH6BBU.js";
 import {
   BehaviorSubject,
   EMPTY,
@@ -133,7 +133,7 @@ import {
   takeUntil,
   timer
 } from "./chunk-4S3KYZTJ.js";
-import "./chunk-WDMUDEB6.js";
+import "./chunk-TXDUYLVM.js";
 
 // node_modules/@angular/material/fesm2022/tabs.mjs
 var _c0 = ["*"];
