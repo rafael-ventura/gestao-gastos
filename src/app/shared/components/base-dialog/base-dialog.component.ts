@@ -320,47 +320,7 @@ export interface DialogAction {
       }
     }
     
-    // ===== ESTILOS DO SELECT PARA MODAL =====
-    ::ng-deep .mat-mdc-select-panel {
-      background: var(--dark-gradient) !important;
-      border-radius: 16px !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-      color: white !important;
-      
-      .mat-mdc-option {
-        color: white !important;
-        border-radius: 8px !important;
-        margin: 4px 8px !important;
-        transition: all 0.2s ease !important;
-        
-        &:hover {
-          background-color: rgba(96, 165, 250, 0.2) !important;
-          color: #60a5fa !important;
-        }
-        
-        &.mdc-list-item--selected {
-          background-color: rgba(96, 165, 250, 0.3) !important;
-          color: #60a5fa !important;
-          font-weight: 600 !important;
-        }
-        
-        // Remove animações estranhas
-        .mat-pseudo-checkbox {
-          display: none !important;
-        }
-      }
-    }
-    
-    // Remove animações de entrada/saída do select
-    ::ng-deep .mat-mdc-select-panel-wrap {
-      animation: none !important;
-    }
-    
-    ::ng-deep .mat-select-panel {
-      animation: none !important;
-      transform: none !important;
-    }
+    // Estilos removidos - usar CSS global para evitar conflitos
   `]
 })
 export class BaseDialogComponent {

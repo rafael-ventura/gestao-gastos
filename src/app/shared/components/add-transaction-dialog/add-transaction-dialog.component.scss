@@ -4,8 +4,9 @@
   max-width: 750px;
   width: 90vw;
   max-height: 85vh;
-  overflow: hidden;
+  overflow: visible; // Mudado de hidden para visible para permitir overlays
   position: relative;
+  z-index: 1000; // Garantir que o modal tenha z-index adequado
   
   // Barra superior decorativa usando design system
   &::before {
@@ -33,11 +34,15 @@
   padding: 32px;
   background: transparent !important;
   color: white !important;
+  position: relative;
+  z-index: 1; // Garantir que o form tenha z-index adequado
   
   // Usando FormInputComponent - sem overrides necessários
   app-form-input {
     width: 100%;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
   }
   
   // Apenas ajustes específicos para elementos não cobertos pelo tema
@@ -48,6 +53,8 @@
     align-items: center;
     gap: 8px;
   }
+  
+  // Remover estilos conflitantes - usar CSS global
 }
 
 // ===== COMPACT FORM =====

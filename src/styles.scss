@@ -401,10 +401,96 @@ body {
   }
 }
 
-// ===== ANIMAÇÕES SUAVES E MODERNAS =====
-* {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+// ===== Z-INDEX HIERARCHY - SIMPLIFICADO =====
+// Container principal dos overlays
+.cdk-overlay-container {
+  z-index: 3000 !important;
 }
+
+// Backdrop dos overlays
+.cdk-overlay-backdrop {
+  z-index: 2999 !important;
+}
+
+// Modal dialog
+.mat-mdc-dialog-container {
+  z-index: 2000 !important;
+}
+
+.mat-mdc-dialog-backdrop {
+  z-index: 1999 !important;
+}
+
+// Overlays específicos (select, datepicker, autocomplete)
+.mat-mdc-select-panel,
+.mat-datepicker-popup,
+.mat-mdc-autocomplete-panel {
+  z-index: 3001 !important;
+}
+
+// ===== SELECT GLOBAL - FUNCIONA EM QUALQUER CONTEXTO =====
+.mat-mdc-select-panel {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  
+  .mat-mdc-option {
+    color: white !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+    transition: all 0.2s ease !important;
+    
+    &:hover {
+      background-color: rgba(96, 165, 250, 0.2) !important;
+      color: #60a5fa !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background-color: rgba(96, 165, 250, 0.3) !important;
+      color: #60a5fa !important;
+      font-weight: 600 !important;
+    }
+    
+    .mat-pseudo-checkbox {
+      display: none !important;
+    }
+  }
+}
+
+// ===== INPUT DE DATA NATIVO =====
+// Estilos para input de data nativo do HTML5
+input[type="date"] {
+  color-scheme: dark !important;
+  
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
+    
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+  
+  &::-webkit-datetime-edit-text {
+    color: white !important;
+  }
+  
+  &::-webkit-datetime-edit-month-field,
+  &::-webkit-datetime-edit-day-field,
+  &::-webkit-datetime-edit-year-field {
+    color: white !important;
+  }
+  
+  &::-webkit-datetime-edit-fields-wrapper {
+    background: transparent !important;
+  }
+}
+
+// ===== ANIMAÇÕES SUAVES E MODERNAS =====
+// Removido transition global que causava animações indesejadas nos selects
 
 // Animações especiais para elementos interativos
 @keyframes gentleBounce {
@@ -424,9 +510,7 @@ body {
   }
 }
 
-// Aplicar animações suaves em elementos que aparecem
-.mat-mdc-card,
-.mat-mdc-form-field,
-.mat-mdc-button {
+// Aplicar animações suaves apenas em elementos específicos
+.mat-mdc-card {
   animation: slideInUp 0.4s ease-out;
 }
