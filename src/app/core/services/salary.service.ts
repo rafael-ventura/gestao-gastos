@@ -49,7 +49,7 @@ export class SalaryService {
 
   /**
    * Adiciona o salário do mês atual automaticamente
-   * Usa sempre a data atual (quando o usuário configurou)
+   * Usa a data baseada nas configurações (dia do salário)
    */
   addMonthlySalary(): Transaction | null {
     const settings = this.storageService.getSettings();
@@ -64,14 +64,12 @@ export class SalaryService {
       return null;
     }
 
-    const today = new Date();
-
     const salaryTransaction: Transaction = {
       id: this.utilsService.generateId(),
       description: 'Salário',
       amount: settings.salary, // Positivo para receita
       category: 'Salário',
-      date: today.toISOString().split('T')[0], // Sempre usa a data atual
+      date: this.getSalaryDateFromSettings(), // Usa a data baseada nas configurações
       isCreditCard: false,
       createdAt: new Date()
     };
@@ -179,5 +177,136 @@ export class SalaryService {
       return transaction !== null;
     }
     return false;
+  }
+
+  /**
+   * Encontra o salário existente do mês atual
+   */
+  findCurrentMonthSalary(): Transaction | null {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    const transactions = this.storageService.getTransactions();
+    
+    return transactions.find(transaction => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        (transaction.description.toLowerCase() === 'salário' || 
+         transaction.category === 'Salário') &&
+        transaction.amount > 0 &&
+        transactionDate.getMonth() === currentMonth &&
+        transactionDate.getFullYear() === currentYear
+      ) || null;
+    }) || null;
+  }
+
+  /**
+   * Atualiza o salário existente com novas configurações
+   * Retorna true se o salário foi atualizado
+   */
+  updateExistingSalary(): boolean {
+    const settings = this.storageService.getSettings();
+    const existingSalary = this.findCurrentMonthSalary();
+    
+    if (!existingSalary || !settings.salary || settings.salary <= 0) {
+      return false;
+    }
+
+    // Verifica se precisa atualizar
+    const needsUpdate = 
+      existingSalary.amount !== settings.salary ||
+      this.getSalaryDateFromSettings() !== existingSalary.date;
+
+    if (!needsUpdate) {
+      console.log('Salário já está atualizado');
+      return false;
+    }
+
+    // Atualiza o salário existente
+    const updatedTransaction: Partial<Transaction> = {
+      amount: settings.salary,
+      date: this.getSalaryDateFromSettings()
+    };
+
+    this.storageService.updateTransaction(existingSalary.id, updatedTransaction);
+    
+    console.log('Salário atualizado:', {
+      id: existingSalary.id,
+      newAmount: settings.salary,
+      newDate: this.getSalaryDateFromSettings()
+    });
+
+    return true;
+  }
+
+  /**
+   * Calcula a data do salário baseada nas configurações
+   */
+  private getSalaryDateFromSettings(): string {
+    const settings = this.storageService.getSettings();
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    
+    // Cria a data do salário para o mês atual
+    let salaryDate = new Date(currentYear, currentMonth, settings.salaryDay);
+    
+    // Se o dia do salário já passou, usa o próximo mês
+    if (salaryDate < today) {
+      salaryDate = new Date(currentYear, currentMonth + 1, settings.salaryDay);
+    }
+    
+    return salaryDate.toISOString().split('T')[0];
+  }
+
+  /**
+   * Sincroniza o salário com as configurações atuais
+   * Atualiza salário existente ou cria novo se necessário
+   */
+  syncSalaryWithSettings(): boolean {
+    const settings = this.storageService.getSettings();
+    
+    // Se não há salário configurado, remove salários existentes
+    if (!settings.salary || settings.salary <= 0) {
+      this.removeCurrentMonthSalaries();
+      return false;
+    }
+
+    const existingSalary = this.findCurrentMonthSalary();
+    
+    if (existingSalary) {
+      // Atualiza salário existente
+      return this.updateExistingSalary();
+    } else {
+      // Cria novo salário
+      const transaction = this.addMonthlySalary();
+      return transaction !== null;
+    }
+  }
+
+  /**
+   * Remove todos os salários do mês atual
+   */
+  private removeCurrentMonthSalaries(): void {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    const transactions = this.storageService.getTransactions();
+    const salaryTransactions = transactions.filter(transaction => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        (transaction.description.toLowerCase() === 'salário' || 
+         transaction.category === 'Salário') &&
+        transaction.amount > 0 &&
+        transactionDate.getMonth() === currentMonth &&
+        transactionDate.getFullYear() === currentYear
+      );
+    });
+
+    salaryTransactions.forEach(transaction => {
+      this.storageService.deleteTransaction(transaction.id);
+    });
+
+    console.log(`Removidos ${salaryTransactions.length} salários do mês atual`);
   }
 }
