@@ -18,6 +18,7 @@ import { CalculationService, MonthlySummary, CategorySummary } from '../../core/
 import { UtilsService } from '../../core/services/utils.service';
 import { Transaction } from '../../core/models/transaction.model';
 import { DeleteConfirmationModalComponent, DeleteConfirmationData } from './components/delete-confirmation-modal/delete-confirmation-modal.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-informacoes',
@@ -33,7 +34,8 @@ import { DeleteConfirmationModalComponent, DeleteConfirmationData } from './comp
     MatTabsModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatTooltipModule
+    MatTooltipModule,
+    FooterComponent
   ],
   templateUrl: './informacoes.component.html',
   styleUrl: './informacoes.component.scss'

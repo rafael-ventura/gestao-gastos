@@ -1,5 +1,6 @@
 .config-container {
   padding: 32px 24px;
+  padding-bottom: 60px; // Espaço extra para o footer
   max-width: 1000px;
   margin: 0 auto;
   min-height: calc(100vh - 64px);
@@ -8,7 +9,6 @@
   margin-top: 16px;
   margin-bottom: 16px;
   overflow-y: auto; // Garante que o scroll funcione
-  padding-bottom: 40px; // Adiciona espaço no final
 }
 
 // ===== HEADER =====

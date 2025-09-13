@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ConfigFormComponent } from './components/config-form/config-form.component';
 import { CategoriesManagerComponent } from './components/categories-manager/categories-manager.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 import { StorageService } from '../../core/services/storage.service';
 import { UtilsService } from '../../core/services/utils.service';
@@ -24,7 +25,8 @@ import { Category } from '../../core/models/category.model';
     MatIconModule,
     MatTooltipModule,
     ConfigFormComponent,
-    CategoriesManagerComponent
+    CategoriesManagerComponent,
+    FooterComponent
   ],
   templateUrl: './config.component.html',
   styleUrl: './config.component.scss'

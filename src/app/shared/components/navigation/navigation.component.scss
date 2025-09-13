@@ -301,8 +301,9 @@
 // ===== MAIN CONTENT =====
 .main-content {
   padding-top: 64px;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px);
   background: #fafafa;
+  padding-bottom: 120px; // Mais espaço para bottom nav + footer
 }
 
 // ===== BOTTOM NAVIGATION =====
@@ -384,9 +385,6 @@
     display: none;
   }
   
-  .main-content {
-    padding-bottom: 80px;
-  }
 }
 
 @media (max-width: 480px) {
