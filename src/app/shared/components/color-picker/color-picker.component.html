@@ -1,0 +1,42 @@
+<div class="color-picker-container" [class.compact]="compact">
+  
+  <!-- Cores Pastéis Sugeridas -->
+  <div class="suggested-colors">
+    <div class="colors-grid">
+      <button
+        *ngFor="let color of suggestedColors"
+        type="button"
+        class="color-button"
+        [class.selected]="selectedColor === color"
+        [style.background-color]="color"
+        (click)="selectColor(color)">
+        <mat-icon *ngIf="selectedColor === color" class="check-icon">check</mat-icon>
+      </button>
+      
+      <!-- Botão para Cor Personalizada -->
+      <button
+        type="button"
+        class="color-button custom-button"
+        [class.selected]="isCustomColor"
+        (click)="openCustomPicker()">
+        <mat-icon class="custom-icon">palette</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Input de cor personalizada (oculto) -->
+  <input
+    #colorInput
+    type="color"
+    class="hidden-color-input"
+    [id]="'color-input-' + componentId"
+    [value]="selectedColor"
+    (input)="onCustomColorChange($event)">
+
+  <!-- Preview da cor selecionada (apenas se não for compacto) -->
+  <div class="selected-preview" *ngIf="!compact && selectedColor">
+    <div class="preview-dot" [style.background-color]="selectedColor"></div>
+    <span class="preview-text">{{ getColorName(selectedColor) || selectedColor }}</span>
+  </div>
+  
+</div>

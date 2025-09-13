@@ -1,0 +1,91 @@
+<div class="form-input-container">
+  <!-- Input de data nativo - fora do mat-form-field -->
+  <div *ngIf="type === 'date'" class="date-input-container">
+    <label *ngIf="label" class="date-label">{{ label }}</label>
+    <div class="date-input-wrapper">
+      <input 
+        type="date"
+        class="date-input"
+        [placeholder]="placeholder"
+        [value]="value || ''"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        (input)="onDateInput($event)"
+        (blur)="onBlur()"
+        (focus)="onFocus()">
+      <mat-icon class="date-icon">calendar_today</mat-icon>
+    </div>
+    <div *ngIf="hint" class="date-hint">{{ hint }}</div>
+    <div *ngIf="errorMessage" class="date-error">{{ errorMessage }}</div>
+  </div>
+
+  <!-- Outros inputs dentro do mat-form-field -->
+  <mat-form-field *ngIf="type !== 'date'" class="modern-input" appearance="outline">
+    <!-- Input de texto/número -->
+    <input 
+      *ngIf="type !== 'select' && type !== 'textarea'"
+      matInput
+      [type]="type"
+      [placeholder]="placeholder"
+      [value]="value || ''"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [attr.maxlength]="maxLength"
+      [min]="min"
+      [max]="max"
+      [step]="step"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      (focus)="onFocus()">
+
+    <!-- Select -->
+    <mat-select 
+      *ngIf="type === 'select'"
+      [placeholder]="placeholder"
+      [value]="value || ''"
+      [disabled]="disabled"
+      (selectionChange)="onSelectChange($event)">
+      <mat-option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+
+    <!-- Textarea -->
+    <textarea 
+      *ngIf="type === 'textarea'"
+      matInput
+      [placeholder]="placeholder"
+      [value]="value || ''"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [attr.maxlength]="maxLength"
+      [rows]="rows"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      (focus)="onFocus()">
+    </textarea>
+
+    <!-- Label -->
+    <mat-label *ngIf="label">{{ label }}</mat-label>
+
+    <!-- Prefixo -->
+    <span *ngIf="prefix" matTextPrefix>{{ prefix }}</span>
+
+    <!-- Ícone de prefixo -->
+    <mat-icon *ngIf="prefixIcon" matIconPrefix>{{ prefixIcon }}</mat-icon>
+
+    <!-- Ícone de sufixo -->
+    <mat-icon *ngIf="suffixIcon" matIconSuffix>{{ suffixIcon }}</mat-icon>
+
+    <!-- Botão de limpar -->
+    <button *ngIf="clearable && value" matIconSuffix mat-icon-button (click)="clear()">
+      <mat-icon>clear</mat-icon>
+    </button>
+
+    <!-- Hint -->
+    <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+
+    <!-- Error -->
+    <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+  </mat-form-field>
+</div>

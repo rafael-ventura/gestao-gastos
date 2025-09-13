@@ -1,0 +1,263 @@
+.form-input-container {
+  width: 100%;
+  
+  .modern-input {
+    width: 100%;
+    
+    ::ng-deep {
+      // Container principal
+      .mat-mdc-text-field-wrapper {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        height: 48px !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        &.mdc-text-field--focused {
+          border-color: #60a5fa !important;
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+        }
+      }
+      
+      // Remover outline padrão
+      .mdc-notched-outline {
+        display: none !important;
+      }
+      
+      // Input - posicionamento limpo
+      .mat-mdc-input-element {
+        color: white !important;
+        font-weight: 500 !important;
+        padding: 12px 16px !important;
+        height: 44px !important;
+        line-height: 20px !important;
+        background: transparent !important;
+        border: none !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        vertical-align: middle !important;
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
+      }
+      
+      // Select
+      .mat-mdc-select-value {
+        color: white !important;
+        padding: 12px 16px !important;
+        line-height: 20px !important;
+        height: 44px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        vertical-align: middle !important;
+      }
+      
+      // Label - posicionamento simples
+      .mat-mdc-form-field-label {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-weight: 500 !important;
+        left: 16px !important;
+        
+        &.mdc-floating-label--float-above {
+          color: #60a5fa !important;
+          font-weight: 600 !important;
+        }
+      }
+      
+      // Prefixo R$
+      .mat-mdc-form-field-text-prefix {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-weight: 600 !important;
+        padding: 12px 0 12px 16px !important;
+        line-height: 20px !important;
+        height: 44px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+      
+      // Ícones
+      .mat-mdc-form-field-icon-prefix,
+      .mat-mdc-form-field-icon-suffix {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+      
+      // Hints e erros
+      .mat-mdc-form-field-hint {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.875rem !important;
+      }
+      
+      .mat-mdc-form-field-error {
+        color: #f87171 !important;
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+      }
+      
+      // Container do input de data - ESTILIZADO
+      .date-input-container {
+        width: 100%;
+        margin-bottom: 20px;
+        
+        .date-label {
+          display: block;
+          color: rgba(255, 255, 255, 0.6) !important;
+          font-weight: 500 !important;
+          margin-bottom: 8px !important;
+          font-size: 14px !important;
+          transition: all 0.2s ease !important;
+        }
+        
+        .date-input-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.1) !important;
+          border: 2px solid rgba(255, 255, 255, 0.2) !important;
+          border-radius: 12px !important;
+          height: 48px !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          backdrop-filter: blur(10px) !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+          
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          }
+          
+          &:focus-within {
+            border-color: #60a5fa !important;
+            background: rgba(96, 165, 250, 0.1) !important;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2), 0 4px 16px rgba(96, 165, 250, 0.1) !important;
+            transform: translateY(-1px) !important;
+          }
+        }
+        
+        .date-input {
+          flex: 1;
+          height: 44px !important;
+          padding: 0 16px !important;
+          background: transparent !important;
+          border: none !important;
+          outline: none !important;
+          color: white !important;
+          font-size: 16px !important;
+          font-weight: 500 !important;
+          color-scheme: dark !important;
+          cursor: pointer !important;
+          
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+            font-style: italic !important;
+          }
+          
+          &::-webkit-calendar-picker-indicator {
+            filter: invert(1) !important;
+            cursor: pointer !important;
+            opacity: 0.7 !important;
+            margin-right: 8px !important;
+            padding: 4px !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            
+            &:hover {
+              opacity: 1 !important;
+              background: rgba(255, 255, 255, 0.1) !important;
+              transform: scale(1.1) !important;
+            }
+          }
+          
+          &::-webkit-datetime-edit-text {
+            color: white !important;
+            font-weight: 500 !important;
+          }
+          
+          &::-webkit-datetime-edit-month-field,
+          &::-webkit-datetime-edit-day-field,
+          &::-webkit-datetime-edit-year-field {
+            color: white !important;
+            font-weight: 500 !important;
+            padding: 2px 4px !important;
+            border-radius: 4px !important;
+            transition: all 0.2s ease !important;
+            
+            &:hover {
+              background: rgba(255, 255, 255, 0.1) !important;
+            }
+          }
+          
+          &::-webkit-datetime-edit-fields-wrapper {
+            background: transparent !important;
+          }
+        }
+        
+        .date-icon {
+          color: rgba(255, 255, 255, 0.7) !important;
+          font-size: 1.2rem !important;
+          width: 1.2rem !important;
+          height: 1.2rem !important;
+          margin-right: 12px !important;
+          transition: all 0.2s ease !important;
+          cursor: pointer !important;
+          
+          &:hover {
+            color: #60a5fa !important;
+            transform: scale(1.1) !important;
+          }
+        }
+        
+        .date-hint {
+          color: rgba(255, 255, 255, 0.6) !important;
+          font-size: 0.875rem !important;
+          margin-top: 6px !important;
+          margin-left: 4px !important;
+          font-style: italic !important;
+        }
+        
+        .date-error {
+          color: #f87171 !important;
+          font-size: 0.875rem !important;
+          font-weight: 600 !important;
+          margin-top: 6px !important;
+          margin-left: 4px !important;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          
+          &::before {
+            content: '⚠️';
+            font-size: 0.75rem;
+          }
+        }
+        
+        // Animação de entrada
+        &.ng-enter {
+          animation: slideInUp 0.3s ease-out;
+        }
+      }
+      
+      // Animação de entrada suave
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
