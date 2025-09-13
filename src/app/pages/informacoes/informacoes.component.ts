@@ -10,11 +10,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { StorageService } from '../../core/services/storage.service';
 import { CalculationService, MonthlySummary, CategorySummary } from '../../core/services/calculation.service';
 import { UtilsService } from '../../core/services/utils.service';
 import { Transaction } from '../../core/models/transaction.model';
+import { DeleteConfirmationModalComponent, DeleteConfirmationData } from '../../shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-informacoes',
@@ -29,7 +32,8 @@ import { Transaction } from '../../core/models/transaction.model';
     MatProgressSpinnerModule,
     MatTabsModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatTooltipModule
   ],
   templateUrl: './informacoes.component.html',
   styleUrl: './informacoes.component.scss'
@@ -39,6 +43,7 @@ export class InformacoesComponent implements OnInit {
   private calculationService = inject(CalculationService);
   private utilsService = inject(UtilsService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   // Dados principais
   currentMonth = this.utilsService.getCurrentMonth();
@@ -248,6 +253,57 @@ export class InformacoesComponent implements OnInit {
 
   getDisplayTransactions(): Transaction[] {
     return this.selectedCategoryFilter ? this.filteredTransactions : this.monthTransactions;
+  }
+
+  /**
+   * Verifica se a transação é um salário
+   */
+  isSalaryTransaction(transaction: Transaction): boolean {
+    return transaction.category === 'Salário' || 
+           transaction.description.toLowerCase() === 'salário';
+  }
+
+  /**
+   * Confirma a exclusão de uma transação
+   */
+  confirmDeleteTransaction(transaction: Transaction): void {
+    const dialogData: DeleteConfirmationData = {
+      title: 'Excluir Transação',
+      message: 'Tem certeza que deseja excluir esta transação?',
+      itemName: transaction.description,
+      itemType: transaction.amount > 0 ? 'Receita' : 'Gasto'
+    };
+
+    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent, {
+      data: dialogData,
+      width: '500px',
+      maxWidth: '90vw'
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.deleteTransaction(transaction);
+      }
+    });
+  }
+
+  /**
+   * Exclui a transação
+   */
+  private deleteTransaction(transaction: Transaction): void {
+    try {
+      this.storageService.deleteTransaction(transaction.id);
+      this.snackBar.open('Transação excluída com sucesso!', 'Fechar', { 
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
+      
+      // Atualiza os dados
+      this.loadData();
+    } catch (error) {
+      console.error('Erro ao excluir transação:', error);
+      this.snackBar.open('Erro ao excluir transação', 'Fechar', { duration: 3000 });
+    }
   }
 }
 

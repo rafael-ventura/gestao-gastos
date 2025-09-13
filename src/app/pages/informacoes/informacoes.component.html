@@ -306,8 +306,18 @@
                         <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
                       </div>
                     </div>
-                    <div class="transaction-amount" [class]="transaction.amount > 0 ? 'positive' : 'negative'">
-                      {{ formatCurrency(transaction.amount) }}
+                    <div class="transaction-actions">
+                      <div class="transaction-amount" [class]="transaction.amount > 0 ? 'positive' : 'negative'">
+                        {{ formatCurrency(transaction.amount) }}
+                      </div>
+                      <button 
+                        *ngIf="!isSalaryTransaction(transaction)"
+                        mat-icon-button 
+                        class="delete-button"
+                        (click)="confirmDeleteTransaction(transaction)"
+                        matTooltip="Excluir transação">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </div>
                   </div>
                   

@@ -924,17 +924,40 @@
       }
     }
     
-    .transaction-amount {
-      font-weight: 600;
-      font-size: 1.1rem;
-      white-space: nowrap;
+    .transaction-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       
-      &.positive {
-        color: #4CAF50;
+      .transaction-amount {
+        font-weight: 600;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        
+        &.positive {
+          color: #4CAF50;
+        }
+        
+        &.negative {
+          color: #F44336;
+        }
       }
       
-      &.negative {
-        color: #F44336;
+      .delete-button {
+        color: rgba(255, 255, 255, 0.6);
+        transition: all 0.2s ease;
+        border-radius: 50%;
+        
+        &:hover {
+          color: #f87171;
+          background-color: rgba(248, 113, 113, 0.1);
+        }
+        
+        mat-icon {
+          font-size: 1.2rem;
+          width: 1.2rem;
+          height: 1.2rem;
+        }
       }
     }
   }

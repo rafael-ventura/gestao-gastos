@@ -493,21 +493,44 @@
       }
     }
     
-    .transaction-amount {
-      font-weight: 600;
-      font-size: 1.1rem;
-      white-space: nowrap;
-      padding: 6px 12px;
-      border-radius: var(--radius-md);
+    .transaction-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       
-      &.positive {
-        color: #059669;
-        background: rgba(34, 197, 94, 0.1);
+      .transaction-amount {
+        font-weight: 600;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        padding: 6px 12px;
+        border-radius: var(--radius-md);
+        
+        &.positive {
+          color: #059669;
+          background: rgba(34, 197, 94, 0.1);
+        }
+        
+        &.negative {
+          color: #dc2626;
+          background: rgba(239, 68, 68, 0.1);
+        }
       }
       
-      &.negative {
-        color: #dc2626;
-        background: rgba(239, 68, 68, 0.1);
+      .delete-button {
+        color: rgba(0, 0, 0, 0.4);
+        transition: all 0.2s ease;
+        border-radius: 50%;
+        
+        &:hover {
+          color: #dc2626;
+          background-color: rgba(220, 38, 38, 0.1);
+        }
+        
+        mat-icon {
+          font-size: 1.2rem;
+          width: 1.2rem;
+          height: 1.2rem;
+        }
       }
     }
   }

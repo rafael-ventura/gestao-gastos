@@ -7,6 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -18,6 +19,7 @@ import { SalaryService } from '../../core/services/salary.service';
 import { Transaction } from '../../core/models/transaction.model';
 import { CustomModalService } from '../../shared/components/custom-modal/custom-modal.service';
 import { TransactionModalComponent, TransactionModalData } from '../../shared/components/transaction-modal/transaction-modal.component';
+import { DeleteConfirmationModalComponent, DeleteConfirmationData } from '../../shared/components/delete-confirmation-modal/delete-confirmation-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -43,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private salaryService = inject(SalaryService);
   private customModal = inject(CustomModalService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
   private viewContainer = inject(ViewContainerRef);
 
@@ -248,5 +251,56 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.monthlyTransactionCount === 0) return '';
     if (this.monthlyTransactionCount === 1) return '1 lançamento este mês';
     return `${this.monthlyTransactionCount} lançamentos este mês`;
+  }
+
+  /**
+   * Verifica se a transação é um salário
+   */
+  isSalaryTransaction(transaction: Transaction): boolean {
+    return transaction.category === 'Salário' || 
+           transaction.description.toLowerCase() === 'salário';
+  }
+
+  /**
+   * Confirma a exclusão de uma transação
+   */
+  confirmDeleteTransaction(transaction: Transaction): void {
+    const dialogData: DeleteConfirmationData = {
+      title: 'Excluir Transação',
+      message: 'Tem certeza que deseja excluir esta transação?',
+      itemName: transaction.description,
+      itemType: transaction.amount > 0 ? 'Receita' : 'Gasto'
+    };
+
+    const dialogRef = this.dialog.open(DeleteConfirmationModalComponent, {
+      data: dialogData,
+      width: '500px',
+      maxWidth: '90vw'
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.deleteTransaction(transaction);
+      }
+    });
+  }
+
+  /**
+   * Exclui a transação
+   */
+  private deleteTransaction(transaction: Transaction): void {
+    try {
+      this.storageService.deleteTransaction(transaction.id);
+      this.snackBar.open('Transação excluída com sucesso!', 'Fechar', { 
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
+      
+      // Atualiza os dados
+      this.loadData();
+    } catch (error) {
+      console.error('Erro ao excluir transação:', error);
+      this.snackBar.open('Erro ao excluir transação', 'Fechar', { duration: 3000 });
+    }
   }
 }
