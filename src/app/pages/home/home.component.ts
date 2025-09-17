@@ -59,11 +59,31 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Estados
   loading = true;
   hasData = false;
+  private isInitialized = false;
   
   // Subscriptions
   private storageSubscription?: Subscription;
 
   ngOnInit() {
+    if (this.isInitialized) {
+      console.log('🏠 HomeComponent ngOnInit - Já inicializado, ignorando');
+      return;
+    }
+    
+    console.log('🏠 HomeComponent ngOnInit - Iniciando');
+    this.isInitialized = true;
+    
+    // PRIMEIRO: migra dados existentes para formato padronizado
+    this.storageService.migrateDataToStandardFormat();
+    
+    // TESTE: verifica se a criação de datas está funcionando
+    this.utilsService.testDateCreation(14);
+    this.utilsService.debugDateFlow(14);
+    this.utilsService.testUserProblem();
+    this.utilsService.testSpecificProblem();
+    this.utilsService.testFormattingProblem();
+    this.utilsService.testMultipleDates();
+    
     this.checkAndAddSalary();
     this.loadData();
     this.subscribeToStorageChanges();
@@ -81,6 +101,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         filter(event => event !== null && event.type === 'transactions')
       )
       .subscribe(() => {
+        console.log('🔄 HomeComponent - Mudança nas transações detectada');
         // Atualização automática quando houver mudança nas transações
         this.loadData();
       });
@@ -116,6 +137,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         t.category === 'Salário' || t.description.toLowerCase() === 'salário'
       );
       
+      console.log('🔍 DEBUG - Home Component:');
+      console.log('📊 Settings loaded:', settings);
+      console.log('💰 Salary from settings:', settings.salary);
+      console.log('📅 Salary day from settings:', settings.salaryDay);
+      console.log('💳 Credit card due day:', settings.creditCardDueDay);
+      console.log('💳 Existing salary transactions:', salaryTransactions);
+      console.log('📈 Current month income:', this.income);
+      console.log('📉 Current month expenses:', this.expenses);
+      console.log('💰 Current month balance:', this.balance);
+      
       // Sincronização automática: se há transação de salário mas configuração zerada
       if (salaryTransactions.length > 0 && settings.salary === 0) {
         const latestSalaryTransaction = salaryTransactions[0]; // Pega a mais recente
@@ -127,11 +158,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         
         console.log('✅ Salário sincronizado automaticamente!');
       }
-      
-      console.log('🔍 DEBUG - Home Component:');
-      console.log('📊 Settings:', settings);
-      console.log('💰 Salary from settings:', settings.salary);
-      console.log('💳 Salary transactions:', salaryTransactions);
       console.log('📈 Income calculated:', this.income);
       console.log('📉 Expenses calculated:', this.expenses);
       console.log('⚖️ Balance calculated:', this.balance);
@@ -191,7 +217,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   formatDate(date: string): string {
-    return this.utilsService.formatDateShort(date);
+    // SOLUÇÃO DEFINITIVA: Parse direto da string sem usar Date
+    console.log(`🔍 formatDate - INPUT: ${date}`);
+    
+    const [year, month, day] = date.split('-').map(Number);
+    const dayStr = String(day).padStart(2, '0');
+    const monthStr = String(month).padStart(2, '0');
+    const result = `${dayStr}/${monthStr}`;
+    
+    console.log(`🔍 formatDate - RESULTADO:`, {
+      input: date,
+      parsed: { year, month, day },
+      result,
+      CORRETO: result.includes('17') // Para dia 17
+    });
+    
+    return result;
   }
 
   getCategoryColor(categoryName: string): string {
@@ -224,8 +265,36 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Verifica e adiciona salário automaticamente se necessário
    */
   private checkAndAddSalary(): void {
+    console.log('💰 HOME - Verificando salário...');
     try {
+      // DEBUG: Verificar configurações antes da sincronização
+      const settingsBefore = this.storageService.getSettings();
+      console.log('🔍 CONFIGURAÇÕES ANTES DA SINCRONIZAÇÃO:', {
+        salary: settingsBefore.salary,
+        salaryDay: settingsBefore.salaryDay,
+        creditCardDueDay: settingsBefore.creditCardDueDay
+      });
+      
+      // PRIMEIRO: sincroniza o salaryDay com transações existentes
+      const syncResult = this.salaryService.syncSalaryDayFromExistingTransactions();
+      console.log('🔄 RESULTADO DA SINCRONIZAÇÃO:', syncResult);
+      
+      // SEGUNDO: corrige a data da transação existente
+      const fixResult = this.salaryService.fixExistingSalaryDate();
+      console.log('🔧 RESULTADO DA CORREÇÃO:', fixResult);
+      
+      // DEBUG: Verificar configurações após sincronização
+      const settingsAfter = this.storageService.getSettings();
+      console.log('🔍 CONFIGURAÇÕES APÓS SINCRONIZAÇÃO:', {
+        salary: settingsAfter.salary,
+        salaryDay: settingsAfter.salaryDay,
+        creditCardDueDay: settingsAfter.creditCardDueDay,
+        mudou: settingsBefore.salaryDay !== settingsAfter.salaryDay
+      });
+      
+      // SEGUNDO: verifica se precisa adicionar salário
       const salaryAdded = this.salaryService.checkAndAddSalaryIfNeeded();
+      console.log('💰 SALÁRIO ADICIONADO:', salaryAdded);
       
       if (salaryAdded) {
         const settings = this.storageService.getSettings();

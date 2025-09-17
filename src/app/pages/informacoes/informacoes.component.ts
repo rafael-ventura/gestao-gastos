@@ -163,13 +163,34 @@ export class InformacoesComponent implements OnInit {
     this.loadMonthData(month);
   }
 
+  onMonthSelectChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const month = target.value;
+    this.onMonthChange(month);
+  }
+
   // ===== UTILITÁRIOS =====
   formatCurrency(value: number): string {
     return this.utilsService.formatCurrency(value);
   }
 
   formatDate(date: string): string {
-    return this.utilsService.formatDateShort(date);
+    // SOLUÇÃO DEFINITIVA: Parse direto da string sem usar Date
+    console.log(`🔍 formatDate - INPUT: ${date}`);
+    
+    const [year, month, day] = date.split('-').map(Number);
+    const dayStr = String(day).padStart(2, '0');
+    const monthStr = String(month).padStart(2, '0');
+    const result = `${dayStr}/${monthStr}`;
+    
+    console.log(`🔍 formatDate - RESULTADO:`, {
+      input: date,
+      parsed: { year, month, day },
+      result,
+      CORRETO: result.includes('17') // Para dia 17
+    });
+    
+    return result;
   }
 
   formatMonthYear(month: string): string {
@@ -207,30 +228,29 @@ export class InformacoesComponent implements OnInit {
 
   private getLast12MonthsList(): string[] {
     const transactions = this.storageService.getTransactions();
+    const months: string[] = [];
+    
     if (transactions.length === 0) {
       // Se não há transações, retorna apenas o mês atual
       return [this.currentMonth];
     }
-
-    // Encontra a primeira transação para determinar o mês inicial
-    const firstTransaction = transactions.reduce((earliest, current) => 
-      new Date(current.date) < new Date(earliest.date) ? current : earliest
-    );
     
-    const firstMonth = firstTransaction.date.slice(0, 7);
-    const currentMonth = this.currentMonth;
+    // Encontra todos os meses únicos que têm transações
+    const monthsWithTransactions = new Set<string>();
+    transactions.forEach(transaction => {
+      const month = transaction.date.slice(0, 7); // YYYY-MM
+      monthsWithTransactions.add(month);
+    });
     
-    const months: string[] = [];
-    const start = new Date(firstMonth + '-01');
-    const end = new Date(currentMonth + '-01');
+    // Converte para array e ordena (mais recente primeiro)
+    const sortedMonths = Array.from(monthsWithTransactions).sort().reverse();
     
-    // Gera lista de meses do primeiro mês até o atual
-    while (start <= end) {
-      months.push(start.toISOString().slice(0, 7));
-      start.setMonth(start.getMonth() + 1);
+    // Se o mês atual não está na lista, adiciona ele
+    if (!sortedMonths.includes(this.currentMonth)) {
+      sortedMonths.unshift(this.currentMonth);
     }
     
-    return months.reverse(); // Mais recente primeiro
+    return sortedMonths;
   }
 
   // Métodos de filtro por categoria

@@ -54,9 +54,31 @@ export class ConfigComponent implements OnInit {
   }
 
   loadSettings() {
+    console.log('🔧 CONFIG - Carregando configurações...');
+    
     this.settings = this.storageService.getSettings();
     this.categories = [...this.settings.categories];
     this.categoriesData = [...this.categories];
+    
+    console.log('🔍 CONFIG - Configurações ANTES da sincronização:', {
+      salary: this.settings.salary,
+      salaryDay: this.settings.salaryDay,
+      creditCardDueDay: this.settings.creditCardDueDay
+    });
+    
+    // PRIMEIRO: sincroniza o salaryDay com transações existentes
+    const syncResult = this.salaryService.syncSalaryDayFromExistingTransactions();
+    console.log('🔄 CONFIG - Resultado da sincronização:', syncResult);
+    
+    // Atualiza as configurações após sincronização
+    this.settings = this.storageService.getSettings();
+    
+    console.log('🔍 CONFIG - Configurações APÓS sincronização:', {
+      salary: this.settings.salary,
+      salaryDay: this.settings.salaryDay,
+      creditCardDueDay: this.settings.creditCardDueDay,
+      mudou: syncResult
+    });
     
     // Verificar transações de salário existentes
     const transactions = this.storageService.getTransactions();
@@ -64,16 +86,21 @@ export class ConfigComponent implements OnInit {
       t.category === 'Salário' || t.description.toLowerCase() === 'salário'
     );
     
+    console.log('💳 CONFIG - Transações de salário encontradas:', salaryTransactions.length);
+    salaryTransactions.forEach((t, i) => {
+      console.log(`  ${i + 1}. ${t.date} - R$ ${t.amount} (${t.description})`);
+    });
+    
     // Sincronização automática: se há transação de salário mas configuração zerada
     if (salaryTransactions.length > 0 && this.settings.salary === 0) {
       const latestSalaryTransaction = salaryTransactions[0]; // Pega a mais recente
-      console.log('🔄 Sincronizando salário automaticamente:', latestSalaryTransaction.amount);
+      console.log('🔄 CONFIG - Sincronizando salário automaticamente:', latestSalaryTransaction.amount);
       
       // Atualiza as configurações com o valor da transação existente
       this.settings.salary = latestSalaryTransaction.amount;
       this.storageService.saveSettings(this.settings);
       
-      console.log('✅ Salário sincronizado automaticamente!');
+      console.log('✅ CONFIG - Salário sincronizado automaticamente!');
     }
     
     // Inicializa os dados do formulário com os valores salvos (ou sincronizados)
@@ -83,14 +110,7 @@ export class ConfigComponent implements OnInit {
       creditCardDueDay: this.settings.creditCardDueDay
     };
     
-    // Debug: Verificar configurações carregadas
-    console.log('🔍 DEBUG - Config Component:');
-    console.log('📊 Settings loaded:', this.settings);
-    console.log('💰 Salary from settings:', this.settings.salary);
-    console.log('📅 Salary day from settings:', this.settings.salaryDay);
-    console.log('💳 Credit card due day:', this.settings.creditCardDueDay);
-    console.log('📝 Config data initialized:', this.configData);
-    console.log('💳 Existing salary transactions:', salaryTransactions);
+    console.log('📝 CONFIG - Dados do formulário inicializados:', this.configData);
   }
 
   // ===== HANDLERS DOS SUBCOMPONENTES =====

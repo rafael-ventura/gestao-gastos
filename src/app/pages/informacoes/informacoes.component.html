@@ -9,15 +9,20 @@
     
     <!-- Seletor de Mês Modernizado -->
     <div class="month-selector-container">
-      <mat-form-field appearance="outline" class="month-selector">
-        <mat-label>Período</mat-label>
-        <mat-select [value]="selectedMonth" (selectionChange)="onMonthChange($event.value)">
-          <mat-option *ngFor="let month of months" [value]="month">
-            {{ formatMonthYear(month) }}
-          </mat-option>
-        </mat-select>
-        <mat-icon matPrefix>calendar_today</mat-icon>
-      </mat-form-field>
+      <div class="month-selector">
+        <label class="month-label">Período</label>
+        <div class="month-select-wrapper">
+          <mat-icon class="month-icon">calendar_today</mat-icon>
+          <select 
+            class="month-select"
+            [value]="selectedMonth" 
+            (change)="onMonthSelectChange($event)">
+            <option *ngFor="let month of months" [value]="month">
+              {{ formatMonthYear(month) }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 

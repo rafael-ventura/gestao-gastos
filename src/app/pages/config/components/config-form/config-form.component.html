@@ -9,40 +9,53 @@
     <form [formGroup]="configForm" class="config-form">
       
       <!-- Salário Mensal -->
-      <app-form-input
-        class="full-width"
-        label="Salário Mensal"
-        type="number"
-        placeholder="3000"
-        prefix="R$"
-        hint="Valor do seu salário mensal (opcional)"
-        [min]="0"
-        [step]="0.01"
-        [errorMessage]="getFieldError('salary')"
-        formControlName="salary">
-      </app-form-input>
+      <div class="full-width">
+        <label class="field-label">Salário Mensal</label>
+        <div class="input-with-prefix">
+          <span class="input-prefix">R$</span>
+          <input 
+            type="number"
+            class="form-input"
+            placeholder="3000"
+            [min]="0"
+            [step]="0.01"
+            formControlName="salary">
+        </div>
+        <div class="field-hint">Valor do seu salário mensal (opcional)</div>
+        <div *ngIf="getFieldError('salary')" class="field-error">{{ getFieldError('salary') }}</div>
+      </div>
 
       <!-- Configurações de Dias -->
       <div class="days-config">
-        <app-form-input
-          class="half-width"
-          label="Dia do Salário"
-          type="select"
-          hint="Dia do mês que você recebe o salário"
-          [options]="dayOptions"
-          [errorMessage]="getFieldError('salaryDay')"
-          formControlName="salaryDay">
-        </app-form-input>
+        <div class="half-width">
+          <label class="field-label">Dia do Salário</label>
+          <select 
+            class="form-select"
+            formControlName="salaryDay"
+            required>
+            <option value="" disabled>Selecione o dia</option>
+            <option *ngFor="let option of dayOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <div class="field-hint">Dia do mês que você recebe o salário</div>
+          <div *ngIf="getFieldError('salaryDay')" class="field-error">{{ getFieldError('salaryDay') }}</div>
+        </div>
 
-        <app-form-input
-          class="half-width"
-          label="Vencimento do Cartão"
-          type="select"
-          hint="Dia do mês que vence o cartão de crédito"
-          [options]="dayOptions"
-          [errorMessage]="getFieldError('creditCardDueDay')"
-          formControlName="creditCardDueDay">
-        </app-form-input>
+        <div class="half-width">
+          <label class="field-label">Vencimento do Cartão</label>
+          <select 
+            class="form-select"
+            formControlName="creditCardDueDay"
+            required>
+            <option value="" disabled>Selecione o dia</option>
+            <option *ngFor="let option of dayOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <div class="field-hint">Dia do mês que vence o cartão de crédito</div>
+          <div *ngIf="getFieldError('creditCardDueDay')" class="field-error">{{ getFieldError('creditCardDueDay') }}</div>
+        </div>
       </div>
 
     </form>

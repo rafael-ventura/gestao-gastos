@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ControlValueAc
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
+// FormInputComponent removido - usando inputs nativos com estilos globais
 import { Settings } from '../../../../core/models/settings.model';
 
 @Component({
@@ -14,8 +14,7 @@ import { Settings } from '../../../../core/models/settings.model';
     CommonModule,
     ReactiveFormsModule,
     MatCardModule,
-    MatIconModule,
-    FormInputComponent
+    MatIconModule
   ],
   providers: [
     {

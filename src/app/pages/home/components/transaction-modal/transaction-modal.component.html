@@ -1,158 +1,160 @@
-<div class="transaction-modal">
-  <!-- Header -->
-  <div class="modal-header">
-    <div class="header-content">
-      <mat-icon class="header-icon">account_balance_wallet</mat-icon>
-      <div class="header-text">
-        <h2 class="modal-title">{{ isEdit ? 'Editar Transação' : 'Adicionar Gasto' }}</h2>
-        <p class="modal-subtitle">{{ compactMode ? 'Adicione rapidamente um novo gasto' : 'Preencha as informações da transação' }}</p>
-      </div>
-    </div>
-    <button type="button" class="close-button" (click)="onCancel()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
-  <!-- Form -->
-  <form [formGroup]="transactionForm" (ngSubmit)="onSave($event)" class="transaction-form">
+<div class="modal-container">
     
-    <!-- Seletor de Tipo -->
-    <div class="transaction-type-selector">
-      <div class="type-toggle-container">
-        <button type="button" 
-                class="type-button expense-button"
-                [class.active]="transactionForm.get('transactionType')?.value === 'expense'"
-                (click)="transactionForm.patchValue({transactionType: 'expense'}); $event.stopPropagation()">
-          <mat-icon>trending_down</mat-icon>
-          <span>Gasto</span>
-        </button>
-        
-        <button type="button" 
-                class="type-button income-button"
-                [class.active]="transactionForm.get('transactionType')?.value === 'income'"
-                (click)="transactionForm.patchValue({transactionType: 'income'}); $event.stopPropagation()">
-          <mat-icon>trending_up</mat-icon>
-          <span>Receita</span>
-        </button>
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <div class="header-icon">💰</div>
+        <div class="header-text">
+          <h2>{{ isEdit ? 'Editar Transação' : 'Adicionar Gasto' }}</h2>
+          <p>{{ compactMode ? 'Adicione rapidamente um novo gasto' : 'Preencha as informações da transação' }}</p>
+        </div>
       </div>
+      <button class="close-btn" (click)="onCancel()">×</button>
     </div>
 
-    <!-- Campos principais -->
-    <div class="form-row">
-      <app-form-input
-        label="O que foi?"
-        type="text"
-        placeholder="Descreva a transação"
-        [formControlName]="'description'"
-        class="description-field">
-      </app-form-input>
-    </div>
-
-    <div class="form-row">
-      <app-form-input
-        label="R$ Valor"
-        type="number"
-        placeholder="0,00"
-        prefix="R$"
-        [formControlName]="'amount'"
-        class="amount-field">
-      </app-form-input>
+    <!-- Form -->
+    <form [formGroup]="transactionForm" (ngSubmit)="onSave($event)" class="modal-form">
       
-      <div class="category-field">
-        <select 
-          class="category-select"
-          [formControlName]="'category'"
-          required>
-          <option value="" disabled>Selecione uma categoria</option>
-          <option *ngFor="let option of categoryOptions" [value]="option.value">
-            {{ option.label }}
-          </option>
-        </select>
+      <!-- Tipo de Transação -->
+      <div class="form-section">
+        <label class="section-label">Tipo de Transação</label>
+        <div class="type-selector">
+          <button 
+            type="button" 
+            class="type-btn expense-btn"
+            [class.active]="transactionForm.get('transactionType')?.value === 'expense'"
+            (click)="transactionForm.patchValue({transactionType: 'expense'})">
+            <span class="btn-icon">📉</span>
+            <span>Gasto</span>
+          </button>
+          
+          <button 
+            type="button" 
+            class="type-btn income-btn"
+            [class.active]="transactionForm.get('transactionType')?.value === 'income'"
+            (click)="transactionForm.patchValue({transactionType: 'income'})">
+            <span class="btn-icon">📈</span>
+            <span>Receita</span>
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="form-row">
-      <div class="date-field">
-        <div class="date-input-container">
-          <label class="date-label">Data</label>
-          <div class="date-input-wrapper">
-            <!-- Input com máscara DD/MM -->
+      <!-- Descrição -->
+      <div class="form-section">
+        <label class="section-label">Descrição</label>
+        <input 
+          type="text" 
+          class="form-input"
+          placeholder="O que foi?"
+          [formControlName]="'description'"
+          required>
+      </div>
+
+      <!-- Valor e Categoria -->
+      <div class="form-row">
+        <div class="form-section">
+          <label class="section-label">Valor</label>
+          <div class="input-with-prefix">
+            <span class="input-prefix">R$</span>
             <input 
-              type="text"
-              [formControlName]="'date'"
-              placeholder="dd/mm"
-              class="date-input-custom"
-              (click)="toggleCustomDatePicker()"
-              (focus)="onDateInputFocus()"
-              (blur)="onDateInputBlur()"
-              (input)="onDateInputChange($event)"
-              #flatpickrInput>
-            <mat-icon class="date-icon" (click)="toggleCustomDatePicker()">calendar_today</mat-icon>
+              type="number" 
+              class="form-input"
+              placeholder="0,00"
+              [formControlName]="'amount'"
+              step="0.01"
+              min="0"
+              required>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <label class="section-label">Categoria</label>
+          <select 
+            class="form-select"
+            [formControlName]="'category'"
+            required>
+            <option value="" disabled>Selecione uma categoria</option>
+            <option *ngFor="let option of categoryOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="form-section">
+        <label class="section-label">Data</label>
+        <div class="date-container">
+          <input 
+            type="text"
+            class="form-input date-input"
+            placeholder="dd/mm"
+            [formControlName]="'date'"
+            (click)="toggleDatePicker()"
+            (input)="onDateInputChange($event)"
+            readonly>
+          <button type="button" class="date-btn" (click)="toggleDatePicker()">📅</button>
+          
+          <!-- Datepicker -->
+          <div class="datepicker" [class.show]="isDatePickerOpen">
+            <div class="datepicker-header">
+              <button type="button" class="nav-btn" (click)="previousMonth()">‹</button>
+              <span class="month-year">{{ currentMonthName }} {{ currentYear }}</span>
+              <button type="button" class="nav-btn" (click)="nextMonth()">›</button>
+            </div>
             
-            <!-- Datepicker customizado -->
-            <div class="custom-datepicker" [class.show]="isCustomDatePickerOpen">
-              <div class="datepicker-header">
-                <button class="nav-button" (click)="previousMonth()">
-                  <mat-icon>chevron_left</mat-icon>
-                </button>
-                <div class="month-year">
-                  {{ currentMonthName }} {{ currentYear }}
-                </div>
-                <button class="nav-button" (click)="nextMonth()">
-                  <mat-icon>chevron_right</mat-icon>
-                </button>
+            <div class="datepicker-weekdays">
+              <div class="weekday" *ngFor="let day of weekdays">{{ day }}</div>
+            </div>
+            
+            <div class="datepicker-days">
+              <div 
+                class="day" 
+                *ngFor="let day of calendarDays" 
+                [class.other-month]="!day.isCurrentMonth"
+                [class.today]="day.isToday"
+                [class.selected]="day.isSelected"
+                (click)="selectDate(day)">
+                {{ day.day }}
               </div>
-              
-              <div class="datepicker-weekdays">
-                <div class="weekday" *ngFor="let day of weekdays">{{ day }}</div>
-              </div>
-              
-              <div class="datepicker-days">
-                <div 
-                  class="day" 
-                  *ngFor="let day of calendarDays" 
-                  [class.other-month]="!day.isCurrentMonth"
-                  [class.today]="day.isToday"
-                  [class.selected]="day.isSelected"
-                  (click)="selectDate(day)"
-                  [attr.data-day]="day.day">
-                  {{ day.day }}
-                </div>
-              </div>
-              
-              <div class="datepicker-footer">
-                <button class="footer-button" (click)="clearDate()">Limpar</button>
-                <button class="footer-button" (click)="selectToday()">Hoje</button>
-              </div>
+            </div>
+            
+            <div class="datepicker-footer">
+              <button type="button" class="footer-btn" (click)="clearDate()">Limpar</button>
+              <button type="button" class="footer-btn" (click)="selectToday()">Hoje</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Cartão de Crédito -->
-    <div class="form-row">
-      <div class="credit-card-option">
-        <mat-checkbox [formControlName]="'isCreditCard'" class="credit-card-checkbox">
-          <mat-icon>credit_card</mat-icon>
-          <span>Gasto no cartão de crédito</span>
-        </mat-checkbox>
+      <!-- Cartão de Crédito -->
+      <div class="form-section">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            class="form-checkbox"
+            [formControlName]="'isCreditCard'">
+          <span class="checkbox-text">
+            <span class="checkbox-icon">💳</span>
+            Gasto no cartão de crédito
+          </span>
+        </label>
       </div>
+
+    </form>
+
+    <!-- Botões -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-cancel" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-save" 
+        [disabled]="!transactionForm.valid || loading"
+        (click)="onSave()">
+        {{ loading ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Adicionar') }}
+      </button>
     </div>
 
-  </form>
-
-  <!-- Actions -->
-  <div class="modal-actions">
-    <button type="button" class="cancel-button" (click)="onCancel()">
-      Cancelar
-    </button>
-    <button type="button" 
-            class="confirm-button" 
-            [disabled]="!transactionForm.valid || loading"
-            (click)="onSave()">
-      <mat-icon *ngIf="!loading">{{ isEdit ? 'save' : 'add' }}</mat-icon>
-      {{ loading ? 'Salvando...' : (isEdit ? 'Atualizar' : 'Adicionar') }}
-    </button>
-  </div>
 </div>

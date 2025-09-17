@@ -422,7 +422,7 @@ body {
 .mat-datepicker-popup,
 .mat-mdc-autocomplete-panel,
 .custom-select-panel {
-  z-index: 2001 !important;
+  z-index: 9999 !important;
   background: #1f2937 !important;
   color: white !important;
   
@@ -436,8 +436,52 @@ body {
   }
 }
 
-// ===== SELECT GLOBAL - REMOVIDO PARA EVITAR CONFLITO =====
-// O CSS do select panel agora está no FormInputComponent para maior especificidade
+// ===== SELECT GLOBAL - GARANTIR FUNCIONAMENTO =====
+// Garantir que os selects funcionem corretamente
+.mat-mdc-select {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  
+  .mat-mdc-select-trigger {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+  
+  .mat-mdc-select-value {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+  
+  .mat-mdc-select-arrow {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+}
+
+.mat-mdc-form-field {
+  pointer-events: auto !important;
+  
+  .mat-mdc-text-field-wrapper {
+    pointer-events: auto !important;
+  }
+}
+
+// Garantir que as opções do select sejam clicáveis
+.mat-mdc-option {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  
+  &:hover {
+    background-color: #60a5fa !important;
+    color: white !important;
+  }
+  
+  &.mdc-list-item--selected {
+    background-color: #60a5fa !important;
+    color: white !important;
+  }
+}
 
 // ===== INPUT DE DATA NATIVO - MELHORADO =====
 // Estilos para input de data nativo do HTML5
@@ -521,7 +565,8 @@ input[type="date"]:focus {
 }
 
 // ===== ESTILOS PARA FLATPICKR =====
-// Estilizar o datepicker do Flatpickr com tema escuro
+// COMENTADO TEMPORARIAMENTE PARA EVITAR CONFLITOS COM DATEPICKER CUSTOMIZADO
+/*
 .flatpickr-calendar {
   background: #1f2937 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -613,6 +658,7 @@ input[type="date"]:focus {
     }
   }
 }
+*/
 
 // ===== ANIMAÇÕES SUAVES E MODERNAS =====
 // Removido transition global que causava animações indesejadas nos selects
@@ -676,4 +722,104 @@ input[type="date"]:focus {
   .cdk-overlay-pane {
     overflow: visible !important;
   }
+}
+
+// ===== GLOBAL INPUT STYLES (PADRONIZAÇÃO) =====
+// Estilos globais para inputs baseados no modal
+.form-input,
+.form-select,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  
+  &:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+  
+  &::placeholder {
+    color: #666;
+  }
+}
+
+// Estilos específicos para selects
+.form-select,
+select {
+  cursor: pointer;
+  
+  option {
+    background: #2a2a2a;
+    color: white;
+  }
+}
+
+// Labels padronizados
+.field-label,
+label {
+  display: block;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+// Hints padronizados
+.field-hint,
+.hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  margin-top: 6px;
+  margin-left: 4px;
+  font-style: italic;
+}
+
+// Erros padronizados
+.field-error,
+.error {
+  color: #f87171;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 6px;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  &::before {
+    content: '⚠️';
+    font-size: 0.75rem;
+  }
+}
+
+// Input com prefixo (R$)
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 12px;
+  color: #aaa;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.input-with-prefix .form-input,
+.input-with-prefix input {
+  padding-left: 40px;
 }

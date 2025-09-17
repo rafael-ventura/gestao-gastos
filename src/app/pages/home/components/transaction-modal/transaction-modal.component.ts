@@ -7,7 +7,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // import * as flatpickr from 'flatpickr';
 
-import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
 import { CustomModalRef } from '../../../../shared/components/custom-modal/custom-modal.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { UtilsService } from '../../../../core/services/utils.service';
@@ -28,8 +27,7 @@ export interface TransactionModalData {
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    MatCheckboxModule,
-    FormInputComponent
+    MatCheckboxModule
   ],
   templateUrl: './transaction-modal.component.html',
   styleUrl: './transaction-modal.component.scss'
@@ -52,7 +50,7 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
   loading = false;
   
   // Custom datepicker properties
-  isCustomDatePickerOpen = false;
+  isDatePickerOpen = false;
   currentDate = new Date();
   currentYear = this.currentDate.getFullYear();
   currentMonth = this.currentDate.getMonth();
@@ -81,11 +79,17 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
       this.currentMonth === today.getMonth() && 
       this.currentYear === today.getFullYear();
     
-    const isSelected = (day: number) => 
-      this.selectedDate && 
-      day === this.selectedDate.getDate() && 
-      this.currentMonth === this.selectedDate.getMonth() && 
-      this.currentYear === this.selectedDate.getFullYear();
+    const isSelected = (day: number) => {
+      if (!this.selectedDate) return false;
+      
+      const selectedDay = this.selectedDate.getDate();
+      const selectedMonth = this.selectedDate.getMonth();
+      const selectedYear = this.selectedDate.getFullYear();
+      
+      return day === selectedDay && 
+             this.currentMonth === selectedMonth && 
+             this.currentYear === selectedYear;
+    };
     
     // Mostrar apenas 35 dias (5 semanas) para reduzir dias de outros meses
     for (let i = 0; i < 35; i++) {
@@ -122,15 +126,12 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
 
   initializeForm() {
     // Formatar data atual para DD/MM
-    const today = new Date();
-    const todayDisplay = this.formatDateForDisplay(today);
-    
     this.transactionForm = this.fb.group({
       transactionType: ['expense', Validators.required],
       description: ['', [Validators.required, Validators.minLength(2)]],
       amount: [0, [Validators.required, Validators.min(0.01)]],
       category: ['', Validators.required],
-      date: [todayDisplay, Validators.required],
+      date: ['', Validators.required],
       isCreditCard: [false]
     });
 
@@ -208,10 +209,26 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
 
   ngAfterViewInit() {
     this.initializeDateInput();
+    
+    // Event listener simples para fechar datepicker ao clicar fora
+    document.addEventListener('click', (event) => {
+      if (this.isDatePickerOpen) {
+        const target = event.target as HTMLElement;
+        const datepicker = document.querySelector('.datepicker');
+        const dateInput = document.querySelector('.date-input');
+        const dateBtn = document.querySelector('.date-btn');
+        
+        if (datepicker && !datepicker.contains(target) && 
+            !dateInput?.contains(target) && 
+            !dateBtn?.contains(target)) {
+          this.isDatePickerOpen = false;
+        }
+      }
+    });
   }
 
   ngOnDestroy() {
-    // Cleanup se necessário
+    // Limpar event listeners se necessário
   }
 
   // Métodos para o datepicker customizado
@@ -230,20 +247,47 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  // Métodos do datepicker customizado
-  toggleCustomDatePicker() {
-    this.isCustomDatePickerOpen = !this.isCustomDatePickerOpen;
+  // Métodos do datepicker customizado - SIMPLIFICADO
+  toggleDatePicker() {
+    this.isDatePickerOpen = !this.isDatePickerOpen;
+    
+    // Se estiver abrindo, configurar event listener para primeiro clique
+    if (this.isDatePickerOpen) {
+      setTimeout(() => {
+        this.setupDatePickerClickHandler();
+      }, 50);
+    }
   }
 
-  onDateInputFocus() {
-    // Não abrir automaticamente no focus
+  private setupDatePickerClickHandler() {
+    const datepicker = document.querySelector('.datepicker');
+    if (datepicker) {
+      // Remover listener anterior se existir
+      datepicker.removeEventListener('click', this.handleDatePickerClick);
+      // Adicionar novo listener
+      datepicker.addEventListener('click', this.handleDatePickerClick);
+    }
   }
 
-  onDateInputBlur() {
-    // Fechar com delay para permitir cliques nos botões
-    setTimeout(() => {
-      this.isCustomDatePickerOpen = false;
-    }, 200);
+  private handleDatePickerClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    
+    // Se clicou em um dia, selecionar imediatamente
+    if (target.classList.contains('day')) {
+      const dayNumber = parseInt(target.textContent || '0');
+      if (dayNumber > 0) {
+        // Encontrar o objeto day correspondente
+        const days = this.calendarDays;
+        const day = days.find(d => d.day === dayNumber);
+        if (day) {
+          this.selectDate(day);
+        }
+      }
+    }
+  }
+
+  closeDatePicker() {
+    this.isDatePickerOpen = false;
   }
 
   previousMonth() {
@@ -265,13 +309,20 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   selectDate(day: any) {
-    if (day.isCurrentMonth) {
-      this.selectedDate = day.date;
-      const formattedDate = this.formatDateForDisplay(day.date);
-      this.transactionForm.patchValue({ date: formattedDate });
+    // Selecionar a data e fechar imediatamente
+    this.selectedDate = day.date;
+    const formattedDate = this.formatDateForDisplay(day.date);
+    
+    // Atualizar o form
+    this.transactionForm.patchValue({ date: formattedDate });
+    
+    // Atualizar o input visual
+    if (this.flatpickrInput) {
       this.flatpickrInput.nativeElement.value = formattedDate;
-      this.isCustomDatePickerOpen = false;
     }
+    
+    // Fechar o datepicker imediatamente
+    this.isDatePickerOpen = false;
   }
 
   selectToday() {
@@ -280,14 +331,14 @@ export class TransactionModalComponent implements OnInit, AfterViewInit, OnDestr
     const formattedDate = this.formatDateForDisplay(today);
     this.transactionForm.patchValue({ date: formattedDate });
     this.flatpickrInput.nativeElement.value = formattedDate;
-    this.isCustomDatePickerOpen = false;
+    this.isDatePickerOpen = false;
   }
 
   clearDate() {
     this.selectedDate = null;
     this.transactionForm.patchValue({ date: '' });
     this.flatpickrInput.nativeElement.value = '';
-    this.isCustomDatePickerOpen = false;
+    this.isDatePickerOpen = false;
   }
 
   onDateInputChange(event: any) {

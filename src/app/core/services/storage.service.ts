@@ -227,6 +227,112 @@ export class StorageService {
     return transactions.length > 0 || settings.salary > 0 || settings.categories.length > 5;
   }
 
+  // ===== MIGRAÇÃO E COMPATIBILIDADE =====
+  
+  /**
+   * Migra dados existentes para o formato padronizado
+   * Corrige inconsistências entre salaryDay e datas de transações
+   */
+  migrateDataToStandardFormat(): void {
+    console.log('🔄 INICIANDO MIGRAÇÃO DE DADOS...');
+    
+    try {
+      const transactions = this.getTransactions();
+      const settings = this.getSettings();
+      
+      // Busca transações de salário
+      const salaryTransactions = transactions.filter(transaction => 
+        (transaction.description.toLowerCase() === 'salário' || 
+         transaction.category === 'Salário') && 
+        transaction.amount > 0
+      );
+      
+      if (salaryTransactions.length > 0) {
+        console.log(`📊 Encontradas ${salaryTransactions.length} transações de salário`);
+        
+        // Pega a transação mais recente para extrair o dia
+        const latestSalary = salaryTransactions.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0];
+        
+        // CORREÇÃO: Extrai o dia da transação mais recente no timezone local
+        const [year, month, day] = latestSalary.date.split('-').map(Number);
+        const extractedDay = new Date(year, month - 1, day).getDate();
+        
+        console.log(`📅 Dia extraído da transação mais recente: ${extractedDay}`);
+        
+        // Se o salaryDay está diferente do dia da transação, corrige
+        if (settings.salaryDay !== extractedDay) {
+          console.log(`🔄 Corrigindo salaryDay de ${settings.salaryDay} para ${extractedDay}`);
+          
+          const updatedSettings = {
+            ...settings,
+            salaryDay: extractedDay
+          };
+          
+          this.saveSettings(updatedSettings);
+          console.log('✅ SalaryDay corrigido na migração');
+        }
+        
+        // Normaliza todas as datas de salário para o dia correto
+        this.normalizeAllSalaryDates(extractedDay);
+      }
+      
+      console.log('✅ MIGRAÇÃO CONCLUÍDA');
+    } catch (error) {
+      console.error('❌ Erro durante migração:', error);
+    }
+  }
+
+  /**
+   * Normaliza todas as datas de salário para o dia correto
+   */
+  private normalizeAllSalaryDates(correctDay: number): void {
+    const transactions = this.getTransactions();
+    let hasChanges = false;
+    
+    const updatedTransactions = transactions.map(transaction => {
+      const isSalary = (transaction.description.toLowerCase() === 'salário' || 
+                       transaction.category === 'Salário') && 
+                      transaction.amount > 0;
+      
+      if (isSalary) {
+        // CORREÇÃO: Extrai o dia no timezone local
+        const [year, month, day] = transaction.date.split('-').map(Number);
+        const currentDay = new Date(year, month - 1, day).getDate();
+        
+        if (currentDay !== correctDay) {
+          console.log(`🔄 Normalizando data de salário: ${transaction.date} -> dia ${correctDay}`);
+          
+          // CORREÇÃO: Parse da data no timezone local
+          const [year, month, day] = transaction.date.split('-').map(Number);
+          const date = new Date(year, month - 1, day);
+          const normalizedDate = new Date(date.getFullYear(), date.getMonth(), correctDay);
+          
+          // Formata no timezone local
+          const yearStr = normalizedDate.getFullYear();
+          const monthStr = String(normalizedDate.getMonth() + 1).padStart(2, '0');
+          const dayStr = String(normalizedDate.getDate()).padStart(2, '0');
+          const normalizedDateString = `${yearStr}-${monthStr}-${dayStr}`;
+          
+          hasChanges = true;
+          
+          return {
+            ...transaction,
+            date: normalizedDateString
+          };
+        }
+      }
+      
+      return transaction;
+    });
+    
+    if (hasChanges) {
+      this.saveTransactions(updatedTransactions);
+      console.log('✅ Datas de salário normalizadas');
+    }
+  }
+
   // ===== ESTATÍSTICAS =====
   getDataStats(): { transactions: number, categories: number, lastUpdate: string | null } {
     const transactions = this.getTransactions();
