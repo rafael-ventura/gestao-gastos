@@ -1,260 +1,97 @@
 # 💰 Gestão de Gastos
 
-> **PWA para controle de gastos pessoais - funciona offline!**
+> **Um app simples e gratuito para controlar seus gastos pessoais - funciona offline!**
 
-[![Angular](https://img.shields.io/badge/Angular-19-red)](https://angular.io/)
-[![PWA](https://img.shields.io/badge/PWA-Ready-brightgreen)](https://web.dev/pwa-checklist/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+## 🎯 **O que é isso?**
 
-## 🎯 **Sobre o Projeto**
+Olha, eu sempre tive dificuldade para controlar meus gastos. Todo mês eu me perguntava: "pra onde foi meu dinheiro?". Aí resolvi criar algo simples, que funcionasse no meu celular e que não precisasse de cadastro nem nada complicado.
 
-App web moderno para controle financeiro pessoal, desenvolvido com Angular 19 e foco em simplicidade e funcionalidade. Funciona 100% offline, salvando dados no seu navegador, sem necessidade de cadastro ou login.
+**A ideia é bem simples:** você adiciona seus gastos, organiza por categoria e acompanha como está indo seu dinheiro no mês. Tudo fica salvo no seu navegador, então ninguém mais tem acesso aos seus dados.
 
-### 🌟 **Destaques**
-- **100% Offline** - Funciona sem internet
-- **PWA Completo** - Instala como app nativo
-- **Design Moderno** - Interface limpa e intuitiva
-- **Mobile-First** - Otimizado para celular
-- **Zero Tracking** - Sua privacidade é respeitada
+## ✨ **Por que usar?**
 
----
+- **100% gratuito** - Sem pegadinhas, sem assinatura
+- **Funciona offline** - Use mesmo sem internet
+- **Instala no celular** - Como um app normal
+- **Seus dados são só seus** - Ficam só no seu navegador
+- **Simples de usar** - Sem complicação
 
-## 🚀 **Funcionalidades**
+## 🚀 **Como começar**
 
-### 💰 **Gestão Financeira**
-- ✅ **Controle de gastos** - Adicionar, editar, categorizar transações
-- ✅ **Salário automático** - Adiciona salário mensal automaticamente
-- ✅ **Categorias personalizadas** - Organize seus gastos por categoria
-- ✅ **Cartão de crédito** - Marque gastos no cartão
-- ✅ **Dashboard inteligente** - Saldo mensal, receitas vs gastos
+### **1. Acesse o app**
+- Vá em: [gestao-gastos.rafael-ventura.dev.br](https://gestao-gastos.rafael-ventura.dev.br/home)
 
-### 📊 **Relatórios e Análises**
-- ✅ **KPIs financeiros** - Métricas principais do mês
-- ✅ **Gastos por categoria** - Breakdown detalhado
-- ✅ **Histórico mensal** - Comparativo entre 12 meses
-- ✅ **Taxa de poupança** - Percentual poupado
-- ✅ **Maior gasto** - Transação de maior valor
+### **2. Instale no celular ou Usar no  Navegador**
+- Abra no Chrome/Safari/Opera/Edge
+    - Caso queira instalar, Toque em "Instalar App"
 
-### ⚙️ **Configurações**
-- ✅ **Salário mensal** - Configure seu salário
-- ✅ **Dias importantes** - Dia do salário e vencimento cartão
-- ✅ **Categorias** - Crie e personalize categorias
-- ✅ **Backup/Export** - Exporte seus dados
-- ✅ **Tema escuro** - Interface moderna
+### **3. Configure seu salário**
+- Vá em "Configurações"
+- Adicione seu salário mensal
+- Defina o dia que você recebe
 
----
+### **4. Comece a registrar gastos e rendas**
+- Use o botão "+" na tela inicial
+- Adicione o valor, descrição e categoria e se foi gasto ou renda
 
-## 🛠️ **Tecnologias**
+### **5. Acompanhe seus relatórios**
+- Veja quanto gastou no mês
+- Compare com meses anteriores
+- Organize por categoria
 
-- **Angular 19** - Framework principal
-- **TypeScript 5.0** - Tipagem estática
-- **Angular Material** - Componentes UI
-- **SCSS** - Estilos avançados
-- **PWA** - Service Worker + Manifest
-- **LocalStorage** - Dados persistentes offline
+## 🔒 **Sobre seus dados**
 
----
+**Importante:** Seus dados ficam apenas no seu navegador (LocalStorage). Eu não tenho acesso a nada do que você registra. Se você limpar o navegador ou trocar de celular, os dados podem ser perdidos.
 
-## 📱 **Como Usar**
+**Para não perder nada:**
+- Use a função "Export" nas configurações
+- Salve o arquivo em um lugar seguro
+- Use "Import" para restaurar em outro dispositivo
 
-### **Online**
-- Acesse: [https://seu-app.vercel.app](https://seu-app.vercel.app)
+## 🚧 **Próximos passos**
 
-### **Instalar no Celular**
-1. Abra no Chrome/Safari
-2. Toque em "Instalar App" 
-3. Use como app nativo!
+Algumas melhorias que estão na fila:
 
-### **Primeiros Passos**
-1. **Configure seu salário** - Vá em Configurações
-2. **Adicione gastos** - Use o botão "+" na tela inicial
-3. **Organize por categoria** - Crie categorias personalizadas
-4. **Acompanhe relatórios** - Veja análises em Informações
+- **Ícones das categorias** - Deixar mais visual e bonito
+- **Editar lançamentos** - Poder corrigir ou ajustar transações
+- **Lançamentos recorrentes** - Configurar gastos que se repetem todo mês
 
----
+## 🛠️ **Para desenvolvedores**
 
-## ⚡ **Desenvolvimento**
+Se você quer contribuir ou rodar localmente:
 
-### **Pré-requisitos**
-- Node.js 18+
-- Angular CLI 19+
-
-### **Instalação**
 ```bash
 # Clone o repositório
 git clone https://github.com/rafael-ventura/gestao-gastos.git
 cd gestao-gastos
 
-# Instale dependências
+# Instale as dependências
 npm install
 
-# Execute em desenvolvimento
+# Rode em desenvolvimento
 ng serve
-
-# Acesse: http://localhost:4200
 ```
 
-### **Build e Deploy**
-```bash
-# Build para produção
-ng build --configuration production
+**Tecnologias:** Angular 19, TypeScript, PWA, LocalStorage
 
-# Deploy (exemplo Vercel)
-vercel --prod
-```
+## 💡 **Contribuições são bem-vindas!**
 
----
+Esse projeto foi feito com muito carinho e código. Se você tem uma ideia legal ou encontrou algum bug, pode abrir uma issue ou mandar um pull request. O projeto está aberto para melhorias!
 
-## 🔒 **Privacidade e Dados**
+**Use essa funcionalidade que outros pagam caro e mensal por aí!** 😄
 
-### **100% Local**
-- ✅ **Dados salvos no navegador** - LocalStorage do seu dispositivo
-- ✅ **Zero tracking** - Sem analytics ou cookies
-- ✅ **Sem cadastro** - Use imediatamente
-- ✅ **Open source** - Código auditável
+## 📞 **Precisa de ajuda?**
 
-### **⚠️ Importante sobre Dados**
-- **Seus dados ficam apenas no seu navegador**
-- **Nós não temos acesso aos seus dados**
-- **Se limpar o navegador, os dados são perdidos**
-- **Use o Export para fazer backup**
-
-### **💡 Alternativa para Backup**
-- Use a função **Export** em Configurações
-- Salve o arquivo JSON em local seguro
-- Use **Import** para restaurar em outro dispositivo
-
----
-
-## 🎨 **Design System**
-
-O projeto segue um design system consistente com:
-- **Cores pastéis** - Paleta suave e moderna
-- **Componentes reutilizáveis** - FormInput, BaseDialog, etc.
-- **Tema escuro** - Interface elegante
-- **Responsividade** - Mobile-first design
-- **Animações** - Transições suaves
-
-Veja mais detalhes em [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md)
-
----
-
-## 📚 **Documentação**
-
-- **[Guia de Desenvolvimento](GUIA-DESENVOLVIMENTO.md)** - Como desenvolver e contribuir
-- **[Status das Features](FEATURES-STATUS.md)** - Funcionalidades implementadas
-- **[Design System](DESIGN-SYSTEM.md)** - Padrões visuais e componentes
-
----
-
-## 🤝 **Contribuindo**
-
-### **Como Contribuir**
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-### **Reportando Bugs**
-- Use a aba [Issues](https://github.com/rafael-ventura/gestao-gastos/issues)
-- Descreva o problema detalhadamente
-- Inclua passos para reproduzir
-
-### **Sugerindo Features**
-- Abra uma [Issue](https://github.com/rafael-ventura/gestao-gastos/issues) com label "enhancement"
-- Descreva a funcionalidade desejada
-- Explique o valor para os usuários
-
----
-
-## 🎉 **Histórico do Projeto**
-
-### **Setembro 2025 - Versão 2.0**
-- ✅ **Modal customizado** - Substituído Angular Material Dialog
-- ✅ **Tema unificado** - Navbar, modais e header consistentes  
-- ✅ **Inputs otimizados** - Altura, padding e posicionamento melhorados
-- ✅ **FormInputComponent** - Componente reutilizável limpo
-- ✅ **Página relatórios** - Modernizada com tema escuro e filtros
-- ✅ **Sistema de salário** - Adição automática e sincronização
-- ✅ **Documentação** - Design system e guias completos
-
-### **Futuro**
-- 🔮 **Gráficos interativos** - Charts avançados
-- 🔮 **Metas financeiras** - Acompanhamento de objetivos
-- 🔮 **Notificações** - Alertas de gastos
-- 🔮 **Sincronização** - Cloud storage opcional
-
----
-
-## 📂 **Estrutura do Projeto**
-
-```
-src/app/
-├── core/                    # Serviços e modelos
-│   ├── services/           # Lógica de negócio
-│   └── models/             # Interfaces TypeScript
-├── pages/                  # Páginas principais
-│   ├── home/              # Dashboard
-│   ├── config/            # Configurações
-│   └── informacoes/       # Relatórios
-├── shared/                 # Componentes reutilizáveis
-│   └── components/        # FormInput, BaseDialog, etc.
-└── styles.scss            # Tema global
-```
-
----
-
-## 🐛 **Problemas Conhecidos**
-
-- **Dados no LocalStorage** - Se limpar o navegador, dados são perdidos
-- **Sem sincronização** - Dados não sincronizam entre dispositivos
-- **Limite de dados** - LocalStorage tem limite de ~5-10MB
-
-### **Soluções**
-- Use Export/Import para backup
-- Mantenha backups regulares
-- Para muitos dados, considere migração futura
-
----
-
-## 📄 **Licença**
-
-MIT License - use livremente!
-
-Veja [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## 🙏 **Agradecimentos**
-
-- **Angular Team** - Framework incrível
-- **Angular Material** - Componentes de qualidade
-- **Comunidade** - Feedback e sugestões
-- **Você** - Por usar o projeto! ❤️
-
----
-
-## 📞 **Suporte**
-
-### **Precisa de Ajuda?**
-- 📖 **Documentação** - Consulte os guias acima
-- 🐛 **Bug Report** - Abra uma Issue
-- 💡 **Sugestão** - Compartilhe sua ideia
-- ⭐ **Estrela** - Se gostou, deixe uma estrela!
-
-### **Funcionalidade Gratuita**
-Use essa funcionalidade que outros pagam caro e mensal por aí! 😄
+- **Bug ou sugestão?** Abra uma [Issue](https://github.com/rafael-ventura/gestao-gastos/issues)
+- **Gostou?** Deixa uma estrela! ⭐
+- **Dúvidas?** Manda uma mensagem
 
 ---
 
 <div align="center">
 
-**⭐ Útil? Deixe uma estrela! ⭐**
+**Feito com ❤️ **
 
-*Feito com ❤️ para controle financeiro simples*
-
-**🚀 Use essa funcionalidade que outros pagam caro e mensal por aí! 🚀**
+*Use essa funcionalidade que outros pagam mensalidade por aí!*
 
 </div>
