@@ -213,9 +213,10 @@ export class SalaryService {
     }
 
     // Verifica se precisa atualizar
+    const newSalaryDate = this.getSalaryDateFromSettings();
     const needsUpdate = 
       existingSalary.amount !== settings.salary ||
-      this.getSalaryDateFromSettings() !== existingSalary.date;
+      newSalaryDate !== existingSalary.date;
 
     if (!needsUpdate) {
       console.log('Salário já está atualizado');
@@ -225,7 +226,7 @@ export class SalaryService {
     // Atualiza o salário existente
     const updatedTransaction: Partial<Transaction> = {
       amount: settings.salary,
-      date: this.getSalaryDateFromSettings()
+      date: newSalaryDate
     };
 
     this.storageService.updateTransaction(existingSalary.id, updatedTransaction);
@@ -233,7 +234,7 @@ export class SalaryService {
     console.log('Salário atualizado:', {
       id: existingSalary.id,
       newAmount: settings.salary,
-      newDate: this.getSalaryDateFromSettings()
+      newDate: newSalaryDate
     });
 
     return true;
@@ -241,6 +242,7 @@ export class SalaryService {
 
   /**
    * Calcula a data do salário baseada nas configurações
+   * Sempre usa o mês atual quando configurado
    */
   private getSalaryDateFromSettings(): string {
     const settings = this.storageService.getSettings();
@@ -248,13 +250,8 @@ export class SalaryService {
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
     
-    // Cria a data do salário para o mês atual
-    let salaryDate = new Date(currentYear, currentMonth, settings.salaryDay);
-    
-    // Se o dia do salário já passou, usa o próximo mês
-    if (salaryDate < today) {
-      salaryDate = new Date(currentYear, currentMonth + 1, settings.salaryDay);
-    }
+    // Sempre cria a data do salário para o mês atual
+    const salaryDate = new Date(currentYear, currentMonth, settings.salaryDay);
     
     return salaryDate.toISOString().split('T')[0];
   }

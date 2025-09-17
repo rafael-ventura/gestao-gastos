@@ -200,29 +200,9 @@ body {
   }
 }
 
-// ===== SELECT PARA MODAL CUSTOMIZADO =====
-.mat-mdc-select-panel {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  
-  .mat-mdc-option {
-    color: white !important;
-    background: transparent !important;
-    
-    &:hover {
-      background: rgba(96, 165, 250, 0.2) !important;
-      color: #60a5fa !important;
-    }
-    
-    &.mdc-list-item--selected {
-      background: rgba(96, 165, 250, 0.3) !important;
-      color: #60a5fa !important;
-      font-weight: 600 !important;
-    }
-  }
-}
+// ===== SELECT PARA MODAL - REMOVIDO =====
+// O CSS do select panel agora está no FormInputComponent para evitar conflitos
+
 
 // ===== MODAL CUSTOMIZADO =====
 .custom-modal-backdrop {
@@ -232,7 +212,7 @@ body {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,7 +223,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1001;
+  z-index: 1000;
   
   // Tema escuro igual navbar/header
   background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
@@ -251,13 +231,29 @@ body {
   border-radius: 24px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
+  overflow: visible;
   
   // Responsividade
   width: 90vw;
   max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
+  
+  // Garantir que o select funcione
+  .mat-mdc-select-panel {
+    z-index: 2001 !important;
+    background: #1f2937 !important;
+    color: white !important;
+    
+    .mat-mdc-option {
+      cursor: pointer !important;
+      color: white !important;
+      
+      &:hover {
+        background-color: #60a5fa !important;
+      }
+    }
+  }
   
   @media (max-width: 768px) {
     width: 95vw;
@@ -404,12 +400,12 @@ body {
 // ===== Z-INDEX HIERARCHY - SIMPLIFICADO =====
 // Container principal dos overlays
 .cdk-overlay-container {
-  z-index: 3000 !important;
+  z-index: 2000 !important;
 }
 
 // Backdrop dos overlays
 .cdk-overlay-backdrop {
-  z-index: 2999 !important;
+  z-index: 1999 !important;
 }
 
 // Modal dialog
@@ -424,68 +420,197 @@ body {
 // Overlays específicos (select, datepicker, autocomplete)
 .mat-mdc-select-panel,
 .mat-datepicker-popup,
-.mat-mdc-autocomplete-panel {
-  z-index: 9999 !important;
-}
-
-// ===== SELECT GLOBAL - FUNCIONA EM QUALQUER CONTEXTO =====
-.mat-mdc-select-panel {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+.mat-mdc-autocomplete-panel,
+.custom-select-panel {
+  z-index: 2001 !important;
+  background: #1f2937 !important;
   color: white !important;
   
   .mat-mdc-option {
+    cursor: pointer !important;
     color: white !important;
-    border-radius: 8px !important;
-    margin: 4px 8px !important;
-    transition: all 0.2s ease !important;
     
     &:hover {
-      background-color: rgba(96, 165, 250, 0.2) !important;
-      color: #60a5fa !important;
-    }
-    
-    &.mdc-list-item--selected {
-      background-color: rgba(96, 165, 250, 0.3) !important;
-      color: #60a5fa !important;
-      font-weight: 600 !important;
-    }
-    
-    .mat-pseudo-checkbox {
-      display: none !important;
+      background-color: #60a5fa !important;
     }
   }
 }
 
-// ===== INPUT DE DATA NATIVO =====
+// ===== SELECT GLOBAL - REMOVIDO PARA EVITAR CONFLITO =====
+// O CSS do select panel agora está no FormInputComponent para maior especificidade
+
+// ===== INPUT DE DATA NATIVO - MELHORADO =====
 // Estilos para input de data nativo do HTML5
 input[type="date"] {
   color-scheme: dark !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
   
   &::-webkit-calendar-picker-indicator {
     filter: invert(1) !important;
     cursor: pointer !important;
     opacity: 0.8 !important;
+    padding: 4px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
     
     &:hover {
       opacity: 1 !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      transform: scale(1.1) !important;
     }
   }
   
   &::-webkit-datetime-edit-text {
     color: white !important;
+    font-weight: 500 !important;
   }
   
   &::-webkit-datetime-edit-month-field,
   &::-webkit-datetime-edit-day-field,
   &::-webkit-datetime-edit-year-field {
     color: white !important;
+    font-weight: 500 !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
   }
   
   &::-webkit-datetime-edit-fields-wrapper {
     background: transparent !important;
+  }
+  
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-style: italic !important;
+  }
+}
+
+// ===== ESTILOS PARA O POPUP DO DATEPICKER NATIVO =====
+// Estilizar o calendário que aparece quando clica no input de data
+::-webkit-calendar-picker-indicator {
+  filter: invert(1) !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+  padding: 4px !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+  
+  &:hover {
+    opacity: 1 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: scale(1.1) !important;
+  }
+}
+
+// Estilizar o popup do datepicker (quando aberto)
+input[type="date"]:focus {
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+    opacity: 1 !important;
+    background: rgba(96, 165, 250, 0.2) !important;
+  }
+}
+
+// ===== ESTILOS PARA FLATPICKR =====
+// Estilizar o datepicker do Flatpickr com tema escuro
+.flatpickr-calendar {
+  background: #1f2937 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+  color: white !important;
+  
+  .flatpickr-months {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
+    .flatpickr-month {
+      color: white !important;
+      
+      .flatpickr-current-month {
+        color: white !important;
+        
+        .cur-month {
+          color: white !important;
+        }
+        
+        .cur-year {
+          color: white !important;
+        }
+      }
+      
+      .flatpickr-prev-month,
+      .flatpickr-next-month {
+        color: #60a5fa !important;
+        
+        &:hover {
+          background: rgba(96, 165, 250, 0.1) !important;
+        }
+      }
+    }
+  }
+  
+  .flatpickr-weekdays {
+    background: rgba(255, 255, 255, 0.05) !important;
+    
+    .flatpickr-weekday {
+      color: rgba(255, 255, 255, 0.6) !important;
+      font-weight: 500 !important;
+    }
+  }
+  
+  .flatpickr-days {
+    .flatpickr-day {
+      color: rgba(255, 255, 255, 0.8) !important;
+      
+      &:hover {
+        background: rgba(96, 165, 250, 0.2) !important;
+        color: white !important;
+      }
+      
+      &.selected {
+        background: #60a5fa !important;
+        color: white !important;
+        font-weight: 600 !important;
+      }
+      
+      &.today {
+        border: 2px solid #60a5fa !important;
+        color: #60a5fa !important;
+        font-weight: 600 !important;
+      }
+      
+      &.flatpickr-disabled {
+        color: rgba(255, 255, 255, 0.3) !important;
+      }
+    }
+  }
+  
+  .flatpickr-time {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    
+    .flatpickr-time-separator {
+      color: white !important;
+    }
+    
+    input {
+      color: white !important;
+      background: transparent !important;
+      
+      &:hover {
+        background: rgba(96, 165, 250, 0.1) !important;
+      }
+    }
   }
 }
 
@@ -523,7 +648,7 @@ input[type="date"] {
     padding: 0 !important;
     max-width: none !important;
     width: auto !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
   
   .mat-mdc-dialog-backdrop {
@@ -531,7 +656,7 @@ input[type="date"] {
   }
   
   .cdk-overlay-pane {
-    overflow: hidden !important;
+    overflow: visible !important;
     max-width: 500px !important;
     width: 100% !important;
   }
@@ -546,9 +671,9 @@ input[type="date"] {
 
 // Garantir que não apareça scroll horizontal
 .cdk-overlay-container {
-  overflow: hidden !important;
+  overflow: visible !important;
   
   .cdk-overlay-pane {
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 }

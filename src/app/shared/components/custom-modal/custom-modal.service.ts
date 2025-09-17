@@ -92,7 +92,12 @@ export class CustomModalService {
 
     // Fechar ao clicar no backdrop (se permitido)
     if (!config?.disableClose) {
-      backdropElement.addEventListener('click', () => modalRef.close());
+      backdropElement.addEventListener('click', (event) => {
+        // Fechar apenas se clicou diretamente no backdrop
+        if (event.target === backdropElement) {
+          modalRef.close();
+        }
+      });
     }
 
     this.activeModals.push(componentRef);

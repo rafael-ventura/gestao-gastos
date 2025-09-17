@@ -14,7 +14,7 @@
   </div>
 
   <!-- Form -->
-  <form [formGroup]="transactionForm" (ngSubmit)="onSave()" class="transaction-form">
+  <form [formGroup]="transactionForm" (ngSubmit)="onSave($event)" class="transaction-form">
     
     <!-- Seletor de Tipo -->
     <div class="transaction-type-selector">
@@ -22,7 +22,7 @@
         <button type="button" 
                 class="type-button expense-button"
                 [class.active]="transactionForm.get('transactionType')?.value === 'expense'"
-                (click)="transactionForm.patchValue({transactionType: 'expense'})">
+                (click)="transactionForm.patchValue({transactionType: 'expense'}); $event.stopPropagation()">
           <mat-icon>trending_down</mat-icon>
           <span>Gasto</span>
         </button>
@@ -30,7 +30,7 @@
         <button type="button" 
                 class="type-button income-button"
                 [class.active]="transactionForm.get('transactionType')?.value === 'income'"
-                (click)="transactionForm.patchValue({transactionType: 'income'})">
+                (click)="transactionForm.patchValue({transactionType: 'income'}); $event.stopPropagation()">
           <mat-icon>trending_up</mat-icon>
           <span>Receita</span>
         </button>
@@ -58,23 +58,76 @@
         class="amount-field">
       </app-form-input>
       
-      <app-form-input
-        label="Categoria"
-        type="select"
-        placeholder="Selecione uma categoria"
-        [options]="categoryOptions"
-        [formControlName]="'category'"
-        class="category-field">
-      </app-form-input>
+      <div class="category-field">
+        <select 
+          class="category-select"
+          [formControlName]="'category'"
+          required>
+          <option value="" disabled>Selecione uma categoria</option>
+          <option *ngFor="let option of categoryOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div class="form-row">
-      <app-form-input
-        label="Data"
-        type="date"
-        [formControlName]="'date'"
-        class="date-field">
-      </app-form-input>
+      <div class="date-field">
+        <div class="date-input-container">
+          <label class="date-label">Data</label>
+          <div class="date-input-wrapper">
+            <!-- Input com máscara DD/MM -->
+            <input 
+              type="text"
+              [formControlName]="'date'"
+              placeholder="dd/mm"
+              class="date-input-custom"
+              (click)="toggleCustomDatePicker()"
+              (focus)="onDateInputFocus()"
+              (blur)="onDateInputBlur()"
+              (input)="onDateInputChange($event)"
+              #flatpickrInput>
+            <mat-icon class="date-icon" (click)="toggleCustomDatePicker()">calendar_today</mat-icon>
+            
+            <!-- Datepicker customizado -->
+            <div class="custom-datepicker" [class.show]="isCustomDatePickerOpen">
+              <div class="datepicker-header">
+                <button class="nav-button" (click)="previousMonth()">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+                <div class="month-year">
+                  {{ currentMonthName }} {{ currentYear }}
+                </div>
+                <button class="nav-button" (click)="nextMonth()">
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </div>
+              
+              <div class="datepicker-weekdays">
+                <div class="weekday" *ngFor="let day of weekdays">{{ day }}</div>
+              </div>
+              
+              <div class="datepicker-days">
+                <div 
+                  class="day" 
+                  *ngFor="let day of calendarDays" 
+                  [class.other-month]="!day.isCurrentMonth"
+                  [class.today]="day.isToday"
+                  [class.selected]="day.isSelected"
+                  (click)="selectDate(day)"
+                  [attr.data-day]="day.day">
+                  {{ day.day }}
+                </div>
+              </div>
+              
+              <div class="datepicker-footer">
+                <button class="footer-button" (click)="clearDate()">Limpar</button>
+                <button class="footer-button" (click)="selectToday()">Hoje</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Cartão de Crédito -->

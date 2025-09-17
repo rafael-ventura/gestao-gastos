@@ -1,20 +1,23 @@
+<!-- Header completamente separado -->
+<div class="categories-section-header">
+  <div class="header-title">
+    <mat-icon>category</mat-icon>
+    <span>Categorias de Gastos</span>
+  </div>
+  <div class="header-actions">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="addCategory()"
+      matTooltip="Adicionar nova categoria">
+      <mat-icon>add</mat-icon>
+      Adicionar
+    </button>
+  </div>
+</div>
+
+<!-- Card apenas para o conteúdo -->
 <mat-card class="categories-card">
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon>category</mat-icon>
-      Categorias de Gastos
-    </mat-card-title>
-    <div class="card-actions">
-      <button 
-        mat-raised-button 
-        color="primary" 
-        (click)="addCategory()"
-        matTooltip="Adicionar nova categoria">
-        <mat-icon>add</mat-icon>
-        Adicionar
-      </button>
-    </div>
-  </mat-card-header>
   <mat-card-content>
     <form [formGroup]="categoriesForm">
       <div formArrayName="categories" class="categories-grid">

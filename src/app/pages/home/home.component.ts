@@ -99,9 +99,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.income = this.calculationService.getCurrentMonthIncome();
       this.expenses = this.calculationService.getCurrentMonthExpenses();
       
-      // Carrega transações recentes (ordenadas por data de criação - mais recente primeiro)
+      // Carrega transações recentes (ordenadas por data da transação - mais recente primeiro)
       this.recentTransactions = this.storageService.getTransactions()
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 10); // Aumentado para 10 transações
       
       // Calcula número de transações do mês atual

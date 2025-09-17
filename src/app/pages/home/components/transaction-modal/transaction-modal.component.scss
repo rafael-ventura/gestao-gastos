@@ -1,5 +1,493 @@
+// Configurações globais para resolver problemas de z-index
+::ng-deep .cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+::ng-deep .mat-datepicker-content {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+::ng-deep .mat-calendar {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+// Garantir que o datepicker customizado apareça sobre TUDO quando visível
+::ng-deep .custom-datepicker {
+  z-index: 999999 !important;
+  position: absolute !important;
+  background: #1f2937 !important;
+  border: 3px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 1) !important;
+}
+
+// Garantir que o modal tenha z-index adequado
+.transaction-modal {
+  position: relative;
+  z-index: 1000;
+}
+
 .transaction-modal {
   color: white;
+  overflow: visible; // Garantir que elementos filhos não sejam cortados
+  
+  // Select nativo estilizado - IDÊNTICO ao input do valor
+  .category-field {
+    flex: 1.5;
+    width: 100%;
+    display: flex;
+    align-items: flex-start; // Alinha com o topo do input do valor
+    padding-top: 0; // Remove padding extra
+    
+    .category-select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px !important; // Força bordas arredondadas
+      height: 48px;
+      color: white;
+      font-weight: 500;
+      padding: 12px 16px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      font-family: inherit; // Mesma fonte do input
+      appearance: none; // Remove estilo padrão do browser
+      -webkit-appearance: none; // Remove estilo padrão no Safari
+      -moz-appearance: none; // Remove estilo padrão no Firefox
+      
+      // Seta customizada
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.7)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px; // Espaço para a seta
+      
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      
+      &:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+      }
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      
+      option {
+        background: #1f2937 !important;
+        color: white !important;
+        padding: 12px 16px !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        font-family: inherit !important;
+        border-radius: 8px !important;
+        margin: 4px 0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        
+        &:hover {
+          background: #60a5fa !important;
+          color: white !important;
+        }
+        
+        &:checked {
+          background: #60a5fa !important;
+          color: white !important;
+        }
+      }
+    }
+  }
+  
+  // Datepicker moderno com Angular Material
+  .date-field {
+    flex: 1;
+    width: 100%;
+    
+    .date-input-container {
+      width: 100%;
+      margin-bottom: 0;
+      
+      .date-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+      
+      .date-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        height: 48px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.15);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        &:focus-within {
+          border-color: #60a5fa;
+          background: rgba(96, 165, 250, 0.1);
+          box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2), 0 4px 16px rgba(96, 165, 250, 0.1);
+          transform: translateY(-1px);
+        }
+      }
+      
+      .date-input {
+        flex: 1;
+        height: 44px;
+        padding: 0 16px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+          font-style: italic;
+        }
+      }
+      
+      // Input customizado com máscara DD/MM
+      .date-input-custom {
+        flex: 1;
+        height: 44px;
+        padding: 0 16px;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        width: 100%;
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+          font-style: italic;
+        }
+        
+        &:focus {
+          color: white;
+        }
+      }
+      
+      .date-icon {
+        position: absolute;
+        right: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-radius: 4px;
+        padding: 4px;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        
+        &:hover {
+          color: #60a5fa;
+          background: rgba(96, 165, 250, 0.1);
+          transform: scale(1.1);
+        }
+      }
+      
+      // Overlay removido - não é necessário para o datepicker customizado
+      
+      // Datepicker customizado
+      .custom-datepicker {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 8px;
+        background: #1f2937;
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 1);
+        z-index: 999999 !important;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 300px;
+        
+        &.show {
+          opacity: 1;
+          visibility: visible;
+        }
+        
+        .datepicker-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 2px 4px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          background: #1f2937;
+          border-radius: 12px 12px 0 0;
+          
+          .nav-button {
+            background: transparent;
+            border: none;
+            color: #60a5fa;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            &:hover {
+              background: rgba(96, 165, 250, 0.1);
+              transform: scale(1.1);
+            }
+            
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+          
+          .month-year {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            flex: 1;
+          }
+        }
+        
+        .datepicker-weekdays {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 0;
+          background: #1f2937;
+          padding: 1px;
+          
+          .weekday {
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            font-size: 11px;
+            text-align: center;
+            padding: 2px 0;
+            max-width: 28px;
+            margin: 0 auto;
+          }
+        }
+        
+        .datepicker-days {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 0;
+          padding: 1px;
+          background: #1f2937;
+          
+          .day {
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 2px 0;
+            text-align: center;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 28px;
+            margin: 0 auto;
+            background: #1f2937;
+            
+            &:hover {
+              background: rgba(96, 165, 250, 0.2);
+              color: white;
+              transform: scale(1.05);
+            }
+            
+            &.other-month {
+              color: rgba(255, 255, 255, 0.3);
+              
+              &:hover {
+                color: rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.05);
+              }
+            }
+            
+            &.today {
+              border: 2px solid #60a5fa;
+              color: #60a5fa;
+              font-weight: 600;
+              
+              &:hover {
+                background: rgba(96, 165, 250, 0.2);
+              }
+            }
+            
+            &.selected {
+              background: #60a5fa;
+              color: white;
+              font-weight: 600;
+              
+              &:hover {
+                background: #4f9ef5;
+              }
+            }
+          }
+        }
+        
+        .datepicker-footer {
+          display: flex;
+          justify-content: space-between;
+          padding: 2px 4px;
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+          background: #1f2937;
+          border-radius: 0 0 12px 12px;
+          
+          .footer-button {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+            font-size: 10px;
+            font-weight: 500;
+            
+            &:hover {
+              background: rgba(255, 255, 255, 0.1);
+              color: white;
+              border-color: rgba(255, 255, 255, 0.3);
+            }
+          }
+        }
+      }
+      
+      .date-input-wrapper:focus-within .date-toggle {
+        color: #60a5fa;
+      }
+    }
+  }
+  
+  // Estilos globais para o datepicker HTML5 nativo
+  ::ng-deep {
+    // Estilizar o datepicker nativo do HTML5
+    input[type="date"] {
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(1) !important;
+        cursor: pointer !important;
+        opacity: 0.8 !important;
+        padding: 4px !important;
+        border-radius: 4px !important;
+        transition: all 0.2s ease !important;
+        
+        &:hover {
+          opacity: 1 !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+          transform: scale(1.1) !important;
+        }
+      }
+      
+      &::-webkit-datetime-edit-text {
+        color: white !important;
+        font-weight: 500 !important;
+      }
+      
+      &::-webkit-datetime-edit-month-field,
+      &::-webkit-datetime-edit-day-field,
+      &::-webkit-datetime-edit-year-field {
+        color: white !important;
+        font-weight: 500 !important;
+        padding: 2px 4px !important;
+        border-radius: 4px !important;
+        transition: all 0.2s ease !important;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+      
+      &::-webkit-datetime-edit-fields-wrapper {
+        background: transparent !important;
+      }
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5) !important;
+        font-style: italic !important;
+      }
+    }
+    
+    // Estilizar o popup do datepicker (quando abrir)
+    .date-input-visible {
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(1) !important;
+        cursor: pointer !important;
+        opacity: 0.8 !important;
+        padding: 4px !important;
+        border-radius: 4px !important;
+        transition: all 0.2s ease !important;
+        
+        &:hover {
+          opacity: 1 !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+          transform: scale(1.1) !important;
+        }
+      }
+    }
+  }
+  
+  // Overlay do datepicker
+  ::ng-deep .cdk-overlay-container {
+    z-index: 9999 !important;
+    
+    .cdk-overlay-backdrop {
+      background: rgba(0, 0, 0, 0.3) !important;
+      z-index: 9998 !important;
+    }
+    
+    .cdk-overlay-pane {
+      z-index: 9999 !important;
+    }
+  }
+  
+  // Garantir que o datepicker seja clicável
+  ::ng-deep .mat-datepicker-content {
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    
+    .mat-calendar {
+      pointer-events: auto !important;
+      
+      * {
+        pointer-events: auto !important;
+      }
+    }
+  }
 }
 
 .modal-header {
@@ -72,6 +560,8 @@
   display: flex;
   gap: 16px;
   margin-bottom: 20px;
+  position: relative;
+  overflow: visible; // Garantir que elementos filhos não sejam cortados
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -94,6 +584,8 @@
 
 .date-field {
   flex: 1;
+  position: relative;
+  overflow: visible; // Garantir que o datepicker não seja cortado
 }
 
 // Seletor de tipo

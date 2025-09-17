@@ -88,6 +88,37 @@
   width: 100%;
 }
 
+// ===== CATEGORIES SECTION HEADER =====
+.categories-section-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 40px !important; // Distância grande entre header e card
+  padding: 0 24px !important;
+  
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    
+    mat-icon {
+      color: var(--primary-400);
+      font-size: 1.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+  
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
 // ===== CATEGORIES CARD =====
 .categories-card {
   margin-bottom: 24px;
@@ -95,40 +126,8 @@
   color: white !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   
-  mat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    padding: 24px 24px 20px 24px; // Aumentado padding bottom
-    
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0;
-      color: #ffffff !important;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      
-      mat-icon {
-        color: var(--primary-400);
-        font-size: 1.75rem;
-        width: 1.75rem;
-        height: 1.75rem;
-      }
-    }
-    
-    .card-actions {
-      display: flex;
-      gap: 8px;
-    }
-  }
-  
   mat-card-content {
-    padding: 0 24px 24px 24px;
+    padding: 24px;
   }
 }
 
@@ -136,18 +135,16 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
-  margin-top: 24px; // Adicionado espaçamento superior
+  // margin-top removido - o padding-bottom do header já faz o trabalho
   
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 16px;
-    margin-top: 20px;
   }
   
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 12px;
-    margin-top: 16px;
   }
 }
 
@@ -603,14 +600,7 @@
     }
   }
   
-  .categories-card mat-card-header {
-    flex-direction: column;
-    align-items: stretch;
-    
-    .card-actions {
-      justify-content: center;
-    }
-  }
+  // Estilos antigos removidos - agora usamos .categories-section-header
 }
 
 @media (max-width: 480px) {

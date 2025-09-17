@@ -719,8 +719,6 @@
   .floating-add-button {
     bottom: 72px;
     right: 16px;
-    width: 48px !important;
-    height: 48px !important;
   }
 }
 
@@ -730,7 +728,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 1000;
+  z-index: 2000;
   
   &.mat-mdc-fab {
     background: var(--gradient-primary);
