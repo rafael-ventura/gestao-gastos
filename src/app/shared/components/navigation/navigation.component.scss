@@ -5,6 +5,8 @@
   right: 0;
   z-index: 10; // Z-index reduzido para não interferir com conteúdo
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #111827; // fundo escuro (tailwind slate-900 like)
+  color: #E5E7EB; // texto claro (tailwind gray-200)
   
   .toolbar-content {
     display: flex;
@@ -27,13 +29,13 @@
     font-size: 2rem;
     width: 2rem;
     height: 2rem;
-    color: white;
+    color: #F3F4F6;
   }
   
   .app-title {
     font-size: 1.5rem;
     font-weight: 500;
-    color: white;
+    color: #F3F4F6;
     white-space: nowrap;
   }
 }
@@ -86,6 +88,12 @@
   }
 }
 
+.menu-button-mobile {
+  display: none;
+  color: white;
+  margin-right: 8px;
+}
+
 // ===== DESKTOP NAVIGATION =====
 .desktop-nav {
   display: flex;
@@ -98,16 +106,16 @@
     gap: 8px;
     padding: 8px 16px;
     border-radius: 20px;
-    color: white;
+    color: #F3F4F6;
     transition: all 0.3s ease;
     
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       transform: translateY(-1px);
     }
     
     &.active {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.14);
       font-weight: 600;
     }
     
@@ -149,17 +157,20 @@
 .sidenav-container {
   flex: 1;
   min-height: calc(100vh - 64px); // Muda para min-height
-  z-index: 1; // Z-index muito baixo para não interferir com conteúdo
 }
 
 .sidenav {
   width: 280px;
-  background: white;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  background: #111827; // fundo escuro para seguir o padrão
+  color: #E5E7EB; // texto claro
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.35);
+  z-index: 1200; // Garante que fique acima do conteúdo
+  margin: 8px 0; // não ocupar 100% da altura
+  border-radius: 12px; // cantos arredondados
   
   .sidenav-header {
     padding: 24px 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     
     .sidenav-logo {
       display: flex;
@@ -171,13 +182,13 @@
         font-size: 2rem;
         width: 2rem;
         height: 2rem;
-        color: #F44336;
+        color: #F87171; // vermelho claro no dark
       }
       
       .app-title {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 500;
-        color: rgba(0, 0, 0, 0.87);
+        color: #F3F4F6;
       }
     }
     
@@ -187,18 +198,18 @@
       margin-top: 16px;
       
       &.positive {
-        background: linear-gradient(135deg, #E8F5E8 0%, #F1F8E9 100%);
-        border: 1px solid #4CAF50;
+        background: rgba(34, 197, 94, 0.12);
+        border: 1px solid rgba(34, 197, 94, 0.4);
       }
       
       &.negative {
-        background: linear-gradient(135deg, #FFEBEE 0%, #FCE4EC 100%);
-        border: 1px solid #F44336;
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.4);
       }
       
       &.neutral {
-        background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);
-        border: 1px solid #607D8B;
+        background: rgba(148, 163, 184, 0.12);
+        border: 1px solid rgba(148, 163, 184, 0.35);
       }
       
       .balance-info {
@@ -218,14 +229,14 @@
           gap: 4px;
           
           .balance-label {
-            font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.8rem;
+            color: rgba(243, 244, 246, 0.7);
           }
           
           .balance-amount {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: rgba(0, 0, 0, 0.87);
+            color: #F3F4F6;
           }
         }
       }
@@ -238,26 +249,24 @@
     .sidenav-item {
       margin: 4px 8px;
       border-radius: 8px;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
+      color: #E5E7EB;
       
       &:hover {
-        background: rgba(33, 150, 243, 0.1);
+        background: rgba(255, 255, 255, 0.06);
       }
       
       &.active {
-        background: rgba(33, 150, 243, 0.2);
-        color: #F44336;
-        font-weight: 500;
+        background: rgba(255, 255, 255, 0.12);
+        color: #F3F4F6;
+        font-weight: 600;
         
         mat-icon {
-          color: #F44336;
+          color: #F3F4F6;
         }
       }
       
-      .item-tooltip {
-        font-size: 0.75rem;
-        color: rgba(0, 0, 0, 0.6);
-      }
+      .item-tooltip { display: none; }
     }
   }
   
@@ -267,8 +276,8 @@
     left: 0;
     right: 0;
     padding: 16px;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
     z-index: 1; // Z-index baixo para não interferir com outros elementos
     
     .app-info {
@@ -278,19 +287,15 @@
       
       .version {
         font-size: 0.75rem;
-        color: rgba(0, 0, 0, 0.6);
+        color: rgba(243, 244, 246, 0.6);
       }
       
       .status {
         font-size: 0.75rem;
         
-        &.has-data {
-          color: #4CAF50;
-        }
+        &.has-data { color: #34D399; }
         
-        &.no-data {
-          color: #F44336;
-        }
+        &.no-data { color: #EF4444; }
       }
     }
   }
@@ -305,7 +310,6 @@
   padding-top: 24px; // Espaço entre navbar e conteúdo
   padding-bottom: 20px; // Pequeno padding para evitar corte no final
   position: relative;
-  z-index: 50; // Z-index muito alto para ficar por cima de tudo
   margin-top: 64px; // Margem para compensar a toolbar fixa
 }
 
@@ -318,6 +322,10 @@
     .toolbar-content {
       padding: 0 8px;
     }
+  }
+  
+  .menu-button-mobile {
+    display: inline-flex;
   }
   
   .logo-section {

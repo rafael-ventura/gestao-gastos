@@ -2,7 +2,14 @@
 <mat-toolbar class="main-toolbar">
   <div class="toolbar-content">
     
-    <!-- Botão Menu (Mobile) - Removido -->
+    <!-- Botão Menu (Mobile) -->
+    <button 
+      class="menu-button-mobile" 
+      mat-icon-button 
+      (click)="toggleSidenav()" 
+      aria-label="Abrir menu">
+      <mat-icon>menu</mat-icon>
+    </button>
 
     <!-- Logo e Título -->
     <div class="logo-section">
@@ -73,7 +80,6 @@
         class="sidenav-item">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
-        <span *ngIf="item.tooltip" matListItemMeta class="item-tooltip">{{ item.tooltip }}</span>
       </a>
     </mat-nav-list>
 
